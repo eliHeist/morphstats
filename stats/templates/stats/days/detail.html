@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ day.date }}</h1>
+  <span class="small">{{ day.title }}</span>
+  <p class="lead">{{ day.comments }}  </p>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{% url 'stats:days-list' %}">Celebration days</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ day.date }}</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<section id="day-detail">
+    <div class="card rounded-4 p-5">
+    
+    <table class="table datatable">
+        <thead>
+          <tr>
+            <th scope="col">Service</th>
+          </tr>
+        </thead>
+        <tbody>
+            
+            {% for service in day.services.all %}
+            <tr>
+              <th><a href="{% url 'stats:service-stats' service.pk %}" class="text-primary">{{ service.service }}</a></th>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</section>
+{% endblock content %}

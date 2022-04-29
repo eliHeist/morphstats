@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ service.date.date }} - {{ service.service }} service</h1>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{% url 'stats:days-list' %}">Celebration days</a></li>
+        <li class="breadcrumb-item active"><a href="{% url 'stats:day-detail' service.date.pk %}">{{ service.date.date }}</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ service.service }}</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<section id="service-detail">
+  {% for group in service.small_groups.all %}
+  
+  {% if group.salvations %}
+    <ul class="list-unstyled">
+      
+      {% for morpher in group.salvations.all %}
+        <li>{{ morpher.name }}</li>
+      {% endfor %}
+        
+    </ul>
+  {% endif %}
+  <div class="p-4 card rounded-4">
+    <p class="lead fw-normal">Group leader(s):
+      {% for facilitator in group.facilitators.all %}
+      <a href="#" class="text-decoration-none text-primary">{{ facilitator.name }}</a>,
+      {% endfor %}
+    </p>
+    <table class="table datatable rounded-4 bg-white">
+      <thead>
+        <tr>
+          <th scope="col">NO</th>
+          <th scope="col">Name</th>
+          <th scope="col">Class</th>
+          <th scope="col">School</th>
+          <th scope="col">Number</th>
+          <th scope="col">Parents No</th>
+          <th scope="col">Address</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for morpher in group.morphers.all %}
+        <tr>
+          <th class="text-primary">{{ counter.increment }}</th>
+          <th><a class="fw-normal">{{ morpher.name }}</a></th>
+          <th><a class="fw-normal">{{ morpher.grade }}</a></th>
+          <th><a class="fw-normal">{{ morpher.school }}</a></th>
+          <th><a class="fw-normal">{{ morpher.contact }}</a></th>
+          <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
+          <th><a class="fw-normal">{{ morpher.residence }}</a></th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</section>
+{% endblock content %}

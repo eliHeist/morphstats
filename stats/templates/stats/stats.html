@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+
+
+{% block styles %}
+  <style>
+    .row-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1em;
+    }
+  </style>
+{% endblock styles %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ day.date }}</h1>
+  <span class="small">{{ day.title }}</span>
+  <p class="lead">{{ day.comments }}  </p>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="#">Stats</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<section>
+  <div class="row-grid">
+    
+    {% for day in days %}
+    <div class="rounded-4 p-4 bg-white">
+      <div class="py-3">
+        <h2 class="h4 fw-bold">{{ day.date }}</h2>
+        <span class="small">{{ day.title }}</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Junior</th>
+            <th>Senior</th>
+            <th>Total</th>
+            <th>FTV</th>
+            <th>Salvations</th>
+            <th>Facilitators</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1st</td>
+            <td>{{ day.first_junior }}</td>
+            <td>{{ day.first_senior }}</td>
+            <td>{{ day.first_count }}</td>
+            <td>{{ day.first_ftv }}</td>
+            <td>{{ day.first_salvations }}</td>
+            <td>{{ day.first_facilitators }}</td>
+          </tr>
+          <tr>
+            <td>2nd</td>
+            <td>{{ day.second_junior }}</td>
+            <td>{{ day.second_senior }}</td>
+            <td>{{ day.second_count }}</td>
+            <td>{{ day.second_ftv }}</td>
+            <td>{{ day.second_salvations }}</td>
+            <td>{{ day.second_facilitators }}</td>
+          </tr>
+          <tr>
+            <td>3rd</td>
+            <td>{{ day.third_junior }}</td>
+            <td>{{ day.third_senior }}</td>
+            <td>{{ day.third_count }}</td>
+            <td>{{ day.third_ftv }}</td>
+            <td>{{ day.third_salvations }}</td>
+            <td>{{ day.third_facilitators }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <span>Total Facilitators: {{ day.facilitators.count }}</span>
+    </div>
+    {% endfor %}
+      
+  </div>
+</section>
+{% endblock content %}
