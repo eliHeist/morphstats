@@ -7,6 +7,7 @@ distlib==0.3.4
 Django==4.0.4
 django-crispy-forms==1.14.0
 django-environ==0.8.1
+django-jazzmin==2.5.0
 django-registration-redux==2.10
 djangorestframework==3.13.1
 filelock==3.4.2
