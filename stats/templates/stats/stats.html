@@ -35,48 +35,50 @@
         <h2 class="h4 fw-bold">{{ day.date }}</h2>
         <span class="small">{{ day.title }}</span>
       </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Service</th>
-            <th>Junior</th>
-            <th>Senior</th>
-            <th>Total</th>
-            <th>FTV</th>
-            <th>Salvations</th>
-            <th>Facilitators</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1st</td>
-            <td>{{ day.first_junior }}</td>
-            <td>{{ day.first_senior }}</td>
-            <td>{{ day.first_count }}</td>
-            <td>{{ day.first_ftv }}</td>
-            <td>{{ day.first_salvations }}</td>
-            <td>{{ day.first_facilitators }}</td>
-          </tr>
-          <tr>
-            <td>2nd</td>
-            <td>{{ day.second_junior }}</td>
-            <td>{{ day.second_senior }}</td>
-            <td>{{ day.second_count }}</td>
-            <td>{{ day.second_ftv }}</td>
-            <td>{{ day.second_salvations }}</td>
-            <td>{{ day.second_facilitators }}</td>
-          </tr>
-          <tr>
-            <td>3rd</td>
-            <td>{{ day.third_junior }}</td>
-            <td>{{ day.third_senior }}</td>
-            <td>{{ day.third_count }}</td>
-            <td>{{ day.third_ftv }}</td>
-            <td>{{ day.third_salvations }}</td>
-            <td>{{ day.third_facilitators }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-wrapper w-100">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Junior</th>
+              <th>Senior</th>
+              <th>Total</th>
+              <th>FTV</th>
+              <th>Salvations</th>
+              <th>Facilitators</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1st</td>
+              <td>{{ day.first_junior }}</td>
+              <td>{{ day.first_senior }}</td>
+              <td>{{ day.first_count }}</td>
+              <td>{{ day.first_ftv }}</td>
+              <td>{{ day.first_salvations }}</td>
+              <td>{{ day.first_facilitators }}</td>
+            </tr>
+            <tr>
+              <td>2nd</td>
+              <td>{{ day.second_junior }}</td>
+              <td>{{ day.second_senior }}</td>
+              <td>{{ day.second_count }}</td>
+              <td>{{ day.second_ftv }}</td>
+              <td>{{ day.second_salvations }}</td>
+              <td>{{ day.second_facilitators }}</td>
+            </tr>
+            <tr>
+              <td>3rd</td>
+              <td>{{ day.third_junior }}</td>
+              <td>{{ day.third_senior }}</td>
+              <td>{{ day.third_count }}</td>
+              <td>{{ day.third_ftv }}</td>
+              <td>{{ day.third_salvations }}</td>
+              <td>{{ day.third_facilitators }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <span>Total Facilitators: {{ day.facilitators.count }}</span>
     </div>
     {% endfor %}

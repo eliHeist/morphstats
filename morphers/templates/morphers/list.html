@@ -3,45 +3,46 @@
 
 {% block content %}
 <div class="pagetitle">
-    <h1>Morphers</h1>
-    <div class="d-flex justify-content-between">
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
-          <li class="breadcrumb-item active"><a href="#">Morphers</a></li>
-        </ol>
-      </nav>
-    </div>
+  <h1>Morphers</h1>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="#">Morphers</a></li>
+      </ol>
+    </nav>
   </div>
-    <div class="card p-3 rounded-4">
-        <table class="table datatable rounded-4 bg-white">
-            <thead>
-              <tr>
-                <!-- <th scope="col">No</th> -->
-                <th scope="col">Name</th>
-                <th scope="col">Class</th>
-                <th scope="col">School</th>
-                <th scope="col">Contact</th>
-                <th scope="col">Parents No</th>
-                <th scope="col">Address</th>
-              </tr>
-            </thead>
-            <tbody>
-                
-                {% for morpher in morphers %}
-                <tr>
-                    <!-- <th class="text-primary">{{ counter.increment }}</th> -->
-                    <th><a class="fw-normal">{{ morpher.name }}</a></th>
-                    <th><a class="fw-normal">{{ morpher.grade }}</a></th>
-                    <th><a class="fw-normal">{{ morpher.school }}</a></th>
-                    <th><a class="fw-normal">{{ morpher.contact }}</a></th>
-                    <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
-                    <th><a class="fw-normal">{{ morpher.residence }}</a></th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </div>
+</div>
+<div class="card p-3 rounded-4">
+  <div class="table-wrapper w-100">
+    <table class="table datatable rounded-4 bg-white">
+      <thead>
+        <tr>
+          <!-- <th scope="col">No</th> -->
+          <th scope="col">Name</th>
+          <th scope="col">Class</th>
+          <th scope="col">School</th>
+          <th scope="col">Contact</th>
+          <th scope="col">Parents No</th>
+          <th scope="col">Address</th>
+        </tr>
+      </thead>
+      <tbody>
+  
+        {% for morpher in morphers %}
+        <tr>
+          <!-- <th class="text-primary">{{ counter.increment }}</th> -->
+          <th><a class="fw-normal">{{ morpher.name }}</a></th>
+          <th><a class="fw-normal">{{ morpher.grade }}</a></th>
+          <th><a class="fw-normal">{{ morpher.school }}</a></th>
+          <th><a class="fw-normal">{{ morpher.contact }}</a></th>
+          <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
+          <th><a class="fw-normal">{{ morpher.residence }}</a></th>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-    </div>
+  </div>
+</div>
+</div>
 {% endblock content %}
-    

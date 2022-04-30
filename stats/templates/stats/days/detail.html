@@ -19,7 +19,8 @@
 <section id="day-detail">
     <div class="card rounded-4 p-5">
     
-    <table class="table datatable">
+    <div class="table-wrapper w-100">
+      <table class="table datatable">
         <thead>
           <tr>
             <th scope="col">Service</th>
@@ -34,6 +35,7 @@
             {% endfor %}
         </tbody>
       </table>
+    </div>
     </div>
 </section>
 {% endblock content %}

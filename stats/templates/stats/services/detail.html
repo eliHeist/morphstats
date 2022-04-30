@@ -33,33 +33,35 @@
       <a href="#" class="text-decoration-none text-primary">{{ facilitator.name }}</a>,
       {% endfor %}
     </p>
-    <table class="table datatable rounded-4 bg-white">
-      <thead>
-        <tr>
-          <!-- <th scope="col">NO</th> -->
-          <th scope="col">Name</th>
-          <th scope="col">Class</th>
-          <th scope="col">School</th>
-          <th scope="col">Number</th>
-          <th scope="col">Parents No</th>
-          <th scope="col">Address</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        {% for morpher in group.morphers.all %}
-        <tr>
-          <!-- <th class="text-primary">{{ counter.increment }}</th> -->
-          <th><a class="fw-normal">{{ morpher.name }}</a></th>
-          <th><a class="fw-normal">{{ morpher.grade }}</a></th>
-          <th><a class="fw-normal">{{ morpher.school }}</a></th>
-          <th><a class="fw-normal">{{ morpher.contact }}</a></th>
-          <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
-          <th><a class="fw-normal">{{ morpher.residence }}</a></th>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-wrapper w-100">
+      <table class="table datatable rounded-4 bg-white">
+        <thead>
+          <tr>
+            <!-- <th scope="col">NO</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Class</th>
+            <th scope="col">School</th>
+            <th scope="col">Number</th>
+            <th scope="col">Parents No</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+  
+          {% for morpher in group.morphers.all %}
+          <tr>
+            <!-- <th class="text-primary">{{ counter.increment }}</th> -->
+            <th><a class="fw-normal">{{ morpher.name }}</a></th>
+            <th><a class="fw-normal">{{ morpher.grade }}</a></th>
+            <th><a class="fw-normal">{{ morpher.school }}</a></th>
+            <th><a class="fw-normal">{{ morpher.contact }}</a></th>
+            <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
+            <th><a class="fw-normal">{{ morpher.residence }}</a></th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
   {% endfor %}
 </section>

@@ -15,7 +15,8 @@
 </div>
     <section id="days">
       <div class="card p-3 rounded-4">
-        <table class="table datatable">
+        <div class="table-wrapper w-100">
+          <table class="table datatable">
             <thead>
               <tr>
                 <th scope="col">Date</th>
@@ -30,6 +31,7 @@
                 {% endfor %}
             </tbody>
           </table>
+        </div>
         </div>
     </section>
 {% endblock content %}
