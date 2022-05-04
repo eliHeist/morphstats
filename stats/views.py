@@ -59,7 +59,7 @@ def getCount(service, name):
     count = 0
     for group in service.small_groups.all():
         for morpher in group.morphers.all():
-            if morpher and morpher.grade.level == level:
+            if morpher and morpher.grade and morpher.grade.level == level:
                 count+=1
     return count
 
