@@ -40,10 +40,10 @@
             <!-- <th scope="col">NO</th> -->
             <th scope="col">Name</th>
             <th scope="col">Class</th>
-            <th scope="col">School</th>
-            <th scope="col">Number</th>
-            <th scope="col">Parents No</th>
             <th scope="col">Address</th>
+            <!-- <th scope="col">Number</th>
+            <th scope="col">Parents No</th> -->
+            <th scope="col" class="d-none d-xl-block">School</th>
           </tr>
         </thead>
         <tbody>
@@ -51,12 +51,12 @@
           {% for morpher in group.morphers.all %}
           <tr>
             <!-- <th class="text-primary">{{ counter.increment }}</th> -->
-            <th><a class="fw-normal">{{ morpher.name }}</a></th>
+            <th><a class="fw-normal text-primary" href="{% url 'morphers:detail' morpher.pk %}">{{ morpher.name }}</a></th>
             <th><a class="fw-normal">{{ morpher.grade }}</a></th>
-            <th><a class="fw-normal">{{ morpher.school }}</a></th>
-            <th><a class="fw-normal">{{ morpher.contact }}</a></th>
-            <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th>
             <th><a class="fw-normal">{{ morpher.residence }}</a></th>
+            <!-- <th><a class="fw-normal">{{ morpher.contact }}</a></th>
+              <th><a class="fw-normal">{{ morpher.parents_contact }}</a></th> -->
+              <th class="d-none d-xl-block"><a class="fw-normal">{{ morpher.school }}</a></th>
           </tr>
           {% endfor %}
         </tbody>

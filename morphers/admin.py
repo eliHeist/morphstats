@@ -9,6 +9,7 @@ admin.site.register(Residence)
 admin.site.register(School)
 
 class MorphAdmin(admin.ModelAdmin):
+    list_display = ('name','grade')
     list_filter = ('grade',)
     
 admin.site.register(Morpher, MorphAdmin)

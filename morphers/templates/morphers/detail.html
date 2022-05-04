@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ morpher.name }}</h1>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'morphers:list' %}">Morphers</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ morpher.name }}</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<div class="card p-3 rounded-4">
+  <h2 class="h4">{{ morpher.name }}</h2>
+  <span class="py-1"><strong>Class:</strong> {{ morpher.grade }}</span>
+  <span class="py-1"><strong>Contact:</strong> {{ morpher.contact }}</span>
+  <span class="py-1"><strong>Parents contact:</strong> {{ morpher.parents_contact }}</span>
+  <span class="py-1"><strong>Address:</strong> {{ morpher.residence }}</span>
+  <span class="py-1"><strong>School:</strong> {{ morpher.school }}</span>
+</div>
+</div>
+{% endblock content %}

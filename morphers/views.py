@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from morphers.models import Morpher
 from stats.views import Counter
@@ -22,3 +22,10 @@ def morpherListView(request):
         'counter':counter,
     }
     return render(request, template_name, context)
+
+
+
+class MorpherDetailView(DetailView):
+    model = Morpher
+    context_object_name = 'morpher'
+    template_name = "morphers/detail.html"
