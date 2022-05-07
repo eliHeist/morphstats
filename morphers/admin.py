@@ -6,11 +6,15 @@ from morphers.models import Grade, Level, Morpher, Residence, School
 admin.site.register(Level)
 admin.site.register(Grade)
 admin.site.register(Residence)
-admin.site.register(School)
 
+@admin.register(Morpher)
 class MorphAdmin(admin.ModelAdmin):
     list_display = ('name','grade')
     list_filter = ('grade',)
     search_fields = ('name',)
     
-admin.site.register(Morpher, MorphAdmin)
+
+@admin.register(School)
+class SchoolAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
