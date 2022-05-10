@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.shortcuts import render
 from django.views.generic import ListView
 from morphers.models import Level
@@ -23,6 +24,35 @@ class Counter:
 
 
 # Day Views
+def getPresent(day):
+    morphers = []
+    for service in day.services.all():
+        for group in service.small_groups.all():
+            for morpher in group.morphers.all():
+                if morpher not in morphers:
+                    morphers.append(morpher)
+    return morphers
+
+
+def getAbsent(day):
+    absent_morphers = []
+    current_sunday = day.date
+    previous_sunday = current_sunday - timedelta(7)
+    if prev_day := Day.objects.filter(date=previous_sunday):
+        p_day = prev_day.first()
+    else:
+        return absent_morphers
+
+    current_morphers = getPresent(day)
+    prev_morphers = getPresent(p_day)
+
+    for morpher in prev_morphers:
+        if morpher not in current_morphers and morpher not in absent_morphers:
+            absent_morphers.append(morpher)
+    return absent_morphers
+
+
+
 def dayListView(request):
     days = Day.objects.all()
     template_name = "stats/days/list.html"
@@ -33,9 +63,12 @@ def dayListView(request):
 
 def dayDetailView(request, pk):
     day = Day.objects.get(id=pk)
+    
     template_name = "stats/days/detail.html"
+
     context = {
         'day':day,
+        'absent':getAbsent(day),
     }
     return render(request, template_name, context)
 
@@ -101,3 +134,6 @@ def statsView(request):
         'days':days,
     }
     return render(request, template_name, context)
+
+
+

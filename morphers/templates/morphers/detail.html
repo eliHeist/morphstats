@@ -22,5 +22,11 @@
   <span class="py-1"><strong>Address:</strong> {{ morpher.residence }}</span>
   <span class="py-1"><strong>School:</strong> {{ morpher.school }}</span>
 </div>
+<div class="card p-4">
+  {% for day in days %}
+    <p class="h5">
+      {{ day.date }}: <span>{{ day.status }}</span>
+    </p>
+  {% endfor %}
 </div>
 {% endblock content %}
