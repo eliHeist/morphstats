@@ -41,8 +41,12 @@
   {% endblock styles %}
   <style>
     .table-wrapper{
-      overflow-y: scroll;
+      overflow-y: auto;
     }
+    .gridoverflow{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+   }
   </style>
 </head>
 <body class="bg-light">

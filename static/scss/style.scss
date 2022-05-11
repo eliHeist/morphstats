@@ -34,6 +34,11 @@ table, thead, tbody, th{
    border: none;
 }
 
+.gridoverflow{
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(auto, 1fr))
+}
+
 // import variables to add custom theme, it uses the functions file
 @import "./bootstrap-5.0.2/scss/_functions";
 @import "./bootstrap-5.0.2/scss/_variables";
