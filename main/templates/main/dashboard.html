@@ -4,7 +4,12 @@
 
 
 {% block styles %}
-
+<style>
+  #chart{
+    min-height: 400px;
+    height: 100%;
+  }
+</style>
 {% endblock styles %}
   
 
@@ -25,7 +30,7 @@
     <div class="col-12 col-lg-6">
       <div class="card p-2 rounded-3">
         <figure class="p-3 rounded-5 bg-white">
-          <canvas id="chart" width="900" height="200"></canvas>
+          <canvas id="chart" width="900"></canvas>
       </figure>
       </div>
     </div>
