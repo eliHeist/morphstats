@@ -11,7 +11,10 @@
         <li class="breadcrumb-item active"><a href="#">Prayer Requests</a></li>
       </ol>
     </nav>
+    
+    {% if request.user.is_staff %}
     <a href="{% url 'facilitators:prayer-create' %}" class="btn btn-outline-secondary">Add Request<i class="bi bi-chevron-right ms-2"></i></a>
+    {% endif %}
   </div>
 </div>
 <section class="row g-3">
