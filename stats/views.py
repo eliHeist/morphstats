@@ -102,7 +102,15 @@ def getSalvationsCount(service):
 def statsView(request):
     days = Day.objects.all()[:10]
     template_name = "stats/stats.html"
+    dayz = []
+
     for day in days:
+        if day.services.all():
+            dayz.append(day)
+        else:
+            day.comment = 'no morph services'
+
+    for day in dayz:
         first_service = day.services.get(service='1st')
         second_service = day.services.get(service='2nd')
         third_service = day.services.get(service='3rd')

@@ -7,3 +7,11 @@ class Facilitator(models.Model):
 
     def __str__(self):
         return self.name
+
+class PrayerRequest(models.Model):
+    facilitator = models.ForeignKey(Facilitator, on_delete=models.SET_NULL, null=True, related_name='prayer_requests')
+    prayer_request = models.TextField()
+    is_answered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.facilitator.name

@@ -30,6 +30,21 @@
   <div class="row">
     
     {% for day in days %}
+    {% if day.comment %}
+    <div class="col-12 col-md-6 col-xl-6">
+      <div class="rounded-4 p-4 alert-danger my-3">
+        <div class="py-3">
+          <h2 class="h4 fw-bold">{{ day.date }}</h2>
+          <span class="small">{{ day.title }}</span><br>
+          <span class="text-danger small"> {{ day.comment }}</span>
+        </div>
+        <p class="">
+          {{ day.comments }}
+        </p>
+      </div>
+    </div>
+
+    {% else %}
     <div class="col-12 col-md-6 col-xl-6">
       <div class="rounded-4 p-4 bg-white my-3">
         <div class="py-3">
@@ -87,6 +102,8 @@
         <span>Total Facilitators: {{ day.facilitators.count }}</span>
       </div>
     </div>
+    {% endif %}
+      
     {% endfor %}
       
   </div>
