@@ -54,7 +54,7 @@ def getAbsent(day):
 
 
 def dayListView(request):
-    days = Day.objects.all()
+    days = Day.objects.all().order_by('-date')
     template_name = "stats/days/list.html"
     context = {
         'days':days,
@@ -100,7 +100,7 @@ def getSalvationsCount(service):
     return sum(group.salvations.count() for group in service.small_groups.all())
 
 def statsView(request):
-    days = Day.objects.all()[:10]
+    days = Day.objects.all().order_by('-date')[:10]
     template_name = "stats/stats.html"
     dayz = []
 
