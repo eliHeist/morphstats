@@ -12,8 +12,11 @@ def landingView(request):
         return redirect('login')
     template_name = "main/dashboard.html"
 
-    days = Day.objects.all()[:5]
-    print(days)
+    day_count = Day.objects.count()
+    # for last 2
+    min_index = day_count-5 if day_count>5 else 0
+    days = Day.objects.all()[min_index:]
+    # print(day_count)
     listarray = []
 
     for day in days:
