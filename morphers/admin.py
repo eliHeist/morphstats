@@ -9,12 +9,12 @@ admin.site.register(Residence)
 
 @admin.register(Morpher)
 class MorphAdmin(admin.ModelAdmin):
-    list_display = ('name','grade')
-    list_filter = ('grade',)
+    list_display = ('name','grade','residence')
+    list_filter = ('grade','school','residence')
     search_fields = ('name',)
     
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name',')
     search_fields = ('name',)
