@@ -16,5 +16,5 @@ class MorphAdmin(admin.ModelAdmin):
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ('name',')
+    list_display = ('name',)
     search_fields = ('name',)
