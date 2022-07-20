@@ -1,4 +1,3 @@
-import re
 from django.contrib import admin
 
 from stats.models import Day, Group, Service

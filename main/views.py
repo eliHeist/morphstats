@@ -14,7 +14,7 @@ def landingView(request):
 
     day_count = Day.objects.count()
     # for last 2
-    min_index = day_count-5 if day_count>5 else 0
+    min_index = day_count-10 if day_count>10 else 0
     days = Day.objects.all()[min_index:]
     # print(day_count)
     listarray = []
