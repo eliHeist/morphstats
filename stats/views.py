@@ -100,7 +100,7 @@ def getSalvationsCount(service):
     return sum(group.salvations.count() for group in service.small_groups.all())
 
 def statsView(request):
-    days = Day.objects.all().order_by('-date')[:10]
+    days = Day.objects.all().order_by('-date')[:4]
     template_name = "stats/stats.html"
     dayz = []
 

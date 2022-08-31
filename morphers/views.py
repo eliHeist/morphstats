@@ -87,7 +87,6 @@ def exportExcel(request):
     font_style = xlwt.XFStyle()
 
     rows = Morpher.objects.filter(grade__is_candidate=True).values_list('name', 'grade__name', 'school__name').order_by('grade__name')
-    print(rows)
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
