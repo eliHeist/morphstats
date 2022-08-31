@@ -23,6 +23,7 @@ class Residence(models.Model):
 class Grade(models.Model):
     name = models.CharField( max_length=10)
     level = models.ForeignKey('Level', on_delete=models.SET_NULL, blank=True, null=True)
+    is_candidate = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

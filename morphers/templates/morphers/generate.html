@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Documents</h1>
+  <div class="d-flex justify-content-between">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active">docs</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="bg-white p-5">
+    <h2 class="text-primary fw-bold h4">Generate a spreadsheet</h2>
+    <!-- generate excel spreadsheet -->
+        <a href="{% url 'morphers:export-excel' %}" class="btn btn-primary">
+            Generate candidates spreadsheet
+        </a>
+</div>
+{% endblock content %}
