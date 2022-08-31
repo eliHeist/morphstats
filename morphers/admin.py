@@ -11,7 +11,7 @@ admin.site.register(Residence)
 class MorphAdmin(admin.ModelAdmin):
     list_display = ('name','grade','residence')
     list_filter = ('grade','school','residence')
-    search_fields = ('name',)
+    search_fields = ('name','contact','parents_contact')
     
 
 @admin.register(School)
