@@ -9,6 +9,9 @@ class StatListView(ListView):
     template_name = 'App/stats-list.html'
     context_object_name = 'stats'
 
+    def get_queryset(self):
+        return Stat.objects.all().order_by('date')
+
 
 class StatDetailView(DetailView):
     model = Stat
