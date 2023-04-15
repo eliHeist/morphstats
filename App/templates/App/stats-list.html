@@ -1,0 +1,25 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="All Stats" id="all-stats-page">
+    <img class="logo" src="{% static 'app/assets/logo.svg' %}" alt="App logo">
+    <p>Click a date to view it</p>
+    <ol>
+        
+        {% for stat in stats %}
+        <li><a href="{% url 'App:stat-detail' stat.id %}">{{ stat.formatedDate }}</a></li>
+        {% endfor %}
+            
+    </ol>
+</section>
+    
+{% endblock slot %}
+
+
+{% block scripts %}
+    active_link = "all-stats"
+{% endblock scripts %}
+    
+    

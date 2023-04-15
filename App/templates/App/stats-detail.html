@@ -1,0 +1,160 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="Today's Stats" id="today-page" 
+x-data="{
+    statID: {{stat.id}},
+    editMode: false,
+    bindProp: {
+        'obj': '',
+        'field': ''
+    },
+    services: null,
+    firstService: {},
+    secondService: {},
+    thirdService: {},
+    updatedServices: [],
+    csrf() {
+        token = document.getElementById('token').firstElementChild.value;
+        return token;
+    },
+    setServices(services){
+        this.services.forEach(service => {
+            if (service.name == '1st'){
+                this.firstService = service
+            } else if (service.name == '2nd'){
+                this.secondService = service
+            } else if (service.name == '3rd'){
+                this.thirdService = service
+            }
+        })
+    },
+    getServices(){
+        fetch(`{% url 'api:stat-services' stat.id %}`, {method: 'GET'})
+            .then((response) => response.json())
+            .then((json) => this.services = json)
+            .then(() => {this.setServices(this.services)})
+    },
+    updateServices(){
+        let allServices = []
+        allServices.push(this.firstService)
+        allServices.push(this.secondService)
+        allServices.push(this.thirdService)
+        fetch(`{% url 'api:stat-services' stat.id %}`, {
+            method: 'PUT',
+            headers: {
+               Accept: 'application/json',
+               'Content-Type': 'application/json',
+               'X-CSRFToken': this.csrf(),
+            },
+            body: JSON.stringify(allServices),
+        }).then((response) => response.json())
+            .then((json) => this.services = json)
+            .then(() => {this.setServices(this.services)})
+            .then(() => {console.log('Updated')})
+    },
+    inputBind(bindProp, field){
+        this.bindProp.obj = bindProp
+        this.bindProp.field = field
+    }
+}"
+ x-init="getServices()">
+    <img class="logo" src="{% static 'app/assets/logo.svg' %}" alt="App logo">
+    <!-- <h1>Today</h1> -->
+    <div class="date">{{ stat.formatedDate }}</div>
+    <div id="token" style="display: none;">{% csrf_token %}</div>
+    
+    <table>
+        <tbody>
+            <tr>
+                <th>Service</th>
+                <th>1st</th>
+                <th>2nd</th>
+                <th>3rd</th>
+            </tr>
+            <tr class="junior">
+                <th>Junior</th>
+                <td class="first" x-text="firstService.junior" @click="inputBind(firstService,'junior')"></td>
+                <td class="second" x-text="secondService.junior" @click="inputBind(secondService,'junior')"></td>
+                <td class="third" x-text="thirdService.junior" @click="inputBind(thirdService,'junior')"></td>
+            </tr>
+            <tr class="senior">
+                <th>Senior</th>
+                <td class="first" x-text="firstService.senior" @click="inputBind(firstService,'senior')"></td>
+                <td class="second" x-text="secondService.senior" @click="inputBind(secondService,'senior')"></td>
+                <td class="third" x-text="thirdService.senior" @click="inputBind(thirdService,'senior')"></td>
+            </tr>
+            <tr class="total">
+                <th>Total</th>
+                <td class="first" x-text="Number(firstService.junior)+Number(firstService.senior)"></td>
+                <td class="second" x-text="Number(secondService.junior)+Number(secondService.senior)"></td>
+                <td class="third" x-text="Number(thirdService.junior)+Number(thirdService.senior)"></td>
+            </tr>
+            <tr class="first_timers">
+                <th>First T Visitors</th>
+                <td class="first" x-text="firstService.first_time_visitors" @click="inputBind(firstService,'first_time_visitors')"></td>
+                <td class="second" x-text="secondService.first_time_visitors" @click="inputBind(secondService,'first_time_visitors')"></td>
+                <td class="third" x-text="thirdService.first_time_visitors" @click="inputBind(thirdService,'first_time_visitors')"></td>
+            </tr>
+            <tr class="salvations">
+                <th>Salvations</th>
+                <td class="first" x-text="firstService.salvations" @click="inputBind(firstService,'salvations')"></td>
+                <td class="second" x-text="secondService.salvations" @click="inputBind(secondService,'salvations')"></td>
+                <td class="third" x-text="thirdService.salvations" @click="inputBind(thirdService,'salvations')"></td>
+            </tr>
+            <tr>
+                <th>Facilitators</th>
+                <td class="first" x-text="firstService.facilitators" @click="inputBind(firstService,'facilitators')"></td>
+                <td class="second" x-text="secondService.facilitators" @click="inputBind(secondService,'facilitators')"></td>
+                <td class="third" x-text="thirdService.facilitators" @click="inputBind(thirdService,'facilitators')"></td>
+            </tr>
+        </tbody>
+    </table>
+    <template x-if="editMode">
+        <p>Click a cell to edit it</p>
+    </template>
+    <div class="actions">
+        <a href="{% url 'App:stat-list' %}" class="back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
+                <path id="Union_2" data-name="Union 2" d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z" transform="translate(12.021) rotate(45)" fill="#fff"/>
+              </svg>              
+            <span>Back to list</span>  
+        </a>
+        <button @click="editMode = !editMode">
+            <span x-text="editMode ? 'Close Edit' : 'Edit'">Save</span>
+            <img src="{% static 'app/assets/arrow-right.svg' %}" alt="">
+        </button>
+    </div>
+    <template x-if="editMode">
+        <div class="input">
+            <div>
+                <label x-text="bindProp.obj.name + ' ' + bindProp.field" for="input">label</label>
+                <input x-model="bindProp.obj[bindProp.field]" type="number" name="input" id="input">
+            </div>
+            <span @click="updateServices()">
+                <img src="{% static 'app/assets/floppy-disk.svg' %}" alt="Save" style="height:1.5rem;">               
+            </span>
+        </div>
+    </template>
+</section>
+    
+{% endblock slot %}
+
+
+{% block scripts %}
+    active_link = "all-stats"
+{% endblock scripts %}
+
+fetch(`{% url 'api:stat-services' stat.id %}`, {
+    method: 'PUT',
+    headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+       'X-CSRFToken': this.csrf(),
+    },
+    body: JSON.stringify(this.services),
+}).then((response) => response.json())
+    .then((json) => this.services = json)
+    .then(() => {this.setServices(this.services)})

@@ -9,16 +9,21 @@
 			{
 				"format": "expanded",
 				"extensionName": ".css",
-				"savePath": "/static/css",
-				"savePathSegmentKeys": null,
-				"savePathReplaceSegmentsWith": null
+				"savePath": "/static/app/css"
 			},
 			{
 				"format": "compressed",
 				"extensionName": ".min.css",
-				"savePath": "/static/css"
+				"savePath": "/static/app/css"
 			}
 		],
+		"liveSassCompile.settings.includeItems": [
+			"**/app.scss"
+		],
+		"liveSassCompile.settings.excludeList": [
+			"/**/node_modules/**",
+			"/.vscode/**"
+		]
 	},
 	"launch": {
 		"version": "0.2.0",

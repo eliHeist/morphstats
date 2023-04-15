@@ -28,6 +28,7 @@ class Service(models.Model):
         return f'{self.date}: {self.service}'
     
 
+# deprecated
 class Group(models.Model):
     service = models.ForeignKey(Service, on_delete=models.DO_NOTHING, related_name='small_groups')
     morphers = models.ManyToManyField(Morpher, related_name='services_attended')

@@ -1,0 +1,36 @@
+{% load static %}
+
+<footer>
+    <nav>
+        <a href="/" class="link all-stats">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/list all.svg' %}" alt=""></div>
+            </div>
+            <span>All stats</span>
+        </a>
+        <a href="/admin/Stat/stat/" class="link">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/list.svg' %}" alt=""></div>
+            </div>
+            <span>Add</span>
+        </a>
+        <!-- <a href="/" class="link today">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/pen-to-square.svg' %}" alt=""></div>
+            </div>
+            <span>Current</span>
+        </a> -->
+        <a href="/" class="link">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/address-book.svg' %}" alt=""></div>
+            </div>
+            <span>Facilitators</span>
+        </a>
+        <a href="/" class="link">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/calendar-days.svg' %}" alt=""></div>
+            </div>
+            <span>Dates</span>
+        </a>
+    </nav>
+</footer>
