@@ -10,7 +10,7 @@ class StatListView(ListView):
     context_object_name = 'stats'
 
     def get_queryset(self):
-        return Stat.objects.all().order_by('date')
+        return Stat.objects.all().order_by('-date')
 
 
 class StatDetailView(DetailView):
