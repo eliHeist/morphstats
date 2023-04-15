@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'JUSTICELEAGUE';
+    src: url('../fonts/JUSTICE\ LEAGUE.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap');
+
+
 :root{
     --color-primary: #006FFF;
     --color-dark: #030E19;
@@ -11,7 +21,7 @@
 *{
     padding: 0;
     margin: 0;
-    font-family: Nunito Sans;
+    font-family: 'Nunito Sans', sans-serif;
     font-size: 1rem;
 }
 
