@@ -10,3 +10,4 @@ venv/
 .env
 **/bootstrap**/*
 db.sqlite3
+node_modules/
