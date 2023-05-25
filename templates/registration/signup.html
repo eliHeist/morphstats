@@ -1,5 +1,5 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% extends 'app_base.html' %}
+{% load tailwind_filters %}
 
 
 {% block content %}
@@ -19,7 +19,7 @@
     <div class="text-center my-3">
         You must be logged in to sign in new user
     </div>
-    <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Login</a>
+    <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
 </div>
 {% endif %}
 {% endblock content %}

@@ -34,14 +34,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_tailwind",
     'rest_framework',
-    "django_filters",
+    # "django_filters",
 
-    'stats',
-    'morphers',
-    'facilitators',
-    'main',
+    # 'stats',
+    # 'morphers',
+    # 'facilitators',
+    # 'main',
     'App',
     'Stat',
     'api',
@@ -134,12 +134,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-LOGOUT_REDIRECT_URL = 'login'
-LOGIN_REDIRECT_URL = 'main:dashboard'
+LOGOUT_REDIRECT_URL = 'App:stat-list'
+LOGIN_REDIRECT_URL = 'App:stat-list'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
