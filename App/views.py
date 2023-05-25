@@ -45,4 +45,5 @@ def registerDayView(request):
     template_name = 'App/register-day.html'
     return render(request, template_name, context)
 
-
+def page_not_found(request, exception):
+    return render(request, '404.html', status=404)

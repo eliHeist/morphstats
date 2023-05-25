@@ -1,0 +1,14 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+
+{% block slot %}
+<section title="404 page" id="page-404" style="display:none;">
+    <img class="logo" src="{% static 'app/logo.png' %}" alt="App logo">
+    <div>
+        <img src="{% static 'app/assets/q.svg' %}" alt="">
+        <p>Ooops. Nothing Here</p>
+    </div>
+</section>
+{% endblock slot %}
+    
