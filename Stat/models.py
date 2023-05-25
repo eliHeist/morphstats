@@ -22,14 +22,16 @@ class Service(models.Model):
     )
     stat = models.ForeignKey('Stat', on_delete=models.CASCADE, related_name='services')
     name = models.CharField(max_length=20, choices=SERVICES)
-    junior = models.SmallIntegerField(default=0)
-    senior = models.SmallIntegerField(default=0)
-    first_time_visitors = models.PositiveSmallIntegerField(default=0)
-    salvations = models.PositiveSmallIntegerField(default=0)
-    facilitators = models.PositiveSmallIntegerField(default=1)
+    junior = models.SmallIntegerField(blank=True, null=True)
+    senior = models.SmallIntegerField(blank=True, null=True)
+    first_time_visitors = models.PositiveSmallIntegerField(blank=True, null=True)
+    salvations = models.PositiveSmallIntegerField(blank=True, null=True)
+    facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.stat}: {self.name}'
     
     def totalMorphers(self):
         return self.junior + self.senior
+
+

@@ -7,18 +7,28 @@
 x-data="{
     statID: {{stat.id}},
     editMode: false,
-    bindProp: {
-        'obj': '',
-        'field': ''
-    },
     services: null,
     firstService: {},
     secondService: {},
     thirdService: {},
     updatedServices: [],
+    status: null,
     csrf() {
         token = document.getElementById('token').firstElementChild.value;
         return token;
+    },
+    showMessage(message){
+        const div = document.createElement('div');
+        div.className = `rounded-full bg-green-500 text-black font-semibold mx-auto `;
+        div.id = 'baloon';
+        div.appendChild(document.createTextNode(message));
+        const body = document.querySelector('body');
+        body.insertBefore(div, body.firstElementChild);
+        alert = document.querySelector('#baloon');
+
+        setTimeout(() => alert.classList.add('animate'), 200);
+        setTimeout(() => alert.classList.remove('animate'), 3000);
+        setTimeout(() => alert.remove(), 4000);
     },
     setServices(services){
         this.services.forEach(service => {
@@ -51,13 +61,14 @@ x-data="{
             },
             body: JSON.stringify(allServices),
         }).then((response) => response.json())
-            .then((json) => this.services = json)
-            .then(() => {this.setServices(this.services)})
-            .then(() => {console.log('Updated')})
-    },
-    inputBind(bindProp, field){
-        this.bindProp.obj = bindProp
-        this.bindProp.field = field
+            .then((json) => {
+                this.services = json.data
+                this.setServices(this.services)
+                this.status = json.status
+                if(this.status == 200){
+                    this.showMessage('Success')
+                }
+            })
     }
 }"
  x-init="getServices()">
@@ -65,7 +76,9 @@ x-data="{
     <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
-    
+    <template x-if="editMode">
+        <p>Click a cell in the table to edit it</p>
+    </template>
     <table>
         <tbody>
             <tr>
@@ -76,15 +89,39 @@ x-data="{
             </tr>
             <tr class="junior">
                 <th>Junior</th>
-                <td class="first" x-text="firstService.junior" @click="inputBind(firstService,'junior')"></td>
-                <td class="second" x-text="secondService.junior" @click="inputBind(secondService,'junior')"></td>
-                <td class="third" x-text="thirdService.junior" @click="inputBind(thirdService,'junior')"></td>
+                <td class="first">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="first_junior" id="first_junior" title="First Junior"
+                    x-model="firstService.junior" x-bind:disabled="!editMode">
+                </td>
+                <td class="second">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="second_junior" id="second_junior" title="Second Junior"
+                    x-model="secondService.junior" x-bind:disabled="!editMode">
+                </td>
+                <td class="third">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="third_junior" id="third_junior" title="Third Junior"
+                    x-model="thirdService.junior" x-bind:disabled="!editMode">
+                </td>
             </tr>
             <tr class="senior">
                 <th>Senior</th>
-                <td class="first" x-text="firstService.senior" @click="inputBind(firstService,'senior')"></td>
-                <td class="second" x-text="secondService.senior" @click="inputBind(secondService,'senior')"></td>
-                <td class="third" x-text="thirdService.senior" @click="inputBind(thirdService,'senior')"></td>
+                <td class="first">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="first_senior" id="first_senior" title="First Senior"
+                    x-model="firstService.senior" x-bind:disabled="!editMode">
+                </td>
+                <td class="second">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="second_senior" id="second_senior" title="second Senior"
+                    x-model="secondService.senior" x-bind:disabled="!editMode">
+                </td>
+                <td class="third">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="third_senior" id="third_senior" title="third Senior"
+                    x-model="thirdService.senior" x-bind:disabled="!editMode">
+                </td>
             </tr>
             <tr class="total">
                 <th>Total</th>
@@ -94,27 +131,61 @@ x-data="{
             </tr>
             <tr class="first_timers">
                 <th>First T Visitors</th>
-                <td class="first" x-text="firstService.first_time_visitors" @click="inputBind(firstService,'first_time_visitors')"></td>
-                <td class="second" x-text="secondService.first_time_visitors" @click="inputBind(secondService,'first_time_visitors')"></td>
-                <td class="third" x-text="thirdService.first_time_visitors" @click="inputBind(thirdService,'first_time_visitors')"></td>
+                <td class="first">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="first_first_time_visitors" id="first_first_time_visitors" title="First first_time_visitors"
+                    x-model="firstService.first_time_visitors" x-bind:disabled="!editMode">
+                </td>
+                <td class="second">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="second_first_time_visitors" id="second_first_time_visitors" title="second first_time_visitors"
+                    x-model="secondService.first_time_visitors" x-bind:disabled="!editMode">
+                </td>
+                <td class="third">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="third_first_time_visitors" id="third_first_time_visitors" title="third first_time_visitors"
+                    x-model="thirdService.first_time_visitors" x-bind:disabled="!editMode">
+                </td>
             </tr>
             <tr class="salvations">
                 <th>Salvations</th>
-                <td class="first" x-text="firstService.salvations" @click="inputBind(firstService,'salvations')"></td>
-                <td class="second" x-text="secondService.salvations" @click="inputBind(secondService,'salvations')"></td>
-                <td class="third" x-text="thirdService.salvations" @click="inputBind(thirdService,'salvations')"></td>
+                <td class="first">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="first_salvations" id="first_salvations" title="First salvations"
+                    x-model="firstService.salvations" x-bind:disabled="!editMode">
+                </td>
+                <td class="second">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="second_salvations" id="second_salvations" title="second salvations"
+                    x-model="secondService.salvations" x-bind:disabled="!editMode">
+                </td>
+                <td class="third">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="third_salvations" id="third_salvations" title="third salvations"
+                    x-model="thirdService.salvations" x-bind:disabled="!editMode">
+                </td>
             </tr>
             <tr>
                 <th>Facilitators</th>
-                <td class="first" x-text="firstService.facilitators" @click="inputBind(firstService,'facilitators')"></td>
-                <td class="second" x-text="secondService.facilitators" @click="inputBind(secondService,'facilitators')"></td>
-                <td class="third" x-text="thirdService.facilitators" @click="inputBind(thirdService,'facilitators')"></td>
+                <td class="first">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="first_facilitators" id="first_facilitators" title="First facilitators"
+                    x-model="firstService.facilitators" x-bind:disabled="!editMode">
+                </td>
+                <td class="second">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="second_facilitators" id="second_facilitators" title="second facilitators"
+                    x-model="secondService.facilitators" x-bind:disabled="!editMode">
+                </td>
+                <td class="third">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
+                    type="number" name="third_facilitators" id="third_facilitators" title="third facilitators"
+                    x-model="thirdService.facilitators" x-bind:disabled="!editMode">
+                </td>
             </tr>
         </tbody>
     </table>
-    <template x-if="editMode">
-        <p>Click a cell to edit it</p>
-    </template>
+    
     <div class="actions">
         <a href="{% url 'App:stat-list' %}" class="back">
             <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
@@ -123,18 +194,16 @@ x-data="{
             <span>Back to list</span>  
         </a>
         <button @click="editMode = !editMode">
-            <span x-text="editMode ? 'Close Edit' : 'Edit'">Save</span>
-            <img src="{% static 'app/assets/arrow-right.svg' %}" alt="">
+            <i class="fas fa-edit text-xl"></i>
+            <span x-text="editMode ? 'Close Edit Mode' : 'Edit Mode'">Save</span>
         </button>
     </div>
+    
     <template x-if="editMode">
-        <div class="input">
-            <div>
-                <label x-text="bindProp.obj.name + ' ' + bindProp.field" for="input">label</label>
-                <input x-model="bindProp.obj[bindProp.field]" type="number" name="input" id="input">
-            </div>
-            <span @click="updateServices()">
-                <img src="{% static 'app/assets/floppy-disk.svg' %}" alt="Save" style="height:1.5rem;">               
+        <div class="grid">
+            <span @click="updateServices()" class="bg-primary p-4 rounded-full text-white text-lg cursor-pointer">
+                Save changes 
+                <i class="fas fa-save text-xl ml-4"></i>              
             </span>
         </div>
     </template>

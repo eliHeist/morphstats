@@ -1,0 +1,46 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section>
+   <img class="logo mx-auto mt-16" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+   
+   <form action="{% url 'App:register-day' %}" method="post" class="mx-4 mt-8 grid gap-8">
+      {% csrf_token %}
+      <div class="grid">
+         <input type="date" name="date" id="date" class="p-2 bg-light text-lighter rounded-full">
+      </div>
+      <div class="grid">
+         <label for="title" class="font-bold">Title</label>
+         <input value="Sunday Celebration" type="text" name="title" id="title" class="p-2 bg-light text-lighter rounded-full">
+      </div>
+      <fieldset class="grid gap-4">
+         <h3 class="font-bold">Register services</h3>
+         <div>
+            <input type="checkbox" name="first_service" id="first_service" class="mr-2 accent-primary" checked>
+            <label for="first_service" class="">First Service</label>
+         </div>
+         <div>
+            <input type="checkbox" name="second_service" id="second_service" class="mr-2 accent-primary" checked>
+            <label for="second_service" class="">Second Service</label>
+         </div>
+         <div>
+            <input type="checkbox" name="third_service" id="third_service" class="mr-2 accent-primary" checked>
+            <label for="third_service" class="">Third Service</label>
+         </div>
+      </fieldset>
+      <div>
+         <button type="submit" class="bg-primary text-white p-4 rounded-full w-full">
+            Add
+         </button>
+      </div>
+   </form>
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+active_link = "all-stats"
+{% endblock scripts %}

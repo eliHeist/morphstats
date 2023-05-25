@@ -5,24 +5,28 @@
 
 <section title="All Stats" id="all-stats-page">
     <img class="logo" src="{% static 'app/assets/logo.png' %}" alt="App logo">
-    <div class="flex p-4">
-        <a href=""><i class="fas fa-plus"></i></a>
-    </div>
-    <p>Click a date to view it</p>
-    <ol>
+    <div class="flex p-4 justify-center">
         
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'App:register-day' %}" class="grid grid-flow-col gap-2">
+                <i class="fas fa-plus text-2xl"></i>
+                <span class="font-bold">Add new stat</span>
+            </a>
+        {% endif %}
+            
+    </div>
+    <p class=" my-8 mx-auto">Click a date to view it</p>
+    <!-- list of the stats -->
+    <ol>
         {% for stat in stats %}
         <li><a href="{% url 'App:stat-detail' stat.id %}">{{ stat.formatedDate }}</a></li>
         {% endfor %}
-            
     </ol>
 </section>
-    
+
 {% endblock slot %}
 
 
 {% block scripts %}
-    active_link = "all-stats"
+active_link = "all-stats"
 {% endblock scripts %}
-    
-    

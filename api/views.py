@@ -66,6 +66,13 @@ def serviceApiView(request, pk=None, stat_pk=None):
         services = Service.objects.filter(stat=stat)
         serializer = ServiceSerializer(services, many=True)
 
+        response = {
+            'status': 200,
+            'data': serializer.data
+        }
+
+        return Response(response)
+
         # if serializer.is_valid():
         #     serializer.save()
             

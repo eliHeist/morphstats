@@ -8,21 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'app/css/build.css' %}">
     <link rel="icon" href="{% static 'app/assets/app icon@.5x.png' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <script src="{% static 'app/js/alpine.js' %}" defer></script>
     <title>Stats App</title>
 </head>
-<body>
+<body class=" text-lighter">
     <div class="app">
         {% block slot %}{% endblock slot %}
     </div>
-
+    
     {% include 'app_components/footer.html' %}
-
+    
     <script>
         active_link = 'null'
         {% block scripts %}{% endblock scripts %}
         document.querySelector(`.link.${active_link}`).classList.add('highlight')
     </script>
+    <script src="{% static 'assets/js/chart.min.js' %}"></script>
     
 </div>
 </body>
