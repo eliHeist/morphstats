@@ -193,12 +193,16 @@ x-data="{
               </svg>              
             <span>Back to list</span>  
         </a>
+        
+        {% if request.user.is_authenticated %}
         <button @click="editMode = !editMode">
             <i class="fas fa-edit text-xl"></i>
-            <span x-text="editMode ? 'Close Edit Mode' : 'Edit Mode'">Save</span>
+            <span x-text="editMode ? 'Close Edit Mode' : 'Edit Mode'">Edit mode</span>
         </button>
+        {% endif %}
+            
     </div>
-    
+    {% if request.user.is_authenticated %}
     <template x-if="editMode">
         <div class="grid">
             <span @click="updateServices()" class="bg-primary p-4 rounded-full text-white text-lg cursor-pointer">
@@ -207,6 +211,7 @@ x-data="{
             </span>
         </div>
     </template>
+    {% endif %}
 </section>
 <section style="height:100vh;"></section>
     
