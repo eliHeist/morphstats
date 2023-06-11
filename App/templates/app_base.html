@@ -13,15 +13,15 @@
     <title>Stats App</title>
 </head>
 <body class=" text-lighter">
-    <div class="app">
-        {% block slot %}{% endblock slot %}
+    <div class="max-w-3xl mx-auto">
+        <div class="app">
+            {% block slot %}{% endblock slot %}
+            {% include 'app_components/footer.html' %}
+        </div>
     </div>
     
-    {% include 'app_components/footer.html' %}
-    
+    {% block scripts %}{% endblock scripts %}
     <script>
-        active_link = 'null'
-        {% block scripts %}{% endblock scripts %}
         document.querySelector(`.link.${active_link}`).classList.add('highlight')
     </script>
     <script src="{% static 'assets/js/chart.min.js' %}"></script>

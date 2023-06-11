@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 
 from Stat.models import Service, Stat
 
@@ -17,6 +17,20 @@ class StatDetailView(DetailView):
     model = Stat
     template_name = 'App/stats-detail.html'
     context_object_name = 'stat'
+
+
+class LatestStatDetailView(TemplateView):
+    template_name = 'App/stats-detail.html'
+    context_object_name = 'stat'
+
+    def get_queryset(self):
+        return Stat.objects.all().order_by('-date').first()
+
+    def get_context_data(self, **kwargs):
+        context = super(LatestStatDetailView, self).get_context_data(**kwargs)
+        context['stat'] = self.get_queryset()
+        context['link_name'] = 'latest-stat'
+        return context
 
 
 def registerDayView(request):

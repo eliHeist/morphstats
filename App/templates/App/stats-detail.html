@@ -191,7 +191,7 @@ x-data="{
             <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
                 <path id="Union_2" data-name="Union 2" d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z" transform="translate(12.021) rotate(45)" fill="#fff"/>
               </svg>              
-            <span>Back to list</span>  
+            <span>Go to list</span>  
         </a>
         
         {% if request.user.is_authenticated %}
@@ -219,17 +219,13 @@ x-data="{
 
 
 {% block scripts %}
-    active_link = "all-stats"
+    <script>
+        
+        {% if link_name %}
+            const active_link = "{{ link_name }}"
+            {% else %}
+            const active_link = "all-stats"
+        {% endif %}
+            
+    </script>
 {% endblock scripts %}
-
-fetch(`{% url 'api:stat-services' stat.id %}`, {
-    method: 'PUT',
-    headers: {
-       Accept: 'application/json',
-       'Content-Type': 'application/json',
-       'X-CSRFToken': this.csrf(),
-    },
-    body: JSON.stringify(this.services),
-}).then((response) => response.json())
-    .then((json) => this.services = json)
-    .then(() => {this.setServices(this.services)})

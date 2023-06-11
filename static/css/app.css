@@ -9,12 +9,12 @@
   font-style: normal;
 }
 :root {
-  --color-primary: #006FFF;
-  --color-dark: #030E19;
-  --color-light: #1A2B3D;
-  --color-lighter: #C0D6F2;
-  --color-white: #FFFFFF;
-  --color-warning: #FFB300;
+  --color-primary: #006fff;
+  --color-dark: #030e19;
+  --color-light: #1a2b3d;
+  --color-lighter: #c0d6f2;
+  --color-white: #ffffff;
+  --color-warning: #ffb300;
   --color-red: #ff003c;
 }
 
@@ -25,17 +25,30 @@
   font-size: 1rem;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid var(--color-light);
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 0.5rem 0.5rem;
 }
 
 body {
   background-color: var(--color-dark);
+}
+
+#baloon {
+  @apply rounded-full bg-lighter text-dark text-xl font-bold mx-auto fixed w-fit text-center py-3 px-8 left-1/2 -translate-x-1/2 -top-16 z-20 shadow-blue-300;
+  box-shadow: 0 -1rem 3rem 0.1rem;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#baloon.animate {
+  box-shadow: 0 0.8rem 3rem 0.7rem;
+  top: 4rem;
 }
 
 .app {
@@ -47,7 +60,7 @@ footer {
   position: fixed;
   bottom: 0;
   z-index: 10;
-  width: 100%;
+  width: inherit;
 }
 footer nav {
   display: grid;
@@ -125,11 +138,6 @@ footer nav .link span {
 #all-stats-page img.logo {
   margin: 0 auto;
 }
-#all-stats-page p {
-  text-align: center;
-  margin-top: 4rem;
-  margin-bottom: 1rem;
-}
 #all-stats-page ol {
   width: 80%;
   margin: 0 auto;
@@ -167,22 +175,30 @@ footer nav .link span {
   text-align: center;
 }
 
-#today-page, #today-page-warning, #stat-detail-page {
+#today-page,
+#today-page-warning,
+#stat-detail-page {
   color: var(--color-lighter);
   padding-top: 3.375rem;
   display: grid;
   text-align: center;
 }
-#today-page img.logo, #today-page-warning img.logo, #stat-detail-page img.logo {
+#today-page img.logo,
+#today-page-warning img.logo,
+#stat-detail-page img.logo {
   margin: 0 auto;
 }
-#today-page h1, #today-page-warning h1, #stat-detail-page h1 {
+#today-page h1,
+#today-page-warning h1,
+#stat-detail-page h1 {
   font-size: 2.7rem;
   text-transform: uppercase;
   font-weight: bolder;
   color: var(--color-primary);
 }
-#today-page .date, #today-page-warning .date, #stat-detail-page .date {
+#today-page .date,
+#today-page-warning .date,
+#stat-detail-page .date {
   background-color: var(--color-light);
   width: -moz-fit-content;
   width: fit-content;
@@ -191,15 +207,21 @@ footer nav .link span {
   border-radius: 10rem;
   margin-top: 1rem;
 }
-#today-page p, #today-page-warning p, #stat-detail-page p {
+#today-page p,
+#today-page-warning p,
+#stat-detail-page p {
   margin-top: 1rem;
 }
-#today-page p.warning, #today-page-warning p.warning, #stat-detail-page p.warning {
+#today-page p.warning,
+#today-page-warning p.warning,
+#stat-detail-page p.warning {
   font-weight: bold;
   font-size: 1.25rem;
   color: var(--color-warning);
 }
-#today-page input[type=date], #today-page-warning input[type=date], #stat-detail-page input[type=date] {
+#today-page input[type=date],
+#today-page-warning input[type=date],
+#stat-detail-page input[type=date] {
   margin: 2rem 1rem;
   border-radius: 10rem;
   padding: 0.5rem 1.25rem;
@@ -207,36 +229,50 @@ footer nav .link span {
   border: 0;
   color: var(--color-white);
 }
-#today-page input[type=date]:focus-visible, #today-page-warning input[type=date]:focus-visible, #stat-detail-page input[type=date]:focus-visible {
+#today-page input[type=date]:focus-visible,
+#today-page-warning input[type=date]:focus-visible,
+#stat-detail-page input[type=date]:focus-visible {
   outline: var(--color-lighter) solid 2px;
 }
-#today-page table, #today-page-warning table, #stat-detail-page table {
+#today-page table,
+#today-page-warning table,
+#stat-detail-page table {
   margin: 1rem;
   text-align: left;
   font-size: 1.25rem;
 }
-#today-page table tr, #today-page-warning table tr, #stat-detail-page table tr {
+#today-page table tr,
+#today-page-warning table tr,
+#stat-detail-page table tr {
   display: grid;
   grid-template-columns: 2.3fr 1fr 1fr 1fr;
 }
-#today-page .actions, #today-page-warning .actions, #stat-detail-page .actions {
+#today-page .actions,
+#today-page-warning .actions,
+#stat-detail-page .actions {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
 }
-#today-page .actions .back, #today-page-warning .actions .back, #stat-detail-page .actions .back {
+#today-page .actions .back,
+#today-page-warning .actions .back,
+#stat-detail-page .actions .back {
   background-color: var(--color-dark);
   display: flex;
   align-content: center;
   text-decoration: none;
   color: var(--color-white);
 }
-#today-page .actions .back span, #today-page-warning .actions .back span, #stat-detail-page .actions .back span {
+#today-page .actions .back span,
+#today-page-warning .actions .back span,
+#stat-detail-page .actions .back span {
   font-weight: 600;
   font-size: 1.25rem;
   margin: auto 0;
 }
-#today-page .actions button, #today-page-warning .actions button, #stat-detail-page .actions button {
+#today-page .actions button,
+#today-page-warning .actions button,
+#stat-detail-page .actions button {
   background-color: var(--color-dark);
   color: var(--color-warning);
   border: none;
@@ -244,25 +280,35 @@ footer nav .link span {
   width: fit-content;
   padding: 0;
 }
-#today-page .actions button span, #today-page-warning .actions button span, #stat-detail-page .actions button span {
+#today-page .actions button span,
+#today-page-warning .actions button span,
+#stat-detail-page .actions button span {
   font-weight: 600;
   font-size: 1.25rem;
   margin-right: 0.2rem;
 }
-#today-page .input, #today-page-warning .input, #stat-detail-page .input {
+#today-page .input,
+#today-page-warning .input,
+#stat-detail-page .input {
   display: flex;
   gap: 1rem;
   padding: 1rem;
 }
-#today-page .input div, #today-page-warning .input div, #stat-detail-page .input div {
+#today-page .input div,
+#today-page-warning .input div,
+#stat-detail-page .input div {
   flex: 1;
   display: grid;
   text-align: left;
 }
-#today-page .input div label, #today-page-warning .input div label, #stat-detail-page .input div label {
+#today-page .input div label,
+#today-page-warning .input div label,
+#stat-detail-page .input div label {
   margin-left: 1.25rem;
 }
-#today-page .input div input, #today-page-warning .input div input, #stat-detail-page .input div input {
+#today-page .input div input,
+#today-page-warning .input div input,
+#stat-detail-page .input div input {
   border-radius: 10rem;
   padding: 0.5rem 1.25rem;
   background-color: var(--color-light);
@@ -270,10 +316,14 @@ footer nav .link span {
   color: var(--color-white);
   accent-color: var(--color-primary);
 }
-#today-page .input div input:focus-visible, #today-page-warning .input div input:focus-visible, #stat-detail-page .input div input:focus-visible {
+#today-page .input div input:focus-visible,
+#today-page-warning .input div input:focus-visible,
+#stat-detail-page .input div input:focus-visible {
   outline: var(--color-lighter) solid 2px;
 }
-#today-page .input span, #today-page-warning .input span, #stat-detail-page .input span {
+#today-page .input span,
+#today-page-warning .input span,
+#stat-detail-page .input span {
   background-color: var(--color-primary);
   margin-top: auto;
   aspect-ratio: 1/1;

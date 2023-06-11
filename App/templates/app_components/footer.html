@@ -1,18 +1,18 @@
 {% load static %}
 
-<footer>
-    <nav>
+<footer class="w-full">
+    <nav class="max-w-3xl mx-auto">
         <a href="/" class="link all-stats">
             <div class="circle-outer">
                 <div class="circle-inner"><img src="{% static 'app/assets/list all.svg' %}" alt=""></div>
             </div>
             <span>Stats</span>
         </a>
-        <a href="#" class="link">
+        <a href="{% url 'App:latest-stat' %}" class="link latest-stat">
             <div class="circle-outer">
-                <div class="circle-inner"><img src="{% static 'app/assets/user-plus.svg' %}" alt=""></div>
+                <div class="circle-inner"><img src="{% static 'app/assets/house.svg' %}" alt=""></div>
             </div>
-            <span>Head count</span>
+            <span>Latest</span>
         </a>
         <!-- <a href="/" class="link today">
             <div class="circle-outer">
