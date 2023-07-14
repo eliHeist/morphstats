@@ -1,0 +1,51 @@
+{% extends 'app_base.html' %}
+{% load static tailwind_filters %}
+
+{% block slot %}
+
+<section class=" pt-12">
+    <img class="logo mx-auto pb-8" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+
+    <div class="grid grid-flow-col justify-between">
+        <a href="{% url 'App:facilitator-checklist' %}"
+            class="grid grid-flow-col content-center gap-2 p-2 text-white font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
+                <path id="Union_2" data-name="Union 2"
+                    d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z"
+                    transform="translate(12.021) rotate(45)" fill="#fff" />
+            </svg>
+            <span>Current Checklist</span>
+        </a>
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'App:facilitator-create' %}"
+            class="grid grid-flow-col content-center gap-2 p-2 bg-white font-semibold rounded-md">
+            <i class="fas fa-plus text-2xl text-primary"></i>
+            <span class="text-primary">Add New</span>
+        </a>
+        {% endif %}
+
+    </div>
+
+    <ul>
+        
+        {% for f in facilitators %}
+        <li>{{ f.name }}</li>
+        {% endfor %}
+            
+    </ul>
+</section>
+<section style="height:100vh;"></section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+    {% if link_name %}
+    const active_link = "{{ link_name }}" 
+    {% else %}
+    const active_link = "all-stats" 
+    {% endif %}
+</script>
+{% endblock scripts %}

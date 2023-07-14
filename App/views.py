@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views import View
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from App.mixins import RedirectNonStaffMixin
 
 from Stat.models import Service, Stat
+from facilitators.forms import FacilitatorForm
+from facilitators.models import Facilitator
 
 # Create your views here.
 class StatListView(ListView):
@@ -12,12 +16,10 @@ class StatListView(ListView):
     def get_queryset(self):
         return Stat.objects.all().order_by('-date')
 
-
 class StatDetailView(DetailView):
     model = Stat
     template_name = 'App/stats-detail.html'
     context_object_name = 'stat'
-
 
 class LatestStatDetailView(TemplateView):
     template_name = 'App/stats-detail.html'
@@ -32,9 +34,8 @@ class LatestStatDetailView(TemplateView):
         context['link_name'] = 'latest-stat'
         return context
 
-
-def registerDayView(request):
-    if request.method == 'POST':
+class RegisterDayView(RedirectNonStaffMixin, View):
+    def post(self, request):
         data = request.POST
         date = data.get('date')
         title = data.get('title')
@@ -53,11 +54,57 @@ def registerDayView(request):
             Service(stat=stat, name='3rd').save()
         
         return redirect('App:stat-list')
-            
-            
-    context = {}
-    template_name = 'App/register-day.html'
-    return render(request, template_name, context)
+    
+    def get(self, request):
+        context = {}
+        template_name = 'App/register-day.html'
+        return render(request, template_name, context)
+
+class FacilitatorChecklistView(RedirectNonStaffMixin, View):
+    def get(self, request):
+        context = {
+            'stat': Stat.objects.all().order_by('-date').first(),
+            'link_name': 'facilitators-link',
+            'facilitators': 'facilitators-link',
+        }
+        template_name = 'App/facilitators/facilitator-checklist.html'
+        return render(request, template_name, context)
+    
+class FacilitatorCreateView(RedirectNonStaffMixin, CreateView):
+    model = Facilitator
+    form_class = FacilitatorForm
+    template_name = "App/facilitators/create.html"
+    success_url = 'App:stat-list'
+
+    def get_context_data(self, **kwargs):
+        context = super(FacilitatorCreateView, self).get_context_data(**kwargs)
+        context['link_name'] = 'facilitators-link'
+        return context
+       
+class FacilitatorListView(ListView):
+    model = Facilitator
+    context_object_name = 'facilitators'
+    template_name = "App/facilitators/list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(FacilitatorListView, self).get_context_data(**kwargs)
+        context['link_name'] = 'facilitators-link'
+        return context
+
+class MoreMenuView(View):
+    def get(self, request):
+        template_name = "App/moremenu.html"
+        context = {
+            'link_name': 'more-link',
+        }
+        return render(request, template_name, context)
+    
 
 def page_not_found(request, exception):
     return render(request, '404.html', status=404)
+
+class AccessDeniedView(View):
+    def get(self, request):
+        template_name = "App/noaccess.html"
+        context = {}
+        return render(request, template_name, context)

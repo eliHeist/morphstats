@@ -25,7 +25,6 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,10 +37,9 @@ INSTALLED_APPS = [
     'rest_framework',
     # "django_filters",
 
-    # 'stats',
     # 'morphers',
-    # 'facilitators',
     # 'main',
+    'facilitators',
     'App',
     'Stat',
     'api',
@@ -87,6 +85,22 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv("DB_ENGINE"),
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            # 'PORT': os.getenv("DB_PORT"),
+            "OPTIONS": {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
+                'charset': 'utf8mb4',
+                "autocommit": True,
+            }
+        }
+    }
 
 
 # Password validation
@@ -143,24 +157,3 @@ LOGIN_REDIRECT_URL = 'App:stat-list'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True
 
-JAZZMIN_UI_TWEAKS = {
-    "theme": "default",
-}
-
-
-if not DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv("DB_ENGINE"),
-            'NAME': os.getenv("DB_NAME"),
-            'USER': os.getenv("DB_USER"),
-            'PASSWORD': os.getenv("DB_PASSWORD"),
-            'HOST': os.getenv("DB_HOST"),
-            # 'PORT': os.getenv("DB_PORT"),
-            "OPTIONS": {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-                'charset': 'utf8mb4',
-                "autocommit": True,
-            }
-        }
-    }

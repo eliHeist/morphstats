@@ -1,6 +1,8 @@
 from django.db import models 
 import datetime
 
+from facilitators.models import Facilitator
+
 # Create your models here.
 class Stat(models.Model):
     title = models.CharField(max_length=50, default='Sunday Celebration Services', blank=True)
@@ -27,11 +29,15 @@ class Service(models.Model):
     first_time_visitors = models.PositiveSmallIntegerField(blank=True, null=True)
     salvations = models.PositiveSmallIntegerField(blank=True, null=True)
     facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
+    facilitators_available = models.ManyToManyField(Facilitator, blank=True)
 
     def __str__(self):
         return f'{self.stat}: {self.name}'
     
     def totalMorphers(self):
         return self.junior + self.senior
+    
+    def syncFacilitators(self):
+        self.facilitators = self.facilitators_available.count()
 
 

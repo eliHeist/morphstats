@@ -92,40 +92,11 @@ footer nav .link.highlight span {
   font-weight: 800;
 }
 footer nav .link.highlight .circle-outer {
-  aspect-ratio: 1/1;
-  width: 100%;
-  max-width: 5rem;
-  min-width: 4rem;
-  background-color: var(--color-dark);
-  position: absolute;
-  border-radius: 10rem;
-  top: -50%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-footer nav .link.highlight .circle-inner {
-  width: 85%;
-  aspect-ratio: 1/1;
-  background-color: var(--color-primary);
-  border-radius: 10rem;
-  display: grid;
-  place-content: center;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  @apply w-full max-w-[5rem] min-w-[4rem] absolute rounded-full left-1/2 bg-primary -translate-x-1/2 top-[10%] grid place-content-center bg-opacity-50 p-2;
 }
 footer nav .link.highlight span {
   margin-bottom: 0.75rem;
   font-weight: bold;
-}
-footer nav .link.highlight:first-of-type .circle-outer, footer nav .link.highlight:first-of-type .circle-inner {
-  border-top-left-radius: 0rem;
-  border-bottom-left-radius: 0rem;
-}
-footer nav .link.highlight:last-of-type .circle-outer, footer nav .link.highlight:last-of-type .circle-inner {
-  border-top-right-radius: 0rem;
-  border-bottom-right-radius: 0rem;
 }
 footer nav .link span {
   color: var(--color-lighter);
@@ -334,4 +305,61 @@ footer nav .link span {
   padding: 0.5rem;
   display: grid;
   place-content: center;
+}
+
+form {
+  @apply accent-primary;
+}
+form p {
+  @apply grid py-4;
+}
+form p:has(input[type=checkbox]) {
+  @apply flex gap-4;
+}
+form p label {
+  @apply font-semibold;
+}
+form p input[type=text], form p input[type=password] {
+  @apply bg-light p-2 rounded-md;
+}
+form p input[type=text]:focus-visible, form p input[type=password]:focus-visible {
+  @apply outline-primary;
+}
+
+.facilitator_list {
+  @apply text-left;
+}
+
+.item {
+  @apply my-2;
+}
+.item input[type=checkbox] + label {
+  @apply cursor-pointer text-sm grid;
+  grid-template-columns: auto 3fr;
+}
+.item input[type=checkbox] + label svg {
+  @apply w-8 stroke-primary stroke-[5] fill-blue-50;
+}
+.item input[type=checkbox] + label svg .box {
+  @apply fill-dark;
+  stroke-dasharray: 320;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s linear;
+}
+.item input[type=checkbox] + label svg .check {
+  @apply fill-none;
+  --num: 70;
+  stroke-dasharray: var(--num);
+  stroke-dashoffset: var(--num);
+  transition: stroke-dashoffset 0.2s linear;
+}
+.item input[type=checkbox] + label span {
+  @apply grid grid-flow-col content-center pl-2;
+}
+.item input[type=checkbox].checked + label .box {
+  @apply fill-white;
+  stroke-dashoffset: 320;
+}
+.item input[type=checkbox].checked + label .check {
+  stroke-dashoffset: 0;
 }/*# sourceMappingURL=app.css.map */

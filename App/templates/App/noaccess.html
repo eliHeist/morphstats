@@ -1,0 +1,35 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="Access denied" class=" pt-16">
+    <img class="logo mx-auto" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+    <p class="text-center">
+        by <a class="font-bold" href="eliheist.pythonanywhere.com"><i class="fas fa-globe ml-2"></i> eliHeist</a>
+    </p>
+
+    <div class="grid place-content-center h-64">
+        <figure>
+            <i class="fas fa-user-large-slash text-8xl text-white"></i>
+        </figure>
+    </div>
+
+    <div class="grid justify-center py-4">
+        <a href="#" class="mx-auto text-red font-bold"><i class="fas fa-triangle-exclamation mr-2"></i>Access Denied</a>
+    </div>
+    <div class="grid justify-center py-4">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="text-white mx-auto"><i class="fas fa-lock mr-2 text-red"></i>Logout and use another account</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="text-white mx-auto"><i class="fas fa-lock mr-2 text-red"></i>Login</a>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

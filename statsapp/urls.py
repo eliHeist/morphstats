@@ -7,8 +7,6 @@ handler404 = 'App.views.page_not_found'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('main.urls', namespace="main")),
-    # path('stats/', include('stats.urls', namespace="stats")),
     path('', include('App.urls', namespace="App")),
     path('api/', include('api.urls', namespace="api")),
     # path('facilitators/', include('facilitators.urls', namespace="facilitators")),

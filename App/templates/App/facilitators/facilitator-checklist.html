@@ -1,0 +1,175 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="Today's Stats" id="today-page" x-data="{
+    facilitators: {},
+    services: {},
+    active_service: {},
+    unavailable: [],
+    update_path: '{% url 'api:update-facilitators' %}',
+    update_ready: false,
+    csrf() {
+        token = document.getElementById('token').firstElementChild.value;
+        return token;
+    },
+    async init(){
+        // get the services =======================
+        this.services = await getServices('{% url 'api:get-service-lists' stat.pk %}')
+        // get the facilitators ===================
+        this.facilitators = await getFacilitators('{% url 'api:facilitators' %}')
+        // set the default active service ====================
+        this.active_service = this.services[0]
+
+        this.setLists()
+    },
+    setLists(){
+        this.unavailable = []
+        for (const i in this.facilitators) {
+            let current = this.facilitators[i]
+            let actives = this.active_service.facilitators
+
+            let is_active = actives.find((value) => {
+                return value.id == current.id
+            })
+
+            if (!is_active){
+                let isThere = this.unavailable.find((value) => {
+                    return value.id == current.id
+                })
+                // if current not in the unavailable array add it there
+                if (!isThere){
+                    this.unavailable.push(current)
+                }
+            }
+        }
+    },
+    handleCheck(facilitator, isAvailable){
+        this.update_ready = false
+        let class_list = document.querySelector(`input#check${facilitator.id}`).classList
+        if (class_list.contains('checked'))
+            class_list.remove('checked')
+        else
+            class_list.add('checked')
+        setTimeout(() => {
+            this.update_ready = CheckActions(facilitator, isAvailable, this.active_service.facilitators, this.unavailable)
+        }, 300)
+        // send updates to database
+        this.update()
+    },
+    update(){
+        setInterval(() => {
+            if (this.update_ready){
+                console.log('Saving....')
+
+                const response = udpadeFacilitators(this.update_path, this.active_service, this.csrf())
+                
+                console.log(response)
+                this.update_ready = false
+                return
+            }
+            else
+                console.log('waiting to save')
+        }, 2000)
+    }
+}" x-init="init()">
+    <img class="logo" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+    <!-- <h1>Today</h1> -->
+    <div class="date">{{ stat.formatedDate }}</div>
+    <div id="token" style="display: none;">{% csrf_token %}</div>
+
+    <main>
+        <form class="accent-primary">
+            <div class="grid grid-flow-col gap-2 mb-0 mt-8">
+                <template x-for="service in services">
+                    <button type="button" class="p-2" 
+                    x-bind:class="active_service.id == service.id ? 'bg-primary' : 'outline outline-light outline-1'"
+                    @click="active_service = service;setLists()">
+                        <span x-text="service.service"></span>
+                    </button>
+                </template>
+            </div>
+            <div class="px-4 available">
+                <h3 class="text-left font-bold text-primary mt-6 mb-3">Facilitators available.</h3>
+                <hr class=" border-light">
+                <ul class="facilitator_list">
+                    <template x-for="facilitator in active_service.facilitators">
+                        <li class="item" x-transition>
+                            <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox" class="hidden pointer-events-none checked" checked>
+                            <label x-bind:for="true ? 'check' + facilitator.id : ''">
+                                <svg viewbox="0 0 100 100"
+                                    @click="handleCheck(facilitator, true)">
+                                    <path class="box"
+                                        d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z"
+                                        />
+                                    <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5 " />
+                                </svg>
+                                <span x-text="facilitator.name"></span>
+                            </label>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="px-4 absent">
+                <h3 class="text-left font-bold text-red mt-8 mb-3">Facilitators absent.</h3>
+                <hr class=" border-light">
+                <ul class="facilitator_list">
+                    <template x-for="facilitator in unavailable">
+                        <li class="item" x-transition x-model="facilitator">
+                            <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox" class="hidden pointer-events-none">
+                            <label x-bind:for="true ? 'check' + facilitator.id : ''">
+                                <svg viewbox="0 0 100 100"
+                                    @click="handleCheck(facilitator, false)">
+                                    <path class="box"
+                                        d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z"
+                                        />
+                                    <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5 " />
+                                </svg>
+                                <span x-text="facilitator.name"></span>
+                            </label>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </form>
+    </main>
+    
+    <div class="grid grid-flow-col justify-between px-2">
+        <a href="{% url 'App:latest-stat' %}"
+            class="grid grid-flow-col content-center gap-2 p-2 text-white font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
+                <path id="Union_2" data-name="Union 2"
+                    d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z"
+                    transform="translate(12.021) rotate(45)" fill="#fff" />
+            </svg>
+            <span>Go to Stats</span>
+        </a>
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'App:facilitator-create' %}" class="grid grid-flow-col content-center gap-2 p-2 font-semibold rounded-md">
+           <i class="fas fa-plus text-2xl text-primary"></i>
+            <span class="text-primary">Add New</span>
+        </a>
+        {% endif %}
+
+    </div>
+</section>
+<section style="height:100vh;"></section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+    //{% if link_name %}
+    const active_link = "{{ link_name }}" 
+    //{% else %}
+    const active_link = "all-stats" 
+    //{% endif %}
+    checklistPage = true;
+    
+</script>
+{% endblock scripts %}
+
+

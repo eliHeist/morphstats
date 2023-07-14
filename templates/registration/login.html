@@ -1,5 +1,5 @@
 {% extends 'app_base.html' %}
-{% load static tailwind_filters %}
+{% load static tailwind_filters crispy_forms_tags %}
 
 
 {% block slot %}
@@ -12,9 +12,9 @@
       <p class="text-center text-sm">Enter username & password to login</p>
     </div>
 
-    <form class=" max-w-lg mx-auto grid" method="post">
+    <form class="max-w-lg w-11/12 mx-auto grid" method="post">
       {% csrf_token %}
-      {{ form|crispy }}
+      {{ form.as_p }}
       <button class="p-3 bg-blue-600 mt-4 rounded-lg" type="submit">Login</button>
     </form>
 

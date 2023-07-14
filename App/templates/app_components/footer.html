@@ -10,27 +10,27 @@
         </a>
         <a href="{% url 'App:latest-stat' %}" class="link latest-stat">
             <div class="circle-outer">
-                <div class="circle-inner"><img src="{% static 'app/assets/house.svg' %}" alt=""></div>
+                <div class="circle-inner"><img src="{% static 'app/assets/angles-up.svg' %}" alt=""></div>
             </div>
-            <span>Latest</span>
+            <span>Today</span>
         </a>
-        <!-- <a href="/" class="link today">
+        <a href="{% url 'App:facilitator-checklist' %}" class="link facilitators-link">
             <div class="circle-outer">
-                <div class="circle-inner"><img src="{% static 'app/assets/pen-to-square.svg' %}" alt=""></div>
+                <div class="circle-inner"><img src="{% static 'app/assets/list.svg' %}" alt=""></div>
             </div>
-            <span>Current</span>
-        </a> -->
-        <a href="/" class="link">
-            <div class="circle-outer">
-                <div class="circle-inner"><img src="{% static 'app/assets/address-book.svg' %}" alt=""></div>
-            </div>
-            <span>Coming soon</span>
+            <span>Checklist</span>
         </a>
         <a href="#" class="link">
             <div class="circle-outer">
                 <div class="circle-inner"><img src="{% static 'app/assets/calendar-days.svg' %}" alt=""></div>
             </div>
-            <span>Dates</span>
+            <span>Calender</span>
+        </a>
+        <a href="{% url 'App:info' %}" class="link more-link">
+            <div class="circle-outer">
+                <div class="circle-inner"><img src="{% static 'app/assets/ellipsis.svg' %}" alt=""></div>
+            </div>
+            <span>More</span>
         </a>
     </nav>
 </footer>
