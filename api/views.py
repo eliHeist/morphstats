@@ -131,6 +131,6 @@ def facilitatorChecklistView(request, stat_pk=None, service_pk=None):
 @api_view(["GET"])
 def facilitatorsApiView(request):
     if request.method == 'GET':
-        fs = Facilitator.objects.all()
+        fs = Facilitator.objects.filter(active=True)
         serializer = FacilitatorSerializer(fs, many=True)
     return Response(serializer.data)
