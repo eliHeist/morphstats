@@ -91,7 +91,7 @@
                 </template>
             </div>
             <div class="px-4 available">
-                <h3 class="text-left font-bold text-primary mt-6 mb-3">Facilitators available.</h3>
+                <h3 class="text-left font-bold text-primary mt-6 mb-3">Facilitators available. <span x-text="facilitators.length - unavailable.length" class="ml-2"></span> / <span x-text="facilitators.length"></span></h3>
                 <hr class=" border-light">
                 <ul class="facilitator_list">
                     <template x-for="facilitator in active_service.facilitators">
@@ -112,7 +112,7 @@
                 </ul>
             </div>
             <div class="px-4 absent">
-                <h3 class="text-left font-bold text-red mt-8 mb-3">Facilitators absent.</h3>
+                <h3 class="text-left font-bold text-red mt-8 mb-3">Facilitators absent. <span x-text="unavailable.length" class="ml-2"></span></h3>
                 <hr class=" border-light">
                 <ul class="facilitator_list">
                     <template x-for="facilitator in unavailable">
