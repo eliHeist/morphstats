@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
+from django.urls.base import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
 from App.mixins import RedirectNonStaffMixin
 
 from Stat.models import Service, Stat
@@ -74,10 +75,21 @@ class FacilitatorCreateView(RedirectNonStaffMixin, CreateView):
     model = Facilitator
     form_class = FacilitatorForm
     template_name = "App/facilitators/create.html"
-    success_url = 'App:stat-list'
+    success_url = reverse_lazy('App:facilitator-list')
 
     def get_context_data(self, **kwargs):
         context = super(FacilitatorCreateView, self).get_context_data(**kwargs)
+        context['link_name'] = 'facilitators-link'
+        return context
+    
+class FacilitatorUpdateView(RedirectNonStaffMixin, UpdateView):
+    model = Facilitator
+    form_class = FacilitatorForm
+    template_name = "App/facilitators/edit.html"
+    success_url = reverse_lazy('App:facilitator-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(FacilitatorUpdateView, self).get_context_data(**kwargs)
         context['link_name'] = 'facilitators-link'
         return context
        
