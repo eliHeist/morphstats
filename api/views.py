@@ -85,8 +85,8 @@ def serviceApiView(request, pk=None, stat_pk=None):
         
     # get all stats
     elif not pk and request.method == "GET":
-        tasks = Stat.objects.all()
-        serializer = StatSerializer(tasks, many=True)
+        services = Service.objects.all()
+        serializer = ServiceSerializer(services, many=True)
     
     return Response(serializer.data)
 

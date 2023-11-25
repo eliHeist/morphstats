@@ -4,7 +4,7 @@
 {% block slot %}
 
 <section class=" pt-12">
-    <img class="logo mx-auto pb-8" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+    <img class="logo mx-auto pb-8" src="{% static 'assets/logo.png' %}" alt="App logo">
 
     <div class="grid grid-flow-col justify-between">
         <a href="{% url 'App:facilitator-checklist' %}"
@@ -32,13 +32,20 @@
         
         {% for f in facilitators %}
         <li class="font-semibold">
-            <a href="{% url 'App:facilitator-update' f.pk %}">{{ f.name }}</a>
+            <div class="flex justify-between items-center">
+                <a>{{ f.name }}</a>
+                <a href="{% url 'App:facilitator-update' f.pk %}">
+                    <i class="fas fa-edit text-light"></i>
+                </a>
+            </div>
         </li>
         {% endfor %}
             
     </ol>
 </section>
-<section style="height:100vh;"></section>
+<section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
+    <p>END</p>
+</section>
 
 {% endblock slot %}
 

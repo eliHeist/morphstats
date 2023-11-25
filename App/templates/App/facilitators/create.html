@@ -4,7 +4,7 @@
 {% block slot %}
 
 <section class=" pt-12">
-    <img class="logo mx-auto pb-8" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+    <img class="logo mx-auto pb-8" src="{% static 'assets/logo.png' %}" alt="App logo">
     <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm">
         {% csrf_token %}
         {{ form.as_p }}

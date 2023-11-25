@@ -61,20 +61,14 @@
     update(){
         setInterval(() => {
             if (this.update_ready){
-                console.log('Saving....')
-
                 const response = udpadeFacilitators(this.update_path, this.active_service, this.csrf())
-                
-                console.log(response)
                 this.update_ready = false
                 return
             }
-            else
-                console.log('waiting to save')
         }, 2000)
     }
-}" x-init="init()">
-    <img class="logo" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+}">
+    <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
     <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
@@ -82,8 +76,8 @@
     <main>
         <div class="grid grid-flow-col justify-between px-2">
             <a href="{% url 'App:latest-stat' %}"
-                class="grid grid-flow-col content-center gap-2 p-2 text-white font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24.042" height="24.042" viewBox="0 0 24.042 24.042">
+                class="grid grid-flow-col items-center gap-2 p-2 text-white font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16.042" height="16.042" viewBox="0 0 24.042 24.042">
                     <path id="Union_2" data-name="Union 2"
                         d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z"
                         transform="translate(12.021) rotate(45)" fill="#fff" />
@@ -92,8 +86,8 @@
             </a>
     
             {% if request.user.is_authenticated %}
-            <a href="{% url 'App:facilitator-create' %}" class="grid grid-flow-col content-center gap-2 p-2 font-semibold rounded-md">
-               <i class="fas fa-plus text-2xl text-primary"></i>
+            <a href="{% url 'App:facilitator-create' %}" class="grid grid-flow-col items-center gap-2 p-2 font-semibold rounded-md">
+               <i class="fas fa-plus text-lg text-primary"></i>
                 <span class="text-primary">Add New</span>
             </a>
             {% endif %}
@@ -117,8 +111,7 @@
                         <li class="item" x-transition>
                             <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox" class="hidden pointer-events-none checked" checked>
                             <label x-bind:for="true ? 'check' + facilitator.id : ''">
-                                <svg viewbox="0 0 100 100"
-                                    @click="handleCheck(facilitator, true)">
+                                <svg viewbox="0 0 100 100" @click="handleCheck(facilitator, true)">
                                     <path class="box"
                                         d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z"
                                         />
@@ -126,6 +119,9 @@
                                 </svg>
                                 <span x-text="facilitator.name"></span>
                             </label>
+                            <a :href="`/facilitators/${facilitator.id}/update/`">
+                                <i class="fas fa-edit text-light"></i>
+                            </a>
                         </li>
                     </template>
                 </ul>
@@ -147,6 +143,9 @@
                                 </svg>
                                 <span x-text="facilitator.name"></span>
                             </label>
+                            <a :href="`/facilitators/${facilitator.id}/update/`">
+                                <i class="fas fa-edit text-light"></i>
+                            </a>
                         </li>
                     </template>
                 </ul>
@@ -156,7 +155,9 @@
     
     
 </section>
-<section style="height:100vh;"></section>
+<section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
+    <p>END</p>
+</section>
 
 {% endblock slot %}
 

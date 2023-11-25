@@ -72,7 +72,7 @@ x-data="{
     }
 }"
  x-init="getServices()">
-    <img class="logo" src="{% static 'app/assets/logo.png' %}" alt="App logo">
+    <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
     <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
@@ -213,7 +213,9 @@ x-data="{
     </template>
     {% endif %}
 </section>
-<section style="height:100vh;"></section>
+<section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
+    <p>END</p>
+</section>
     
 {% endblock slot %}
 
