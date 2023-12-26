@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('App.urls', namespace="App")),
     path('api/', include('api.urls', namespace="api")),
+    path('events/', include('events.urls', namespace="events")),
     # path('facilitators/', include('facilitators.urls', namespace="facilitators")),
     # path('morphers/', include('morphers.urls', namespace="morphers")),
     path('accounts/login/', LoginView.as_view(), name="login"),

@@ -1,0 +1,48 @@
+{% extends 'app_base.html' %} {% load static tailwind_filters %}
+
+{% block slot %}
+
+<section title="More details" class="py-16">
+    <img class="logo mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
+
+    <main class="pb-10">
+        <form method="post" class="max-w-lg mx-auto">
+            {% csrf_token %}
+            <p>
+                <label for="id_name">Name:</label>
+                <input type="text" name="name" maxlength="50" required="" id="id_name">
+            </p>
+            <p>
+                <label for="id_date">Date:</label>
+                <input type="date" name="date" id="id_date">
+            </p>
+            <p>
+                <label for="id_venue">Venue:</label>
+                <input type="text" name="venue" maxlength="50" id="id_venue">
+            </p>
+            <p>
+                <label for="id_status">Status:</label>
+                <select name="status" id="id_status">
+                    <option value="0" selected="">Planned</option>
+                    <option value="1">Cancelled</option>
+                    <option value="2">Postponed</option>
+                </select>
+            </p>
+            <p>
+                <label for="id_details">Details:</label>
+                <textarea name="details" cols="40" rows="10" id="id_details"></textarea>
+            </p>
+            <button class="">Create</button>
+        </form>
+    </main>
+
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+    const active_link = "calendar-link"
+</script>
+{% endblock scripts %}

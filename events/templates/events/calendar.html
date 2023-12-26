@@ -1,0 +1,64 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="More details" class="pt-16">
+    <img class="logo mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
+
+    <div class="my-4">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'events:create' %}" class="grid grid-flow-col gap-2 w-fit mx-auto">
+            <i class="fas fa-calendar-plus text-2xl"></i>
+            <span class="font-bold">Add Event</span>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="grid grid-flow-col gap-2">
+            <i class="fas fa-user text-2xl"></i>
+            <span class="font-bold">Login</span>
+        </a>
+        {% endif %}
+    </div>
+
+    <main>
+        <ol class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {% for event in events %}
+            <li>
+                <div class="event-card">
+                    <h3>{{ event.name }}</h3>
+                    <p>{{ event.details|truncatewords:10 }}</p>
+                    <div class="flex justify-between gap-8">
+                        <p class="flex items-center gap-2">
+                            <i class="fas fa-calendar"></i>
+                            {{ event.date }}
+                        </p>
+                        <p class="flex">
+                            <i class="fas fa-elipsis"></i>
+                            {% if event.status == 0 %}
+                            <span class="font-bold px-2 py-1 rounded-lg text-xs uppercase h-fit bg-primary text-blue-100">Planned</span>
+                            {% elif event.status == 1 %}
+                            <span class="font-bold px-2 py-1 rounded-lg text-xs uppercase h-fit bg-red text-rose-100">Cancelled</span>
+                            {% elif event.status == 2 %}
+                            <span class="font-bold px-2 py-1 rounded-lg text-xs uppercase h-fit bg-amber-500 text-amber-100">Postponed</span>
+                            {% elif event.status == 3 %}
+                            <span class="font-bold px-2 py-1 rounded-lg text-xs uppercase h-fit bg-lighter text-dark">No date yet</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'events:detail' event.id %}">View</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </main>
+        
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+    const active_link = "calendar-link"
+</script>
+{% endblock scripts %}

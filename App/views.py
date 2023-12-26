@@ -92,7 +92,7 @@ class FacilitatorUpdateView(RedirectNonStaffMixin, UpdateView):
         context = super(FacilitatorUpdateView, self).get_context_data(**kwargs)
         context['link_name'] = 'facilitators-link'
         return context
-       
+     
 class FacilitatorListView(ListView):
     model = Facilitator
     context_object_name = 'facilitators'
@@ -111,7 +111,6 @@ class MoreMenuView(View):
         }
         return render(request, template_name, context)
     
-
 def page_not_found(request, exception):
     return render(request, '404.html', status=404)
 
@@ -120,3 +119,4 @@ class AccessDeniedView(View):
         template_name = "App/noaccess.html"
         context = {}
         return render(request, template_name, context)
+

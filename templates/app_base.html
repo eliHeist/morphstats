@@ -17,9 +17,9 @@
     </script>
 </head>
 <body class=" text-lighter">
-    <div class="max-w-3xl mx-auto">
+    <div class="sm:bg-transparent">
         <div class="app">
-            {% block slot %}{% endblock slot %}
+            <div class="overflow-y-auto flex-1 px-2">{% block slot %}{% endblock slot %}</div>
             {% include 'app_components/footer.html' %}
         </div>
     </div>

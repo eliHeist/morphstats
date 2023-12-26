@@ -37,11 +37,10 @@ INSTALLED_APPS = [
     'rest_framework',
     # "django_filters",
 
-    # 'morphers',
-    # 'main',
     'facilitators',
     'App',
     'Stat',
+    'events',
     'api',
 ]
 

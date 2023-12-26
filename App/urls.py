@@ -2,7 +2,6 @@ from django.urls import path
 
 from App.views import AccessDeniedView, FacilitatorChecklistView, FacilitatorCreateView, FacilitatorListView, FacilitatorUpdateView, LatestStatDetailView, MoreMenuView, RegisterDayView, StatDetailView, StatListView
 
-
 app_name = "App"
 
 urlpatterns = [

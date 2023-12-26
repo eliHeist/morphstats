@@ -11,6 +11,18 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap");
 
+@mixin sm{
+    @media (min-width: 640px) {
+        @content
+    }
+}
+
+@mixin rsm{
+    @media (max-width: 640px) {
+        @content
+    }
+}
+
 :root {
     --color-primary: #006fff;
     --color-dark: #030e19;
@@ -26,6 +38,12 @@
     margin: 0;
     font-family: "Nunito Sans", sans-serif;
     font-size: 1rem;
+}
+
+.logo{
+    @include sm{
+        display: none;
+    }
 }
 
 table,
@@ -44,7 +62,7 @@ body {
 }
 
 #baloon {
-    @apply rounded-full bg-dark text-lighter text-xl font-bold mx-auto fixed w-fit text-center py-3 px-8 left-1/2 -translate-x-1/2 -top-16 z-20 shadow-blue-950;
+    @apply rounded-full bg-lighter text-dark text-xl font-bold mx-auto fixed w-fit text-center py-3 px-8 left-1/2 -translate-x-1/2 -top-16 z-20 shadow-blue-950;
     box-shadow: 0 -1rem 3rem 0.1rem;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
@@ -58,63 +76,113 @@ body {
 .app {
     height: 100vh;
     width: 100%;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    @include sm{
+        flex-direction: row-reverse;
+    }
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-
+    @include sm{
+        width: fit-content;
+        height: 100vh;
+    }
+    background-color: var(--color-light);
     nav {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-        height: 5rem;
-        background-color: var(--color-light);
+        @include rsm{
+            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+            height: 5rem;
+        }
+        
         .link {
             display: grid;
-            place-content: center;
             gap: 0.75rem;
             position: relative;
-
-            .circle- {
-                &outer {
-                    margin: 0 auto;
-                }
-                &inner {
-                    img {
-                        max-width: 1.5rem;
-                        max-height: 1.5rem;
-                    }
-                }
-            }
-
-            &.highlight {
-                justify-content: center;
-                align-content: end;
-                span {
-                    color: var(--color-white);
-                    font-weight: 800;
-                }
+            
+            @include rsm{
+                place-content: center;
                 .circle- {
                     &outer {
-                        @apply w-full max-w-[5rem] min-w-[4rem] absolute rounded-full left-1/2 bg-primary -translate-x-1/2 top-[10%] grid place-content-center bg-opacity-50 p-2;
+                        margin: 0 auto;
                     }
                     &inner {
-                        
+                        img {
+                            max-width: 1.5rem;
+                            max-height: 1.5rem;
+                        }
                     }
                 }
+    
+                &.highlight {
+                    justify-content: center;
+                    align-content: end;
+                    span {
+                        color: var(--color-white);
+                        font-weight: 800;
+                    }
+                    .circle- {
+                        &outer {
+                            @apply w-full max-w-[5rem] min-w-[4rem] absolute rounded-full left-1/2 bg-primary -translate-x-1/2 top-[10%] grid place-content-center bg-opacity-50 p-2;
+                        }
+                        &inner {
+                            
+                        }
+                    }
+                    span {
+                        margin-bottom: 0.75rem;
+                        font-weight: bold;
+                    }
+                }
+    
                 span {
-                    margin-bottom: 0.75rem;
-                    font-weight: bold;
+                    color: var(--color-lighter);
+                    font-size: 0.75rem;
                 }
             }
+        }
 
-            span {
-                color: var(--color-lighter);
-                font-size: 0.75rem;
+        @include sm{
+            grid-template-columns: auto;
+            gap: 1rem;
+            height: auto;
+            width: fit-content;
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+            
+            .link{
+                &.highlight{
+                    background-color: var(--color-primary);
+                    span{
+                        font-weight: 600;
+                        color: var(--color-white);
+                    }
+                }
+                padding: .6rem 1rem;
+                display: flex;
+
+                border-radius: 5rem;
+
+                .circle- {
+                    &outer {
+                        height: 1.5rem;
+                        width: 1.5rem;
+                        aspect-ratio: 1/1;
+                    }
+                    &inner {
+                        img {
+                            max-width: 1.5rem;
+                            max-height: 1.5rem;
+                        }
+                    }
+                }
+    
+                span {
+                    color: var(--color-lighter);
+                    font-size: 1rem;
+                }
             }
         }
     }
@@ -299,17 +367,36 @@ form{
         label{
             @apply font-semibold;
         }
-        input[type='text'],input[type='password']{
+        input[type='text'],input[type='date'],input[type='password'],textarea,select{
             @apply bg-light p-2 rounded-md;
             &:focus-visible{
                 @apply outline-primary;
             }
         }
     }
+    button {
+        @apply py-2 px-4 bg-primary text-white rounded-md;
+        &:hover{
+            @apply bg-primary/70;
+        }
+    }
 }
 
 .facilitator_list{
     @apply text-left;
+    @include sm{
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+
+        .item{
+            display: flex;
+            align-items: center;
+            background-color: var(--color-light);
+            padding: .2rem;
+            border-radius: .5rem;
+        }
+    }
 }
 
 .item{
@@ -389,5 +476,20 @@ form{
                 }
             }
         }
+    }
+}
+
+.event-card{
+    width: 100%;
+    background-color: var(--color-light);
+    border-radius: 1rem;
+    padding: 1rem;
+
+    h3{
+        @apply text-lg font-semibold mb-4;
+    }
+
+    p{
+        @apply my-2;
     }
 }
