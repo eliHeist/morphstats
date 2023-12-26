@@ -543,6 +543,10 @@ video {
   margin-bottom: 0.75rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -814,6 +818,10 @@ video {
   padding-bottom: 4rem;
 }
 
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
 .pb-8 {
   padding-bottom: 2rem;
 }
@@ -951,12 +959,6 @@ video {
   outline-color: #1A2B3D;
 }
 
-@font-face {
-  font-family: "JUSTICELEAGUE";
-  src: url(05533a909895cab31675.ttf) format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
 :root {
   --color-primary: #006fff;
   --color-dark: #030e19;
@@ -1066,6 +1068,12 @@ footer nav .link {
   gap: 0.75rem;
   position: relative;
 }
+footer nav .link .img {
+  font-size: 1.2rem;
+}
+footer nav .link.highlight .img {
+  color: var(--color-white);
+}
 @media (max-width: 640px) {
   footer nav .link {
     place-content: center;
@@ -1073,7 +1081,7 @@ footer nav .link {
   footer nav .link .circle-outer {
     margin: 0 auto;
   }
-  footer nav .link .circle-inner img {
+  footer nav .link .circle-inner .img {
     max-width: 1.5rem;
     max-height: 1.5rem;
   }
@@ -1162,7 +1170,7 @@ footer nav .link {
     width: 1.5rem;
     aspect-ratio: 1/1;
   }
-  footer nav .link .circle-inner img {
+  footer nav .link .circle-inner .img {
     max-width: 1.5rem;
     max-height: 1.5rem;
   }
@@ -1601,6 +1609,44 @@ form button:hover {
 .event-card p {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.stat-articles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.stat-article {
+  padding: 1rem 1.2rem;
+  border-radius: 1rem;
+  transition: all 500ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  background-color: var(--color-light);
+}
+.stat-article:hover {
+  background-color: var(--color-light);
+}
+.stat-article h3 {
+  color: var(--color-lighter);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.stat-article .num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+.stat-article .services {
+  display: grid;
+  grid-auto-flow: column;
+  margin-top: 0.5rem;
+}
+.stat-article a {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .focus-within\:bg-light:focus-within {

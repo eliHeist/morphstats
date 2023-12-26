@@ -151,6 +151,7 @@ class MoreMenuView(View):
         template_name = "App/moremenu.html"
         context = {
             'year': today.year,
+            'days': days,
             'highest_attendance_day': highest_attendance_day,
             'lowest_attendance_day': lowest_attendance_day,
             'highest_visitors_day': highest_visitors_day,
