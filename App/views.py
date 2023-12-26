@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import render, redirect
 from django.urls.base import reverse_lazy
 from django.views import View
@@ -104,10 +106,57 @@ class FacilitatorListView(ListView):
         return context
 
 class MoreMenuView(View):
-    def get(self, request):
+    def get(self, request, year=None):
+        # TODO add django filter to make a greater filtering system
+        today = date.today()
+        day1 = today.replace(year=today.year,month=1,day=1)
+        
+        days = Stat.objects.filter(date__gte=day1)
+        print(days)
+        # services = Service.objects.filter()
+        
+        highest_attendance = 0
+        lowest_attendance = 1000
+        highest_visitors = 0
+        total_visitors = 0
+        highest_salvations = 0
+        total_salvations = 0
+        
+        highest_attendance_day = None
+        
+        for day in days:
+            attendance = day.totalAttendance()
+            visitors = day.totalVisitors()
+            salvations = day.totalSalvations()
+            
+            if attendance > highest_attendance:
+                highest_attendance_day = day
+                highest_attendance = attendance
+            
+            if attendance < lowest_attendance:
+                lowest_attendance_day = day
+                lowest_attendance = attendance
+            
+            if visitors > highest_visitors:
+                highest_visitors_day = day
+                highest_visitors = visitors
+            
+            if salvations > highest_salvations:
+                highest_salvations_day = day
+                highest_salvations = salvations
+            
+            total_visitors += visitors
+            total_salvations += salvations
+        
         template_name = "App/moremenu.html"
         context = {
-            'link_name': 'more-link',
+            'year': today.year,
+            'highest_attendance_day': highest_attendance_day,
+            'lowest_attendance_day': lowest_attendance_day,
+            'highest_visitors_day': highest_visitors_day,
+            'highest_salvations_day': highest_salvations_day,
+            'total_visitors': total_visitors,
+            'total_salvations': total_salvations,
         }
         return render(request, template_name, context)
     
@@ -120,3 +169,12 @@ class AccessDeniedView(View):
         context = {}
         return render(request, template_name, context)
 
+class GeneralStatsView(View):
+    def get(self, request, *args, **kwargs):
+        today = date.today()
+        day1 = today.replace(year=today.year,month=1,day=1)
+        
+        events = Stat.objects.filter(date__gte=day1)
+        template_name = 'App/statistics.html'
+        context = {}
+        return render(request, template_name, context)

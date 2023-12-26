@@ -11,6 +11,24 @@ class Stat(models.Model):
 
     def formatedDate(self):
         return self.date.strftime("%A, %d %B %Y")
+    
+    def totalAttendance(self):
+        count:int = 0
+        for service in self.services.all():
+            count += service.totalMorphers()
+        return count
+    
+    def totalSalvations(self):
+        count:int = 0
+        for service in self.services.all():
+            count += service.salvations
+        return count
+    
+    def totalVisitors(self):
+        count:int = 0
+        for service in self.services.all():
+            count += service.first_time_visitors
+        return count
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))

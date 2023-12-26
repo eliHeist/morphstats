@@ -9,9 +9,8 @@ from events.models import Event
 # Create your views here.
 class CalendarView(View):
     def get(self, request, *args, **kwargs):
-        events = Event.objects.all().order_by('date')
-        # events = Event.objects.filter(date__gte=date.today())
-        print(events)
+        # events = Event.objects.all().order_by('date')
+        events = Event.objects.filter(date__gte=date.today())
         template_name = 'events/calendar.html'
         context = {
             'events': events
