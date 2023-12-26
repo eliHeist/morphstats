@@ -21,13 +21,15 @@ class Stat(models.Model):
     def totalSalvations(self):
         count:int = 0
         for service in self.services.all():
-            count += service.salvations
+            if service.salvations:
+                count += service.salvations
         return count
     
     def totalVisitors(self):
         count:int = 0
         for service in self.services.all():
-            count += service.first_time_visitors
+            if service.first_time_visitors:
+                count += service.first_time_visitors
         return count
 
     def __str__(self):
@@ -53,7 +55,12 @@ class Service(models.Model):
         return f'{self.stat}: {self.name}'
     
     def totalMorphers(self):
-        return self.junior + self.senior
+        count = 0
+        if self.junior:
+            count += self.junior
+        if self.senior:
+            count += self.senior
+        return count
     
     def syncFacilitators(self):
         self.facilitators = self.facilitators_available.count()
