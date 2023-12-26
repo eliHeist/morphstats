@@ -8,13 +8,13 @@
     <div class="flex p-4 justify-center">
         
         {% if request.user.is_authenticated %}
-            <a href="{% url 'App:register-day' %}" class="grid grid-flow-col gap-2">
-                <i class="fas fa-plus text-2xl"></i>
+            <a href="{% url 'App:register-day' %}" class="grid grid-flow-col gap-2 items-center">
+                <i class="fas fa-plus"></i>
                 <span class="font-bold">Add new stat</span>
             </a>
         {% else %}
-            <a href="{% url 'login' %}" class="grid grid-flow-col gap-2">
-                <i class="fas fa-user text-2xl"></i>
+            <a href="{% url 'login' %}" class="grid grid-flow-col gap-2 items-center">
+                <i class="fas fa-user"></i>
                 <span class="font-bold">Login</span>
             </a>
         {% endif %}
