@@ -47,11 +47,22 @@ x-data="{
             .then((json) => this.services = json)
             .then(() => {this.setServices(this.services)})
     },
-    updateServices(){
+    updateServices(message=0){
         let allServices = []
-        allServices.push(this.firstService)
+        let first = false
+
+        if (message == 0){
+            allServices.push(this.firstService)
+        }
+        else if (message == 1){
+            first = this.firstService
+        }
+
         allServices.push(this.secondService)
         allServices.push(this.thirdService)
+
+        let obj = {'services': allServices, 'message': message, 'first': first}
+
         fetch(`{% url 'api:stat-services' stat.id %}`, {
             method: 'PUT',
             headers: {
@@ -59,7 +70,7 @@ x-data="{
                'Content-Type': 'application/json',
                'X-CSRFToken': this.csrf(),
             },
-            body: JSON.stringify(allServices),
+            body: JSON.stringify(obj),
         }).then((response) => response.json())
             .then((json) => {
                 this.services = json.data
@@ -202,11 +213,11 @@ x-data="{
     </div>
     {% if request.user.is_authenticated %}
     <template x-if="editMode">
-        <div class="grid">
-            <span @click="updateServices()" class="bg-primary px-4 py-2 rounded-full text-white cursor-pointer w-fit mx-auto">
+        <div class="grid gap-4">
+            <button @click="updateServices(0)" class="bg-primary px-4 py-2 rounded-full text-white cursor-pointer w-fit mx-auto">
                 Save changes 
                 <i class="fas fa-save ml-4"></i>              
-            </span>
+            </button>
         </div>
     </template>
     {% endif %}

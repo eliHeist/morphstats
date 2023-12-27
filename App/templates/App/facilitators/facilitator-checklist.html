@@ -66,6 +66,24 @@
                 return
             }
         }, 2000)
+    },
+    SyncServices(service, services){
+        console.log(service)
+        console.log(services)
+        services.forEach(s => {
+            if (s.id != service.id){
+                s.facilitators = []
+                service.facilitators.forEach(f => {
+                    s.facilitators.push(f)
+                })
+                // update the service
+                const response = udpadeFacilitators(this.update_path, s, this.csrf())
+            }
+            else if (this.update_ready){
+                // update the service
+                const response = udpadeFacilitators(this.update_path, s, this.csrf())
+            }
+        });
     }
 }">
     <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
@@ -74,9 +92,9 @@
     <div id="token" style="display: none;">{% csrf_token %}</div>
 
     <main>
-        <div class="grid grid-flow-col justify-between px-2">
+        <div class="grid grid-flow-col justify-between px-2 mt-4">
             <a href="{% url 'App:latest-stat' %}"
-                class="grid grid-flow-col items-center gap-2 p-2 text-white font-semibold">
+                class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16.042" height="16.042" viewBox="0 0 24.042 24.042">
                     <path id="Union_2" data-name="Union 2"
                         d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z"
@@ -86,10 +104,16 @@
             </a>
     
             {% if request.user.is_authenticated %}
-            <a href="{% url 'App:facilitator-create' %}" class="grid grid-flow-col items-center gap-2 p-2 font-semibold rounded-md">
-               <i class="fas fa-plus text-lg text-primary"></i>
-                <span class="text-primary">Add New</span>
+            <a href="{% url 'App:facilitator-create' %}" class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit">
+                Add New
+                <i class="fas fa-plus ml-4"></i>
             </a>
+            {% endif %}
+            {% if request.user.is_superuser %}
+            <button @click="SyncServices(services[0],services)" class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit">
+                Sync First Service
+                <i class="fas fa-arrows-rotate ml-4"></i>              
+            </button>
             {% endif %}
     
         </div>
@@ -154,9 +178,6 @@
     </main>
     
     
-</section>
-<section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
-    <p>END</p>
 </section>
 
 {% endblock slot %}

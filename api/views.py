@@ -55,15 +55,32 @@ def serviceApiView(request, pk=None, stat_pk=None):
 
     # update services
     elif stat_pk and request.method == "PUT":
-        for service in request.data:
-            service_instance = Service.objects.get(id=int(service['id']))
-            service_serializer = ServiceSerializer(instance=service_instance, data=service)
+        data = request.data
+        services = request.data.get('services')
+        message = request.data.get('message')
+        firstservice = request.data.get('first')
+
+        if message == 0:
+            for service in services:
+                service_instance = Service.objects.get(id=int(service['id']))
+                service_serializer = ServiceSerializer(instance=service_instance, data=service)
+                # save 
+                if service_serializer.is_valid():
+                    service_serializer.save()
+        elif message == 1:
+            firstserviceinstance = Service.objects.get(id=int(firstservice['id']))
+            service_serializer = ServiceSerializer(instance=firstserviceinstance, data=firstservice)
             # save 
             if service_serializer.is_valid():
-                service_serializer.save()
+                firstserviceinstance = service_serializer.save()
+            
+            for service in services:
+                service_instance = Service.objects.get(id=int(service['id']))
+                service_instance.facilitators_available = firstserviceinstance.junior
+                
 
         stat = Stat.objects.get(id=stat_pk)
-        services = Service.objects.filter(stat=stat)
+        services = stat.services.all()
         serializer = ServiceSerializer(services, many=True)
 
         response = {

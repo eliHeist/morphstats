@@ -386,18 +386,17 @@ form{
 
 .facilitator_list{
     @apply text-left;
+    display: grid;
+    .item{
+        display: flex;
+        align-items: center;
+        background-color: var(--color-light);
+        padding: .2rem .3rem;
+        border-radius: .5rem;
+    }
     @include sm{
-        display: grid;
-        gap: 1rem;
         grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-
-        .item{
-            display: flex;
-            align-items: center;
-            background-color: var(--color-light);
-            padding: .2rem;
-            border-radius: .5rem;
-        }
+        gap: 1rem;
     }
 }
 

@@ -51,4 +51,5 @@ function CheckActions(facilitator, isAvailable, active_facilitators, inactive_fa
     }
     return handleWildChecks('available', 'absent');
 }
+
 //#endregion facilitator checklist
