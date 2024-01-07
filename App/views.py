@@ -5,6 +5,7 @@ from django.urls.base import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
 from App.mixins import RedirectNonStaffMixin
+from django.utils import timezone
 
 from Stat.models import Service, Stat
 from facilitators.forms import FacilitatorForm
@@ -109,10 +110,9 @@ class MoreMenuView(View):
     def get(self, request, year=None):
         # TODO add django filter to make a greater filtering system
         today = date.today()
-        day1 = today.replace(year=today.year,month=1,day=1)
+        current_year = timezone.now().year
         
-        days = Stat.objects.filter(date__gte=day1)
-        print(days)
+        days = Stat.objects.filter(date____year=current_year)
         # services = Service.objects.filter()
         
         highest_attendance = 0
