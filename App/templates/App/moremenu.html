@@ -11,6 +11,7 @@
 <section title="Statistics">
     <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
     <div class="stat-articles">
+        {% if highest_attendance_day %}
         <article class="stat-article">
             <h3>Highest Attendance</h3>
             <span class="num">{{ highest_attendance_day.totalAttendance }}</span>
@@ -28,6 +29,8 @@
                 <i class="fas fa-arrow-right-long"></i>
             </a>
         </article>
+        {% endif %}
+        {% if lowest_attendance_day %}
         <article class="stat-article">
             <h3>Lowest Attendance</h3>
             <span class="num">{{ lowest_attendance_day.totalAttendance }}</span>
@@ -45,6 +48,8 @@
                 <i class="fas fa-arrow-right-long"></i>
             </a>
         </article>
+        {% endif %}
+        {% if highest_visitors_day %}
         <article class="stat-article">
             <h3>Highest Visitors</h3>
             <span class="num">{{ highest_visitors_day.totalVisitors }}</span>
@@ -62,6 +67,8 @@
                 <i class="fas fa-arrow-right-long"></i>
             </a>
         </article>
+        {% endif %}
+        {% if highest_salvations_day %}
         <article class="stat-article">
             <h3>Highest Salvations</h3>
             <span class="num">{{ highest_salvations_day.totalSalvations }}</span>
@@ -79,6 +86,7 @@
                 <i class="fas fa-arrow-right-long"></i>
             </a>
         </article>
+        {% endif %}
     </div>
     <div class="grid gap-4 mt-8 text-xl">
         <p>

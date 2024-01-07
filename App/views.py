@@ -112,7 +112,7 @@ class MoreMenuView(View):
         today = date.today()
         current_year = timezone.now().year
         
-        days = Stat.objects.filter(date____year=current_year)
+        days = Stat.objects.filter(date__year=current_year)
         # services = Service.objects.filter()
         
         highest_attendance = 0
@@ -123,6 +123,9 @@ class MoreMenuView(View):
         total_salvations = 0
         
         highest_attendance_day = None
+        lowest_attendance_day = None
+        highest_visitors_day = None
+        highest_salvations_day = None
         
         for day in days:
             attendance = day.totalAttendance()
