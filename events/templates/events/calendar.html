@@ -30,7 +30,10 @@
                     <div class="flex justify-between gap-8">
                         <p class="flex items-center gap-2">
                             <i class="fas fa-calendar"></i>
-                            {{ event.date }}
+                            {{ event.start_date }}
+                            {% if event.end_date %}
+                             - {{ event.end_date }}
+                            {% endif %}
                         </p>
                         <p class="flex">
                             <i class="fas fa-elipsis"></i>

@@ -13,8 +13,13 @@
                 <input type="text" name="name" maxlength="50" required="" id="id_name">
             </p>
             <p>
-                <label for="id_date">Date:</label>
-                <input type="date" name="date" id="id_date">
+                <label for="id_start_date">Date:</label>
+                <input type="date" name="start_date" id="id_start_date">
+            </p>
+            <p x-data='{ show:false }'>
+                <label for="id_end_date">End Date: <i class="fas ml-2 cursor-pointer" @click="show=!show" :class="show ? 'fa-angle-up' : 'fa-angle-down'"></i></label>
+                <span x-show="show" x-cloak class="text-xs mb-2">Leave blank if its a one day event</span>
+                <input x-show="show" x-cloak type="date" name="end_date" id="id_end_date">
             </p>
             <p>
                 <label for="id_venue">Venue:</label>
