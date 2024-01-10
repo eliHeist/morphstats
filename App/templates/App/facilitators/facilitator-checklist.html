@@ -100,7 +100,7 @@
                         d="M2,17a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0h.435a2,2,0,0,1,2,2V12.565H15a2,2,0,0,1,2,2V15a2,2,0,0,1-2,2Z"
                         transform="translate(12.021) rotate(45)" fill="#fff" />
                 </svg>
-                <span>Go to Stats</span>
+                <span>List</span>
             </a>
     
             {% if request.user.is_authenticated %}
@@ -111,7 +111,7 @@
             {% endif %}
             {% if request.user.is_superuser %}
             <button @click="SyncServices(services[0],services)" class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit">
-                Sync First Service
+                Sync 1st
                 <i class="fas fa-arrows-rotate ml-4"></i>              
             </button>
             {% endif %}
