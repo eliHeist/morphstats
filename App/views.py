@@ -182,3 +182,11 @@ class GeneralStatsView(View):
         template_name = 'App/statistics.html'
         context = {}
         return render(request, template_name, context)
+
+class FacilitatorDetailView(View):
+    def get(self, request, *args, **kwargs):
+        template_name = 'App/facilitators/facilitator-calendar.html.html'
+        stats = Stat.objects.all()
+        facilitators = Facilitator.objects.all()
+        context = {}
+        return render(request, template_name, context)

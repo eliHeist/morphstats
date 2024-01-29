@@ -31,6 +31,14 @@ class Stat(models.Model):
             if service.first_time_visitors:
                 count += service.first_time_visitors
         return count
+    
+    def facilitators(self):
+        facilitators_list = []
+        for service in self.services.all():
+            for facilitator in service.facilitators_available.all():
+                if facilitator not in facilitators_list:
+                    facilitators_list.append(facilitator)
+        return facilitators_list
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))
