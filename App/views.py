@@ -112,7 +112,7 @@ class MoreMenuView(View):
         today = date.today()
         current_year = timezone.now().year
         
-        days = Stat.objects.filter(date__year=current_year)
+        days = Stat.objects.filter(date__year=current_year).order_by('-date')
         # services = Service.objects.filter()
         
         highest_attendance = 0
@@ -151,6 +151,31 @@ class MoreMenuView(View):
             total_visitors += visitors
             total_salvations += salvations
         
+        calendar = None
+        facilitators = None
+        if request.user.is_authenticated:
+            # ITEM: [data1,data2, ...]
+            class StatPair():
+                def __init__(self,stat=None,data=[]) -> None:
+                    self.stat = stat
+                    self.data = data
+
+            calendar = []
+            facilitators = Facilitator.objects.filter(active=True)
+            for stat in days:
+                pair = StatPair(stat, [])
+                print(pair.data)
+                for facilitator in facilitators:
+                    if facilitator in stat.facilitators():
+                        pair.data.append(True)
+                    else:
+                        pair.data.append(False)
+                print(pair.data)
+                    # print(f'{pair.stat} - {facilitator}')
+                calendar.append(pair)
+                # print(f'{pair.stat} - {pair.data}')
+            # print(calendar)
+
         template_name = "App/moremenu.html"
         context = {
             'year': today.year,
@@ -161,6 +186,8 @@ class MoreMenuView(View):
             'highest_salvations_day': highest_salvations_day,
             'total_visitors': total_visitors,
             'total_salvations': total_salvations,
+            'calendar': calendar,
+            'facilitators': facilitators,
         }
         return render(request, template_name, context)
     
@@ -184,9 +211,27 @@ class GeneralStatsView(View):
         return render(request, template_name, context)
 
 class FacilitatorDetailView(View):
-    def get(self, request, *args, **kwargs):
-        template_name = 'App/facilitators/facilitator-calendar.html.html'
-        stats = Stat.objects.all()
-        facilitators = Facilitator.objects.all()
-        context = {}
+    class PairSet():
+        def __init__(self, stat=None, status=None) -> None:
+            self.stat = stat
+            self.status = status
+
+    def get(self, request, pk, *args, **kwargs):
+        template_name = 'App/facilitators/facilitator-calendar.html'
+        stats = Stat.objects.all().order_by('-date')
+        facilitator = Facilitator.objects.get(pk=pk)
+        main_list = []
+        for stat in stats:
+            mini_list = self.PairSet(stat)
+            if facilitator in stat.facilitators():
+                mini_list.status = True
+            else:
+                mini_list.status = False
+            main_list.append(mini_list)
+                    
+
+        context = {
+            'facilitator': facilitator,
+            'list': main_list,
+        }
         return render(request, template_name, context)
