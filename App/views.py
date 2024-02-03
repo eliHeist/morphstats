@@ -151,31 +151,6 @@ class MoreMenuView(View):
             total_visitors += visitors
             total_salvations += salvations
         
-        calendar = None
-        facilitators = None
-        if request.user.is_authenticated:
-            # ITEM: [data1,data2, ...]
-            class StatPair():
-                def __init__(self,stat=None,data=[]) -> None:
-                    self.stat = stat
-                    self.data = data
-
-            calendar = []
-            facilitators = Facilitator.objects.filter(active=True)
-            for stat in days:
-                pair = StatPair(stat, [])
-                print(pair.data)
-                for facilitator in facilitators:
-                    if facilitator in stat.facilitators():
-                        pair.data.append(True)
-                    else:
-                        pair.data.append(False)
-                print(pair.data)
-                    # print(f'{pair.stat} - {facilitator}')
-                calendar.append(pair)
-                # print(f'{pair.stat} - {pair.data}')
-            # print(calendar)
-
         template_name = "App/moremenu.html"
         context = {
             'year': today.year,
@@ -186,11 +161,9 @@ class MoreMenuView(View):
             'highest_salvations_day': highest_salvations_day,
             'total_visitors': total_visitors,
             'total_salvations': total_salvations,
-            'calendar': calendar,
-            'facilitators': facilitators,
         }
         return render(request, template_name, context)
-    
+
 def page_not_found(request, exception):
     return render(request, '404.html', status=404)
 

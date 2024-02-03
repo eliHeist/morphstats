@@ -98,36 +98,6 @@
             <span class="font-semibold">{{ total_salvations }}</span>
         </p>
     </div>
-    {% if calendar %}
-    <div class="overflow-auto">
-        <table class="w-max">
-            <thead>
-                <th class="sticky bg-dark left-0"></th>
-                {% for facilitator in facilitators %}
-                <th><span class="w-max">{{ facilitator.name }}</span></th>
-                {% endfor %}
-            </thead>
-            <tbody>
-                {% for pair in calendar %}
-                <tr>
-                    <td class="sticky bg-dark left-0">{{ pair.stat.date }}</td>
-                    <div class="overflow-x-auto w-full">
-                        {% for item in pair.data %}
-                        <td class="text-center">
-                            {% if item %}
-                            <i class="fas fa-circle-check text-green-500"></i>
-                            {% else %}
-                            <i class="fas fa-circle-xmark text-red"></i>
-                            {% endif %}
-                        </td>
-                        {% endfor %}
-                    </div>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
 </section>
 
 {% endblock slot %}

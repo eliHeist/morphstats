@@ -1,0 +1,73 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="More details" class="pt-16">
+    <img class="logo mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
+</section>
+
+<section title="Attendance records">
+    <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
+    <header class="bg-light p-4 rounded-md mb-8" x-data='{ show:false }'>
+        <button type="submit" class="bg-sky-500 text-white py-2 px-4 rounded-md hover:bg-sky-600 focus:outline-none focus:ring focus:border-sky-300" @click="show=!show">
+            <i class="fas fa-filter"></i>
+            Filters
+        </button>
+        <form method="get" class="flex items-end gap-4 mt-4" x-cloak x-show="show">
+            <!-- From Date Field -->
+            <div class="grid gap-1">
+                <label for="from_date" class="text-white">From Date:</label>
+                <input type="date" id="from_date" name="from_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500">
+            </div>
+    
+            <!-- To Date Field -->
+            <div class="grid gap-1">
+                <label for="to_date" class="text-white">Date: *</label>
+                <input type="date" id="to_date" name="date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" required>
+            </div>
+    
+            <!-- Submit Button -->
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                Submit
+            </button>
+        </form>
+    </header>
+    <div class="overflow-auto">
+        <table class="w-max">
+            <thead>
+                <th class="sticky bg-dark left-0"></th>
+                {% for facilitator in facilitators %}
+                <th><span class="w-max">{{ facilitator.name }}</span></th>
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for pair in calendar %}
+                <tr>
+                    <td class="sticky bg-dark left-0">{{ pair.stat.date }}</td>
+                    <div class="overflow-x-auto w-full">
+                        {% for item in pair.data %}
+                        <td class="text-center">
+                            {% if item %}
+                            <i class="fas fa-circle-check text-green-500"></i>
+                            {% else %}
+                            <i class="fas fa-circle-xmark text-red"></i>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+    const active_link = "attendance-link"
+</script>
+{% endblock scripts %}
