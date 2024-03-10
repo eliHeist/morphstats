@@ -39,6 +39,14 @@ class Stat(models.Model):
                 if facilitator not in facilitators_list:
                     facilitators_list.append(facilitator)
         return facilitators_list
+    
+    def facilitatorsCount(self):
+        facilitators_list = []
+        for service in self.services.all():
+            for facilitator in service.facilitators_available.all():
+                if facilitator not in facilitators_list:
+                    facilitators_list.append(facilitator)
+        return len(facilitators_list)
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))

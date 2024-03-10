@@ -9,6 +9,20 @@ class StatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ServiceSerializer(serializers.ModelSerializer):
+    facilitators_count = serializers.SerializerMethodField()
     class Meta:
         model = Service
-        fields = '__all__'
+        fields = [
+            "id",
+            "stat",
+            "name",
+            "junior",
+            "senior",
+            "first_time_visitors",
+            "salvations",
+            "facilitators",
+            "facilitators_count",
+        ]
+
+    def get_facilitators_count(self, obj):
+        return obj.facilitators_available.count()

@@ -8,11 +8,6 @@
 
     <div class="flex justify-between">
         {% if request.user.is_authenticated %}
-        <a href="{% url 'App:facilitator-checklist' %}"
-            class="flex items-center gap-2 p-2 text-white font-semibold">
-            <i class="fas fa-list-ul"></i>
-            <span>Checklist</span>
-        </a>
 
         <a href="{% url 'App:facilitator-create' %}" class="flex items-center gap-2 px-2 py-1 rounded-md">
             <i class="fas fa-plus"></i>

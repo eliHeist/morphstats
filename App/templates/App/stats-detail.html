@@ -87,9 +87,6 @@ x-data="{
     <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
-    <template x-if="editMode">
-        <p>Click a cell in the table to edit it</p>
-    </template>
     <table>
         <tbody>
             <tr>
@@ -194,8 +191,32 @@ x-data="{
                     x-model="thirdService.facilitators" x-bind:disabled="!editMode">
                 </td>
             </tr>
+            <template x-if="editMode">
+                <tr>
+                    <th>FctChk</th>
+                    <td class="first">
+                        <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                            name="first_facilitators" id="first_facilitators" title="First facilitators"
+                            x-model="firstService.facilitators_count" x-bind:disabled="!editMode">
+                    </td>
+                    <td class="second">
+                        <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                            name="second_facilitators" id="second_facilitators" title="second facilitators"
+                            x-model="secondService.facilitators_count" x-bind:disabled="!editMode">
+                    </td>
+                    <td class="third">
+                        <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                            name="third_facilitators" id="third_facilitators" title="third facilitators"
+                            x-model="thirdService.facilitators_count" x-bind:disabled="!editMode">
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
+
+    <p>
+        Total facilitators: <span>{{ stat.facilitatorsCount }}</span>
+    </p>
     
     <div class="actions">
         <a href="{% url 'App:stat-list' %}" class="flex gap-2 items-center">

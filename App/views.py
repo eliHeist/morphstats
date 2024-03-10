@@ -65,9 +65,13 @@ class RegisterDayView(RedirectNonStaffMixin, View):
         return render(request, template_name, context)
 
 class FacilitatorChecklistView(RedirectNonStaffMixin, View):
-    def get(self, request):
+    def get(self, request, pk=None):
+        if pk is None:
+            stat = Stat.objects.all().order_by('-date').first()
+        else:
+            stat = Stat.objects.get(pk=pk)
         context = {
-            'stat': Stat.objects.all().order_by('-date').first(),
+            'stat': stat,
             'link_name': 'facilitators-link',
             'facilitators': 'facilitators-link',
         }
