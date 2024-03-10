@@ -3,8 +3,7 @@
 
 {% block slot %}
 
-<section title="Today's Stats" id="today-page" 
-x-data="{
+<section title="Today's Stats" id="today-page" x-data="{
     statID: {{stat.id}},
     editMode: false,
     services: null,
@@ -81,11 +80,13 @@ x-data="{
                 }
             })
     }
-}"
- x-init="getServices()">
+}" x-init="getServices()">
     <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
     <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
+    {% if request.user.is_authenticated %}
+    <a class="date" href="{% url 'App:facilitator-checklist' stat.pk %}">View Checklist</a>
+    {% endif %}
     <div id="token" style="display: none;">{% csrf_token %}</div>
     <table>
         <tbody>
@@ -98,37 +99,37 @@ x-data="{
             <tr class="junior">
                 <th>Junior</th>
                 <td class="first">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="first_junior" id="first_junior" title="First Junior"
-                    x-model="firstService.junior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="first_junior" id="first_junior" title="First Junior" x-model="firstService.junior"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="second">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="second_junior" id="second_junior" title="Second Junior"
-                    x-model="secondService.junior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="second_junior" id="second_junior" title="Second Junior" x-model="secondService.junior"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="third">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="third_junior" id="third_junior" title="Third Junior"
-                    x-model="thirdService.junior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="third_junior" id="third_junior" title="Third Junior" x-model="thirdService.junior"
+                        x-bind:disabled="!editMode">
                 </td>
             </tr>
             <tr class="senior">
                 <th>Senior</th>
                 <td class="first">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="first_senior" id="first_senior" title="First Senior"
-                    x-model="firstService.senior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="first_senior" id="first_senior" title="First Senior" x-model="firstService.senior"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="second">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="second_senior" id="second_senior" title="second Senior"
-                    x-model="secondService.senior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="second_senior" id="second_senior" title="second Senior" x-model="secondService.senior"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="third">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="third_senior" id="third_senior" title="third Senior"
-                    x-model="thirdService.senior" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="third_senior" id="third_senior" title="third Senior" x-model="thirdService.senior"
+                        x-bind:disabled="!editMode">
                 </td>
             </tr>
             <tr class="total">
@@ -140,55 +141,58 @@ x-data="{
             <tr class="first_timers">
                 <th>First T Visitors</th>
                 <td class="first">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="first_first_time_visitors" id="first_first_time_visitors" title="First first_time_visitors"
-                    x-model="firstService.first_time_visitors" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="first_first_time_visitors" id="first_first_time_visitors"
+                        title="First first_time_visitors" x-model="firstService.first_time_visitors"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="second">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="second_first_time_visitors" id="second_first_time_visitors" title="second first_time_visitors"
-                    x-model="secondService.first_time_visitors" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="second_first_time_visitors" id="second_first_time_visitors"
+                        title="second first_time_visitors" x-model="secondService.first_time_visitors"
+                        x-bind:disabled="!editMode">
                 </td>
                 <td class="third">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="third_first_time_visitors" id="third_first_time_visitors" title="third first_time_visitors"
-                    x-model="thirdService.first_time_visitors" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="third_first_time_visitors" id="third_first_time_visitors"
+                        title="third first_time_visitors" x-model="thirdService.first_time_visitors"
+                        x-bind:disabled="!editMode">
                 </td>
             </tr>
             <tr class="salvations">
                 <th>Salvations</th>
                 <td class="first">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="first_salvations" id="first_salvations" title="First salvations"
-                    x-model="firstService.salvations" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="first_salvations" id="first_salvations" title="First salvations"
+                        x-model="firstService.salvations" x-bind:disabled="!editMode">
                 </td>
                 <td class="second">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="second_salvations" id="second_salvations" title="second salvations"
-                    x-model="secondService.salvations" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="second_salvations" id="second_salvations" title="second salvations"
+                        x-model="secondService.salvations" x-bind:disabled="!editMode">
                 </td>
                 <td class="third">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="third_salvations" id="third_salvations" title="third salvations"
-                    x-model="thirdService.salvations" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="third_salvations" id="third_salvations" title="third salvations"
+                        x-model="thirdService.salvations" x-bind:disabled="!editMode">
                 </td>
             </tr>
             <tr>
                 <th>Facilitators</th>
                 <td class="first">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="first_facilitators" id="first_facilitators" title="First facilitators"
-                    x-model="firstService.facilitators" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="first_facilitators" id="first_facilitators" title="First facilitators"
+                        x-model="firstService.facilitators" x-bind:disabled="!editMode">
                 </td>
                 <td class="second">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="second_facilitators" id="second_facilitators" title="second facilitators"
-                    x-model="secondService.facilitators" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="second_facilitators" id="second_facilitators" title="second facilitators"
+                        x-model="secondService.facilitators" x-bind:disabled="!editMode">
                 </td>
                 <td class="third">
-                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" 
-                    type="number" name="third_facilitators" id="third_facilitators" title="third facilitators"
-                    x-model="thirdService.facilitators" x-bind:disabled="!editMode">
+                    <input class="w-full bg-dark focus-within:outline-none focus-within:bg-light" type="number"
+                        name="third_facilitators" id="third_facilitators" title="third facilitators"
+                        x-model="thirdService.facilitators" x-bind:disabled="!editMode">
                 </td>
             </tr>
             <template x-if="editMode">
@@ -217,44 +221,45 @@ x-data="{
     <p>
         Total facilitators: <span>{{ stat.facilitatorsCount }}</span>
     </p>
-    
+
     <div class="actions">
         <a href="{% url 'App:stat-list' %}" class="flex gap-2 items-center">
-            <i class="fas fa-arrow-left"></i>             
-            <span>Go to list</span>  
+            <i class="fas fa-arrow-left"></i>
+            <span>Go to list</span>
         </a>
-        
+
         {% if request.user.is_authenticated %}
         <a @click="editMode = !editMode" class="flex gap-2 items-center cursor-pointer">
             <i class="fas fa-edit"></i>
             <span x-text="editMode ? 'Close Edit Mode' : 'Edit Mode'">Edit mode</span>
         </a>
         {% endif %}
-            
+
     </div>
     {% if request.user.is_authenticated %}
     <template x-if="editMode">
         <div class="grid gap-4">
-            <button @click="updateServices(0)" class="bg-primary px-4 py-2 rounded-full text-white cursor-pointer w-fit mx-auto">
-                Save changes 
-                <i class="fas fa-save ml-4"></i>              
+            <button @click="updateServices(0)"
+                class="bg-primary px-4 py-2 rounded-full text-white cursor-pointer w-fit mx-auto">
+                Save changes
+                <i class="fas fa-save ml-4"></i>
             </button>
         </div>
     </template>
     {% endif %}
 </section>
-    
+
 {% endblock slot %}
 
 
 {% block scripts %}
-    <script>
-        
-        {% if link_name %}
-            const active_link = "{{ link_name }}"
-            {% else %}
-            const active_link = "all-stats"
-        {% endif %}
-            
-    </script>
+<script>
+
+    {% if link_name %}
+    const active_link = "{{ link_name }}"
+    {% else %}
+    const active_link = "all-stats"
+    {% endif %}
+
+</script>
 {% endblock scripts %}
