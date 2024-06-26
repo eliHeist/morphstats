@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 
 import environ
+
+from .settings_files.unfold_theme import *
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
@@ -25,6 +28,9 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 # Application definition
 
 INSTALLED_APPS = [
+
+    "unfold",
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
