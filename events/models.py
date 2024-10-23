@@ -3,7 +3,7 @@ from datetime import date
 
 # Create your models here.
 class Event(models.Model):
-    class STATUSES(models.TextChoices):
+    class STATUSES(models.IntegerChoices):
         PLANNED = (0, "Planned")
         CANCELLED = (1, "Cancelled")
         POSTPONED = (2, "Postponed")

@@ -3,10 +3,6 @@
 
 {% block slot %}
 
-<section title="More details" class="pt-16">
-    <img class="logo mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
-</section>
-
 <section title="Attendance records">
     <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
     <header class="bg-light p-4 rounded-md mb-8" x-data='{ show:false }'>
@@ -68,6 +64,6 @@
 
 {% block scripts %}
 <script>
-    const active_link = "attendance-link"
+    const active_link = "facilitators-link"
 </script>
 {% endblock scripts %}

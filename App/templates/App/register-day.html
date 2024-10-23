@@ -6,7 +6,7 @@
 <section>
    <img class="logo mx-auto mt-16" src="{% static 'assets/logo.png' %}" alt="App logo">
    
-   <form action="{% url 'App:register-day' %}" method="post" class="mx-4 mt-8 grid gap-8">
+   <form action="{% url 'App:register-day' %}" method="post" class="mx-4 mt-8 grid gap-8 max-w-lg">
       {% csrf_token %}
       <div class="grid">
          <input type="date" name="date" id="date" class="p-2 bg-light text-lighter rounded-full">

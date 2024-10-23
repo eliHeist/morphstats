@@ -10,7 +10,7 @@ async function getServices(url) {
     const response = await fetch(url);
     return await response.json();
 }
-async function udpadeFacilitators(url, service, csrf) {
+async function updateFacilitators(url, service, csrf) {
     const response = await fetch(url, {
         method: 'PUT',
         headers: {

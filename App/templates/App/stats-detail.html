@@ -81,14 +81,22 @@
             })
     }
 }" x-init="getServices()">
-    <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
-    <!-- <h1>Today</h1> -->
+
     <div class="date">{{ stat.formatedDate }}</div>
-    {% if request.user.is_authenticated %}
-    <a class="date" href="{% url 'App:facilitator-checklist' stat.pk %}">View Checklist</a>
-    {% endif %}
+
+    <div class="flex gap-4 p-4 justify-center">
+            
+        {% if request.user.is_authenticated %}
+        
+        <a href="{% url 'App:facilitator-checklist' stat.pk %}" class="flex gap-2 items-center px-6 py-2 bg-primary text-white rounded-full">
+            <i class="fas fa-list-check"></i>
+            <span class="font-bold">View Checklist</span>
+        </a>
+        {% endif %}
+            
+    </div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
-    <table>
+    <table class="max-w-lg mx-auto">
         <tbody>
             <tr>
                 <th>Service</th>
@@ -222,30 +230,21 @@
         Total facilitators: <span>{{ stat.facilitatorsCount }}</span>
     </p>
 
-    <div class="actions">
-        <a href="{% url 'App:stat-list' %}" class="flex gap-2 items-center">
-            <i class="fas fa-arrow-left"></i>
-            <span>Go to list</span>
-        </a>
-
-        {% if request.user.is_authenticated %}
-        <a @click="editMode = !editMode" class="flex gap-2 items-center cursor-pointer">
-            <i class="fas fa-edit"></i>
-            <span x-text="editMode ? 'Close Edit Mode' : 'Edit Mode'">Edit mode</span>
-        </a>
-        {% endif %}
-
-    </div>
     {% if request.user.is_authenticated %}
-    <template x-if="editMode">
-        <div class="grid gap-4">
+    <div class="flex gap-4 justify-center flex-wrap">
+        <button @click="editMode = !editMode" class="flex gap-2 items-center px-6 py-2 text-white rounded-full border border-light">
+            <i class="fas fa-edit"></i>
+            <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
+        </button>
+        <template x-if="editMode">
             <button @click="updateServices(0)"
-                class="bg-primary px-4 py-2 rounded-full text-white cursor-pointer w-fit mx-auto">
-                Save changes
-                <i class="fas fa-save ml-4"></i>
+                class="bg-primary flex gap-2 items-center px-6 py-2 text-white rounded-full">
+                Save
+                <i class="fas fa-save"></i>
             </button>
-        </div>
-    </template>
+        </template>
+    </div>
+
     {% endif %}
 </section>
 

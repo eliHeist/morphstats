@@ -61,15 +61,13 @@
     update(){
         setInterval(() => {
             if (this.update_ready){
-                const response = udpadeFacilitators(this.update_path, this.active_service, this.csrf())
+                const response = updateFacilitators(this.update_path, this.active_service, this.csrf())
                 this.update_ready = false
                 return
             }
-        }, 2000)
+        }, 1000)
     },
     SyncServices(service, services){
-        console.log(service)
-        console.log(services)
         services.forEach(s => {
             if (s.id != service.id){
                 s.facilitators = []
@@ -77,98 +75,71 @@
                     s.facilitators.push(f)
                 })
                 // update the service
-                const response = udpadeFacilitators(this.update_path, s, this.csrf())
+                const response = updateFacilitators(this.update_path, s, this.csrf())
             }
             else if (this.update_ready){
                 // update the service
-                const response = udpadeFacilitators(this.update_path, s, this.csrf())
+                const response = updateFacilitators(this.update_path, s, this.csrf())
             }
         });
     }
 }">
-    <img class="logo" src="{% static 'assets/logo.png' %}" alt="App logo">
-    <!-- <h1>Today</h1> -->
     <div class="date">{{ stat.formatedDate }}</div>
     <div id="token" style="display: none;">{% csrf_token %}</div>
 
+    <div class="flex gap-4 p-4 justify-center">
+
+        <a href="{% url 'App:facilitator-list' %}"
+            class="flex gap-2 items-center px-6 py-2 border border-light text-white rounded-full">
+            <i class="fas fa-list"></i>
+            <span>All</span>
+        </a>
+        <!-- {% if request.user.is_authenticated %}
+        <button @click="SyncServices(services[0],services)" class="flex gap-2 items-center px-6 py-2 border border-light text-white rounded-full">
+            <i class="fas fa-arrows-rotate"></i>
+            <span class="font-bold">Sync all to 1st</span>
+        </button>
+        {% endif %} -->
+
+    </div>
+
     <main>
-        <div class="grid grid-flow-col justify-between px-2 mt-4">
-            <a href="{% url 'App:facilitator-list' %}"
-                class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i>
-                <span>List</span>
-            </a>
-    
-            
-            {% if request.user.is_superuser %}
-            <button @click="SyncServices(services[0],services)" class="bg-light px-4 py-2 rounded-full text-white cursor-pointer w-fit">
-                Sync 1st
-                <i class="fas fa-arrows-rotate ml-4"></i>              
-            </button>
-            {% endif %}
-    
-        </div>
         <form class="accent-primary">
             <div class="grid grid-flow-col gap-2 mb-0 mt-8">
                 <template x-for="service in services">
-                    <button type="button" class="p-2" 
-                    x-bind:class="active_service.id == service.id ? 'bg-primary' : 'outline outline-light outline-1'"
-                    @click="active_service = service;setLists()">
+                    <button type="button" class="p-2"
+                        x-bind:class="active_service.id == service.id ? 'bg-primary' : 'outline outline-light outline-1'"
+                        @click="active_service = service;setLists()">
                         <span x-text="service.service"></span>
                     </button>
                 </template>
             </div>
-            <div class="px-4 available">
-                <h3 class="text-left font-bold text-primary mt-6 mb-3">Facilitators available. <span x-text="facilitators.length - unavailable.length" class="ml-2"></span> / <span x-text="facilitators.length"></span></h3>
-                <hr class=" border-light">
-                <ul class="facilitator_list">
-                    <template x-for="facilitator in active_service.facilitators">
-                        <li class="item" x-transition>
-                            <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox" class="hidden pointer-events-none checked" checked>
-                            <label x-bind:for="true ? 'check' + facilitator.id : ''">
-                                <svg viewbox="0 0 100 100" @click="handleCheck(facilitator, true)">
-                                    <path class="box"
-                                        d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z"
-                                        />
-                                    <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5 " />
-                                </svg>
-                                <span x-text="facilitator.name"></span>
-                            </label>
-                            <a :href="`/facilitators/${facilitator.id}/update/`">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </li>
-                    </template>
-                </ul>
-            </div>
-            <div class="px-4 absent">
-                <h3 class="text-left font-bold text-red mt-8 mb-3">Facilitators absent. <span x-text="unavailable.length" class="ml-2"></span></h3>
-                <hr class=" border-light">
-                <ul class="facilitator_list">
-                    <template x-for="facilitator in unavailable">
-                        <li class="item" x-transition x-model="facilitator">
-                            <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox" class="hidden pointer-events-none">
-                            <label x-bind:for="true ? 'check' + facilitator.id : ''">
-                                <svg viewbox="0 0 100 100"
-                                    @click="handleCheck(facilitator, false)">
-                                    <path class="box"
-                                        d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z"
-                                        />
-                                    <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5 " />
-                                </svg>
-                                <span x-text="facilitator.name"></span>
-                            </label>
-                            <a :href="`/facilitators/${facilitator.id}/update/`">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </li>
-                    </template>
-                </ul>
-            </div>
+            <ul class="facilitator_list">
+                <template x-for="facilitator in facilitators">
+                    <li class="item">
+                        <input x-bind:id="true ? 'check' + facilitator.id : ''" type="checkbox"
+                            class="hidden pointer-events-none" 
+                            :class="active_service.facilitators.find((value) => {return value.id == facilitator.id}) ? 'checked' : ''"
+                            :checked="active_service.facilitators.find((value) => {return value.id == facilitator.id}) ? 'true' : 'false'">
+                        <label x-bind:for="true ? 'check' + facilitator.id : ''">
+                            <svg viewbox="0 0 100 100" @click="handleCheck(facilitator)">
+                                <path class="box"
+                                    d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                                <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5 " />
+                            </svg>
+                            <span x-text="facilitator.name"></span>
+                        </label>
+                        <a :href="`/facilitators/${facilitator.id}/update/`">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+
         </form>
     </main>
-    
-    
+
+
 </section>
 
 {% endblock slot %}
@@ -177,13 +148,11 @@
 {% block scripts %}
 <script>
     //{% if link_name %}
-    const active_link = "{{ link_name }}" 
+    const active_link = "{{ link_name }}"
     //{% else %}
-    const active_link = "all-stats" 
+    const active_link = "all-stats"
     //{% endif %}
     checklistPage = true;
-    
+
 </script>
 {% endblock scripts %}
-
-

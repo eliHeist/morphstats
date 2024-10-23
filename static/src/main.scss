@@ -285,7 +285,6 @@ footer {
     }
 
     table {
-        margin: 1rem;
         text-align: left;
         font-size: 1.25rem;
         tr {
@@ -391,21 +390,21 @@ form{
         display: flex;
         align-items: center;
         background-color: var(--color-light);
-        padding: .2rem .3rem;
+        padding: .5rem 1rem;
         border-radius: .5rem;
     }
     @include sm{
-        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
         gap: 1rem;
     }
 }
 
 .item{
-    @apply my-2 flex;
+    @apply my-2 grid;
+    grid-template-columns: 1fr auto;
     input[type="checkbox"]{
         & + label{
-            @apply pointer-events-none text-sm grid flex-1;
-            grid-template-columns: auto 3fr;
+            @apply pointer-events-none text-sm flex;
 
             svg{
                 @apply w-8 stroke-primary stroke-[5] fill-blue-50 cursor-pointer pointer-events-auto;
@@ -533,3 +532,4 @@ form{
         margin-top: 1rem;
     }
 }
+

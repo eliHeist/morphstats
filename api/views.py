@@ -1,8 +1,14 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from Stat.models import Service, Stat
 from Stat.serializers import ServiceSerializer, StatSerializer
+
 from facilitators.models import Facilitator
 from facilitators.serializers import FacilitatorSerializer
 
@@ -107,6 +113,69 @@ def serviceApiView(request, pk=None, stat_pk=None):
     
     return Response(serializer.data)
 
+
+class ServiceAPIView(APIView):
+    def get(self, request, pk=None):
+        stat_id = request.query_params.get('stat_id')
+        
+        if pk:
+            service = get_object_or_404(Service, pk=pk)
+            serializer = ServiceSerializer(service)
+            return Response(serializer.data)
+        elif stat_id:
+            services = Service.objects.filter(stat__id=stat_id)
+            serializer = ServiceSerializer(services, many=True)
+            return Response(serializer.data)
+        else:
+            services = Service.objects.all()
+            serializer = ServiceSerializer(services, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        if isinstance(request.data, list):
+            serializer = ServiceSerializer(data=request.data, many=True)
+        else:
+            serializer = ServiceSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        if pk:
+            service = get_object_or_404(Service, pk=pk)
+            serializer = ServiceSerializer(service, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            services_data = request.data
+            if not isinstance(services_data, list):
+                return Response({"error": "Expected a list of services"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            updated_services = []
+            for service_data in services_data:
+                service = get_object_or_404(Service, pk=service_data.get('id'))
+                serializer = ServiceSerializer(service, data=service_data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    updated_services.append(serializer.data)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response(updated_services)
+
+    def delete(self, request, pk=None):
+        if pk:
+            service = get_object_or_404(Service, pk=pk)
+            service.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "A specific service ID (pk) is required for deletion."}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(["GET","PUT"])
 def facilitatorChecklistView(request, stat_pk=None, service_pk=None):
     if request.method == 'GET' and stat_pk:
@@ -148,6 +217,6 @@ def facilitatorChecklistView(request, stat_pk=None, service_pk=None):
 @api_view(["GET"])
 def facilitatorsApiView(request):
     if request.method == 'GET':
-        fs = Facilitator.objects.filter(active=True).order_by('-name')
+        fs = Facilitator.objects.filter(active=True).order_by('name')
         serializer = FacilitatorSerializer(fs, many=True)
     return Response(serializer.data)

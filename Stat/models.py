@@ -65,6 +65,7 @@ class Service(models.Model):
     first_time_visitors = models.PositiveSmallIntegerField(blank=True, null=True)
     salvations = models.PositiveSmallIntegerField(blank=True, null=True)
     facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
+    non_system_facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
     facilitators_available = models.ManyToManyField(Facilitator, blank=True)
 
     def __str__(self):

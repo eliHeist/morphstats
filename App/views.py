@@ -22,11 +22,11 @@ class StatListView(ListView):
 
 class StatDetailView(DetailView):
     model = Stat
-    template_name = 'App/stats-detail.html'
+    template_name = 'App/stats-detail-new.html'
     context_object_name = 'stat'
 
 class LatestStatDetailView(TemplateView):
-    template_name = 'App/stats-detail.html'
+    template_name = 'App/stats-detail-new.html'
     context_object_name = 'stat'
 
     def get_queryset(self):

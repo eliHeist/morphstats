@@ -1,0 +1,172 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<section title="Today's Stats" id="today-page" x-data="checklist" x-init="initialize(
+        {{stat.id}}, //stat pk
+        '{% url 'api:services' %}', //services url
+        '{% url 'api:facilitators' %}' //facilitators url
+    )">
+
+    <div class="date">{{ stat.formatedDate }}</div>
+    <div class="grid gap-8 lg:grid-cols-2">
+        <section class="py-8 overflow-x-auto">
+            <table id="services-table" class="w-full border-collapse">
+                <tr>
+                    <th class="border p-2">Service</th>
+                    <template x-for="service in services" :key="service.id">
+                        <th class="border p-2" x-text="service.name"></th>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Junior</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <input x-show="editMode" type="number" x-model="service.junior"
+                                class="w-full bg-dark focus:outline-none focus:bg-light">
+                            <span x-show="!editMode" x-text="service.junior"></span>
+                        </td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Senior</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <input x-show="editMode" type="number" x-model="service.senior"
+                                class="w-full bg-dark focus:outline-none focus:bg-light">
+                            <span x-show="!editMode" x-text="service.senior"></span>
+                        </td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Total</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2" x-text="(parseInt(service.junior) || 0) + (parseInt(service.senior) || 0)"></td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">F T Visitors</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <input x-show="editMode" type="number" x-model="service.first_time_visitors"
+                                class="w-full bg-dark focus:outline-none focus:bg-light">
+                            <span x-show="!editMode" x-text="service.first_time_visitors"></span>
+                        </td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Salvations</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <input x-show="editMode" type="number" x-model="service.salvations"
+                                class="w-full bg-dark focus:outline-none focus:bg-light">
+                            <span x-show="!editMode" x-text="service.salvations"></span>
+                        </td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Facilitators</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2"
+                            x-text="service.facilitators_available.length + (parseInt(service.non_system_facilitators) || 0)"></td>
+                    </template>
+                </tr>
+                {% if request.user.is_authenticated %}
+                <tr>
+                    <th class="border p-2">Extras</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <input x-show="editMode" type="number" x-model="service.non_system_facilitators"
+                                class="w-full bg-dark focus:outline-none focus:bg-light">
+                            <span x-show="!editMode" x-text="service.non_system_facilitators"></span>
+                        </td>
+                    </template>
+                </tr>
+                {% endif %}
+            </table>
+            <p>
+                Total facilitators: <span>{{ stat.facilitatorsCount }}</span>
+            </p>
+
+            {% if request.user.is_authenticated %}
+            <div class="flex gap-4 justify-center flex-wrap">
+                <button @click="editMode = !editMode"
+                    class="flex gap-2 items-center px-6 py-2 text-white rounded-full border border-light">
+                    <i class="fas fa-edit"></i>
+                    <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
+                </button>
+                <template x-if="editMode">
+                    <button @click="updateServices()"
+                        class="bg-primary flex gap-2 items-center px-6 py-2 text-white rounded-full">
+                        Save
+                        <i class="fas fa-save"></i>
+                    </button>
+                </template>
+            </div>
+            {% endif %}
+        </section>
+        {% if request.user.is_authenticated %}
+        <section class="py-8">
+            <h2 class="text-2xl font-bold">Checklist</h2>
+            <div x-data="{ activeTab: services[0]?.name || '' }" class="mt-4">
+                <!-- Tab navigation -->
+                <div class="flex mb-4 border-b border-light">
+                    <template x-for="service in services" :key="service.id">
+                        <button 
+                            class="px-4 py-2 font-semibold"
+                            :class="{ 'text-primary border-b-2 border-primary': activeTab === service.name }"
+                            @click="activeTab = service.name"
+                            x-text="service.name">
+                        </button>
+                    </template>
+                </div>
+
+                <!-- Tab content -->
+                <template x-for="service in services" :key="service.id">
+                    <div x-show="activeTab === service.name" class="mt-4">
+                        <ul class="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-y-2 gap-x-6">
+                            <template x-for="facilitator in facilitators" :key="facilitator.id">
+                                <li class="item">
+                                    <input x-bind:id="'check' + facilitator.id" type="checkbox"
+                                        class="hidden pointer-events-none" 
+                                        :class="service.facilitators_available.includes(facilitator.id) ? 'checked' : ''"
+                                        :checked="service.facilitators_available.includes(facilitator.id)">
+                                    <label x-bind:for="'check' + facilitator.id" @click="handleCheck(facilitator, service.id)">
+                                        <svg viewbox="0 0 100 100">
+                                            <path class="box"
+                                                d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                                            <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
+                                        </svg>
+                                        <span x-text="facilitator.name"></span>
+                                    </label>
+                                    <!-- <a :href="`/facilitator/${facilitator.id}/update/`" class="opacity-0">
+                                        <i class="fas fa-edit"></i>
+                                    </a> -->
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+
+
+</section>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+<script>
+
+    {% if link_name %}
+    const active_link = "{{ link_name }}"
+    {% else %}
+    const active_link = "all-stats"
+    {% endif %}
+
+</script>
+{% endblock scripts %}
