@@ -10,8 +10,8 @@
     )">
 
     <div class="date">{{ stat.formatedDate }}</div>
-    <div class="grid gap-8 lg:grid-cols-2">
-        <section class="py-8 overflow-x-auto">
+    <div class="grid gap-8 lg:grid-cols-12 ">
+        <section class="py-8 lg:col-span-5 xl:col-span-4 overflow-x-auto">
             <table id="services-table" class="w-full border-collapse">
                 <tr>
                     <th class="border p-2">Service</th>
@@ -107,7 +107,7 @@
             {% endif %}
         </section>
         {% if request.user.is_authenticated %}
-        <section class="py-8">
+        <section class="py-8 lg:col-span-7 xl:col-span-8">
             <h2 class="text-2xl font-bold">Checklist</h2>
             <div x-data="{ activeTab: services[0]?.name || '' }" class="mt-4">
                 <!-- Tab navigation -->
@@ -125,7 +125,7 @@
                 <!-- Tab content -->
                 <template x-for="service in services" :key="service.id">
                     <div x-show="activeTab === service.name" class="mt-4">
-                        <ul class="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-y-2 gap-x-6">
+                        <ul class="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-y-2 gap-x-6">
                             <template x-for="facilitator in facilitators" :key="facilitator.id">
                                 <li class="item">
                                     <input x-bind:id="'check' + facilitator.id" type="checkbox"
