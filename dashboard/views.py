@@ -74,7 +74,7 @@ class StatisticsDashboardView(View):
                 stats["lowest_stat"] = stat
 
         if total_stats > 0:
-            stats["average"] = round(stats["total"] / total_stats, 1)
+            stats["average"] = round(stats["total"] / total_stats, 0)
         else:
             stats["lowest"] = 0
 
@@ -122,7 +122,7 @@ class StatisticsDashboardView(View):
                     # number of sundays served
                     facilitator_dict[facilitator]["total_sundays_served"] = len(facilitator_dict[facilitator]["sundays_served"])
 
-        data["average_facilitation"] = round(data["total_facilitation"] / data["total_sundays"], 1)
+        data["average_facilitation"] = round(data["total_facilitation"] / data["total_sundays"], 0)
         data["total_facilitators"] = len(facilitator_dict)
         
         data["facilitators_dict"] = facilitator_dict
