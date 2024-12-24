@@ -6,10 +6,11 @@ module.exports = {
             colors: {
                 'primary': '#006FFF',
                 'dark': '#030E19',
-                'light': '#1A2B3D',
+                'light': '#1a2b3d',
                 'lighter': '#C0D6F2',
                 'warning': '#FFB300',
-                'red': '#ff003c',
+                'danger': '#ff003c',
+                'success': '#00C853',
                 grey: {
                     50: 'rgb(252, 252, 252)',
                     100: 'rgb(245, 245, 245)',
@@ -31,6 +32,8 @@ module.exports = {
     variants: {
       extend: {},
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/container-queries'),
+    ],
   };
   

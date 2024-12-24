@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/', include('api.urls', namespace="api")),
     path('events/', include('events.urls', namespace="events")),
     path('facilitators/', include('facilitators.urls', namespace="facilitators")),
-    # path('morphers/', include('morphers.urls', namespace="morphers")),
+    path('dashboard/', include('dashboard.urls', namespace="dashboard")),
     path('accounts/login/', LoginView.as_view(), name="login"),
     path('accounts/logout/', LogoutView.as_view(), name="logout"),
 ]

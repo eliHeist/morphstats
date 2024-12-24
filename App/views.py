@@ -107,8 +107,12 @@ class FacilitatorListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FacilitatorListView, self).get_context_data(**kwargs)
-        context['link_name'] = 'facilitators-link'
+        context['active_facilitator_count'] = context['facilitators'].filter(active=True).count()
         return context
+    
+    def get_queryset(self):
+        qs = super().get_queryset().order_by('name')
+        return qs 
 
 class MoreMenuView(View):
     def get(self, request, year=None):

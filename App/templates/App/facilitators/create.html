@@ -3,7 +3,6 @@
 {% block slot %}
 
 <section class=" pt-12">
-    <img class="logo mx-auto pb-8" src="{% static 'assets/logo.png' %}" alt="App logo">
     <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm">
         {% csrf_token %}
         {{ form.as_p }}
@@ -15,11 +14,4 @@
 
 
 {% block scripts %}
-<script>
-    // {% if link_name %}
-    const active_link = "{{ link_name }}" 
-    // {% else %}
-    const active_link = "all-stats" 
-    // {% endif %}
-</script>
 {% endblock scripts %}

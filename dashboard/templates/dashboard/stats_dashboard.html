@@ -1,0 +1,167 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block slot %}
+
+<div class="bg-dark text-lighter min-h-screen p-2 sm:p-4 md:p-6" x-data="{
+    convertNumber(){
+        document.querySelectorAll('.large_number').forEach(element => {
+            let number = element.innerText;
+            if (!isNaN(number)) {
+                if (number.includes('.')) {
+                    let [whole, decimal] = number.split('.');
+                    element.innerHTML = `${whole}<span class='text-2xl ml-1'>.${decimal}</span>`;
+                } else if (number.length > 3) {
+                    let whole = number.slice(0, -3);
+                    let lastThree = number.slice(-3);
+                    element.innerHTML = `${whole}<span class='text-2xl ml-1'>${lastThree}</span>`;
+                }
+            }
+        });
+    },
+    init(){
+        this.convertNumber();
+    }
+}">
+    <div class="grid @container">
+        <header class="mb-12 text-center">
+            <h1 class="text-3xl font-bold text-white mb-6">Dashboard</h1>
+            <p class="text-lg">Welcome to the dashboard. Here you can view statistics and other information about
+                our services.</p>
+        </header>
+        <main class="grid gap-y-12">
+            {% for stat in stats.numbers_stats %}
+            <section>
+                <h2 class="mb-6 text-xl font-bold text-white">{{ stat.name }}</h2>
+                <div class="grid @xs:grid-cols-2 @xs:gap-4  @5xl:grid-cols-4">
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Total</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stat.total }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-arrow-up-9-1 text-primary"></i>
+                            <span class="text-xl">Total</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Average</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stat.average }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-divide text-warning"></i>
+                            <span class="text-xl">Average</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <div class="font-semibold text-lg">{{ stat.highest_stat.date }}</div>
+                        <div class="font-bold text-5xl tracking-tight large_number">{{ stat.highest }}</div>
+                        <div class="font-normal flex gap-x-3 items-center">
+                            <i class="fa-solid fa-arrow-trend-up text-success"></i>
+                            <span>Highest</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <div class="font-semibold text-lg">{{ stat.lowest_stat.date }}</div>
+                        <div class="font-bold text-5xl tracking-tight large_number">{{ stat.lowest }}</div>
+                        <div class="font-normal flex gap-x-3 items-center">
+                            <i class="fa-solid fa-arrow-trend-down text-danger"></i>
+                            <span>Lowest</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {% endfor %}
+
+            <section>
+                <h2 class="mb-6 text-xl font-bold text-white flex items-center">
+                    <i class="fa-solid fa-person-digging text-purple-600 mr-2 text-2xl"></i>
+                    Facilitation
+                </h2>
+                <div class="grid @xs:grid-cols-2 @xs:gap-4 @5xl:grid-cols-4">
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Total</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_sundays }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-calendar-day text-primary"></i>
+                            <span class="text-xl">Days</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Total</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_services }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-calendar-day text-primary"></i>
+                            <span class="text-xl">Services</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Average</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_facilitators }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-divide text-warning"></i>
+                            <span class="text-xl">Facilitators</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <!-- <div class="font-semibold text-lg">Average</div> -->
+                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.average_facilitation }}</div>
+                        <div class="font-normal">
+                            <i class="fa-solid fa-divide text-warning"></i>
+                            <span class="text-xl">Daily Average</span>    
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <div class="font-semibold text-lg">{{ stats.facilitators_data.highest_facilitation_day.date }}</div>
+                        <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.highest_facilitation }}</div>
+                        <div class="font-normal flex gap-x-3 items-center">
+                            <i class="fa-solid fa-arrow-trend-up text-success"></i>
+                            <span>Most</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <div class="font-semibold text-lg">{{ stats.facilitators_data.lowest_facilitation_day.date }}</div>
+                        <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.lowest_facilitation }}</div>
+                        <div class="font-normal flex gap-x-3 items-center">
+                            <i class="fa-solid fa-arrow-trend-down text-danger"></i>
+                            <span>Least</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid gap-4 mt-12">
+                    <div class="flex flex-col gap-y-6 rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <h3 class="text-2xl font-bold text-white">Facilitators List</h3>
+                        {% if True %}
+                        <ol class="grid gap-y-6 gap-x-6">
+                            {% for facilitator, details in stats.facilitators_data.facilitators_dict.items %}
+                            <li class="{% if not facilitator.active %}opacity-80{% endif %} flex gap-x-2">
+                                <div>
+                                    <span>{{ forloop.counter }}.</span>
+                                </div>
+                                <div class="grid border-l-2 border-lighter/30 pl-2">
+                                    <h4 class="text-xl font-semibold mb-1 text-white {% if not facilitator.active %}[text-decoration:line-through;]{% endif %}">{{ facilitator.name }}</h4>
+                                    <div class="flex gap-x-3">
+                                        <div class="flex gap-x-2 items-end text-center text-sm font-medium">
+                                            <span class="">{{ details.total_sundays_served }}</span>
+                                            <span class="">Day{% if details.total_sundays_served > 1 %}s{% endif %},</span>
+                                        </div>
+                                        <div class="flex gap-x-2 items-end text-center text-sm font-medium">
+                                            <span class="">{{ details.total_services_served }}</span>
+                                            <span class="">Service{% if details.total_services_served > 1 %}s{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ol>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+{% endblock slot %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

@@ -3,11 +3,6 @@
 
 {% block slot %}
 
-<section title="More details" class="pt-16">
-    <img class="logo mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
-    
-</section>
-
 <section title="Statistics">
     <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
     <div class="stat-articles">
@@ -104,7 +99,4 @@
 
 
 {% block scripts %}
-<script>
-    const active_link = "more-link"
-</script>
 {% endblock scripts %}

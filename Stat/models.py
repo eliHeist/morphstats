@@ -18,6 +18,20 @@ class Stat(models.Model):
             count += service.totalMorphers()
         return count
     
+    def totalJunior(self):
+        count:int = 0
+        for service in self.services.all():
+            if service.junior:
+                count += service.junior or 0
+        return count
+    
+    def totalSenior(self):
+        count:int = 0
+        for service in self.services.all():
+            if service.senior:
+                count += service.senior
+        return count
+    
     def totalSalvations(self):
         count:int = 0
         for service in self.services.all():
