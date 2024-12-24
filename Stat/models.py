@@ -54,6 +54,22 @@ class Stat(models.Model):
                     facilitators_list.append(facilitator)
         return facilitators_list
     
+    def facilitatorsData(self):
+        facilitators_dict = {}
+
+        for service in self.services.all():
+            for facilitator in service.facilitators_available.all():
+                if facilitator.pk not in facilitators_dict:
+                    facilitators_dict[facilitator.pk] = {
+                        'facilitator': facilitator,
+                        'service_count': 1
+                    }
+                else:
+                    facilitators_dict[facilitator.pk]['service_count'] += 1
+
+        return list(facilitators_dict.values())
+
+    
     def facilitatorsCount(self):
         facilitators_list = []
         for service in self.services.all():

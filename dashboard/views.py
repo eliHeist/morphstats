@@ -112,20 +112,30 @@ class StatisticsDashboardView(View):
             if stat.facilitatorsCount() < data["lowest_facilitation"]:
                 data["lowest_facilitation"] = stat.facilitatorsCount()
                 data["lowest_facilitation_day"] = stat
-            for service in stat.services.all():
-                data["total_services"] += 1
-                
-                for facilitator in service.facilitators_available.all():
-                    if facilitator not in facilitator_dict:
-                        facilitator_dict[facilitator] = {"services_served": set(), "total_services_served": 0, "sundays_served": set(), "total_sundays_served": 0}
-                    # set of services served
-                    facilitator_dict[facilitator]["services_served"].add(service)
-                    # number of services served
-                    facilitator_dict[facilitator]["total_services_served"] = len(facilitator_dict[facilitator]["services_served"])
-                    # set of sundays served
-                    facilitator_dict[facilitator]["sundays_served"].add(stat)
-                    # number of sundays served
-                    facilitator_dict[facilitator]["total_sundays_served"] = len(facilitator_dict[facilitator]["sundays_served"])
+            
+            data["total_services"] += stat.services.count()
+            
+                # for facilitator in service.facilitators_available.all():
+                #     if facilitator not in facilitator_dict:
+                #         facilitator_dict[facilitator] = {"services_served": set(), "total_services_served": 0, "sundays_served": set(), "total_sundays_served": 0}
+                #     # set of services served
+                #     facilitator_dict[facilitator]["services_served"].add(service)
+                #     # number of services served
+                #     facilitator_dict[facilitator]["total_services_served"] = len(facilitator_dict[facilitator]["services_served"])
+                #     # set of sundays served
+                #     facilitator_dict[facilitator]["sundays_served"].add(stat)
+                #     # number of sundays served
+                #     facilitator_dict[facilitator]["total_sundays_served"] = len(facilitator_dict[facilitator]["sundays_served"])
+            
+            for stat_data in stat.facilitatorsData():
+                if stat_data['facilitator'] not in facilitator_dict:
+                    facilitator_dict[stat_data['facilitator']] = {"total_services_served": 0, "sundays_served": set(), "total_sundays_served": 0}
+                # number of services served
+                facilitator_dict[stat_data['facilitator']]["total_services_served"] += stat_data['service_count']
+                # set of sundays served
+                facilitator_dict[stat_data['facilitator']]["sundays_served"].add(stat)
+                # number of sundays served
+                facilitator_dict[stat_data['facilitator']]["total_sundays_served"] += 1
 
         data["average_facilitation"] = int(data["total_facilitation"] / data["total_sundays"])
         data["total_facilitators"] = len(facilitator_dict)
