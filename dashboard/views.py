@@ -42,7 +42,7 @@ class StatisticsDashboardView(View):
                     "highest_stat": value["highest_stat"],
                     "lowest": value["lowest"],
                     "lowest_stat": value["lowest_stat"],
-                    "average": value["average"],
+                    "daily_average": value["daily_average"],
                     "total": value["total"]
                 })
         
