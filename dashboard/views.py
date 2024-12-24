@@ -62,7 +62,7 @@ class StatisticsDashboardView(View):
 
     def calculate_stats(self, filtered_stats, method_name):
         total_stats = filtered_stats.count()
-        stats = {"highest": 0, "lowest": float('inf'), "total": 0, "average": 0}
+        stats = {"highest": 0, "lowest": float('inf'), "total": 0, "daily_average": 0}
 
         for stat in filtered_stats:
             value = getattr(stat, method_name)()
@@ -75,7 +75,7 @@ class StatisticsDashboardView(View):
                 stats["lowest_stat"] = stat
 
         if total_stats > 0:
-            stats["average"] = int(stats["total"] / total_stats)
+            stats["daily_average"] = int(stats["total"] / total_stats)
         else:
             stats["lowest"] = 0
 
