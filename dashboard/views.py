@@ -20,7 +20,7 @@ class StatisticsDashboardView(View):
         
         
         numbers_stats = {
-            "morphers": self.calculate_stats(filtered_stats, 'totalAttendance'),
+            "attendance": self.calculate_stats(filtered_stats, 'totalAttendance'),
             "junior": self.calculate_stats(filtered_stats, 'totalJunior'),
             "senior": self.calculate_stats(filtered_stats, 'totalSenior'),
             "salvations": self.calculate_stats(filtered_stats, 'totalSalvations'),
