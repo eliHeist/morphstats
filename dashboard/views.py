@@ -116,7 +116,7 @@ class StatisticsDashboardView(View):
                 
                 for facilitator in service.facilitators_available.all():
                     if facilitator not in facilitator_dict:
-                        facilitator_dict[facilitator] = {"services_served": set(), "sundays_served": set()}
+                        facilitator_dict[facilitator] = {"services_served": set(), "total_services_served": 0, "sundays_served": set(), "total_sundays_served": 0}
                     # set of services served
                     facilitator_dict[facilitator]["services_served"].add(service)
                     # number of services served
@@ -128,7 +128,9 @@ class StatisticsDashboardView(View):
 
         data["average_facilitation"] = round(data["total_facilitation"] / data["total_sundays"], 0)
         data["total_facilitators"] = len(facilitator_dict)
+
+        sorted_facilitator_dict = dict( sorted(facilitator_dict.items(), key=lambda item: item[1]['total_sundays_served'], reverse=True) )
         
-        data["facilitators_dict"] = facilitator_dict
+        data["facilitators_dict"] = sorted_facilitator_dict
 
         return data
