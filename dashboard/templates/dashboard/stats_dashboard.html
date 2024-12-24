@@ -8,10 +8,7 @@
         document.querySelectorAll('.large_number').forEach(element => {
             let number = element.innerText;
             if (!isNaN(number)) {
-                if (number.includes('.')) {
-                    let [whole, decimal] = number.split('.');
-                    element.innerHTML = `${whole}<span class='text-2xl ml-1'>.${decimal}</span>`;
-                } else if (number.length > 3) {
+                if (number.length > 3) {
                     let whole = number.slice(0, -3);
                     let lastThree = number.slice(-3);
                     element.innerHTML = `${whole},<span class='text-4xl ml-1'>${lastThree}</span>`;
@@ -141,9 +138,6 @@
                     <div
                         class="flex flex-col gap-y-6 rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
                         <h3 class="text-2xl font-bold text-white">Facilitators List</h3>
-                        <p>
-                            
-                        </p>
                         <ol class="grid gap-y-6 gap-x-6" x-data="">
                             {% for facilitator, details in stats.facilitators_data.facilitators_dict.items %}
                             <li class="{% if not facilitator.active %}opacity-80{% endif %} flex gap-x-2">
