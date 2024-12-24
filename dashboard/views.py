@@ -27,6 +27,7 @@ class StatisticsDashboardView(View):
             "first_time_visitors": self.calculate_stats(filtered_stats, 'totalVisitors'),
         }
         
+        
         stats = {
             "facilitators_data": self.calculate_facilitators_served(filtered_stats),
         }
@@ -74,7 +75,7 @@ class StatisticsDashboardView(View):
                 stats["lowest_stat"] = stat
 
         if total_stats > 0:
-            stats["average"] = int(stats["total"] / total_stats, 0)
+            stats["average"] = int(stats["total"] / total_stats)
         else:
             stats["lowest"] = 0
 
@@ -126,11 +127,13 @@ class StatisticsDashboardView(View):
                     # number of sundays served
                     facilitator_dict[facilitator]["total_sundays_served"] = len(facilitator_dict[facilitator]["sundays_served"])
 
-        data["average_facilitation"] = int(data["total_facilitation"] / data["total_sundays"], 0)
+        data["average_facilitation"] = int(data["total_facilitation"] / data["total_sundays"])
         data["total_facilitators"] = len(facilitator_dict)
 
+        # sort by most days served
         sorted_facilitator_dict = dict( sorted(facilitator_dict.items(), key=lambda item: item[1]['total_sundays_served'], reverse=True) )
         
         data["facilitators_dict"] = sorted_facilitator_dict
 
         return data
+
