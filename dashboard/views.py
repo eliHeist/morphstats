@@ -91,13 +91,17 @@ class StatisticsDashboardView(View):
             "lowest_facilitation": 10000000, #✔️ # start at a high value to be able to get the lowest
             "lowest_facilitation_day": 0, #✔️
             "facilitators_dict": None,
-            "total_facilitators": 0 #✔️
+            "total_facilitators": 0, #✔️
+            "stats_list": [
+                ['Date', 'Morphers', 'Facilitators']
+            ]
         }
         facilitator_dict = {}
 
         for stat in filtered_stats:
             # increment total facilitation
             data["total_facilitation"] += stat.facilitatorsCount()
+            data["stats_list"].append([stat.date.strftime("%d %b"), stat.totalAttendance(), stat.facilitatorsCount()])
             
             # find highest facilitation
             if stat.facilitatorsCount() > data["highest_facilitation"]:
