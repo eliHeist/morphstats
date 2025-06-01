@@ -81,10 +81,10 @@ class Stat(models.Model):
     def total_that_served(self):
         non_system_total = 0
         for service in self.services.all():
-            if service.non_system_facilitators > non_system_total:
+            if service.non_system_facilitators and service.non_system_facilitators > non_system_total:
                 non_system_total = service.non_system_facilitators
         
-        return self.facilitatorsCount() + (non_system_total or 0)
+        return self.facilitatorsCount() + non_system_total
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))
