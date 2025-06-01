@@ -84,7 +84,7 @@ class Stat(models.Model):
             if service.non_system_facilitators > non_system_total:
                 non_system_total = service.non_system_facilitators
         
-        return self.facilitatorsCount() + non_system_total
+        return self.facilitatorsCount() + (non_system_total or 0)
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))
