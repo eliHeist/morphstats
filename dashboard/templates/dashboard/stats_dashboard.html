@@ -4,6 +4,7 @@
 {% block slot %}
 
 <div class="bg-dark text-lighter min-h-screen p-2 sm:p-4 md:p-6" x-data="{
+    tab: 0,
     convertNumber(){
         document.querySelectorAll('.large_number').forEach(element => {
             let number = element.innerText;
@@ -29,204 +30,176 @@
             <p class="text-lg">Welcome to the dashboard. Here you can view statistics and other information about
                 our services.</p>
         </header>
-        <main class="grid gap-y-12">
-            {% for stat in stats.numbers_stats %}
-            <section>
-                <h2 class="mb-6 text-xl font-bold text-white">{{ stat.name }}</h2>
-                <div class="grid @xs:grid-cols-2 @xs:gap-4  @5xl:grid-cols-4">
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Total</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stat.total }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-arrow-up-9-1 text-primary"></i>
-                            <span class="text-xl">Total</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Average</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stat.daily_average }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-divide text-warning"></i>
-                            <span class="text-xl">Average</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <div class="font-semibold text-lg">{{ stat.highest_stat.date }}</div>
-                        <div class="font-bold text-5xl tracking-tight large_number">{{ stat.highest }}</div>
-                        <div class="font-normal flex gap-x-3 items-center">
-                            <i class="fa-solid fa-arrow-trend-up text-success"></i>
-                            <span>Highest</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <div class="font-semibold text-lg">{{ stat.lowest_stat.date }}</div>
-                        <div class="font-bold text-5xl tracking-tight large_number">{{ stat.lowest }}</div>
-                        <div class="font-normal flex gap-x-3 items-center">
-                            <i class="fa-solid fa-arrow-trend-down text-danger"></i>
-                            <span>Lowest</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            {% endfor %}
 
-            <section>
-                <h2 class="mb-6 text-xl font-bold text-white flex items-center">
-                    <i class="fa-solid fa-person-digging text-purple-600 mr-2 text-2xl"></i>
-                    Facilitation
-                </h2>
-                <div class="grid @xs:grid-cols-2 @xs:gap-4 @5xl:grid-cols-4">
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Total</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_sundays }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-calendar-day text-primary"></i>
-                            <span class="text-xl">Days</span>
+        <!-- Tabs -->
+        <div class="w-fit mb-4 max-w-3xl mx-auto sticky top-2 z-40" id="tabs-component">
+            <div role="tablist" aria-label="Sample tabs" class="flex gap-2">
+                <button id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" data-index="0"
+                class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 0 }" @click="tab = 0">Stats</button>
+                <button id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" data-index="1"
+                class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 1 }" @click="tab = 1">Facilitators</button>
+                <button id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-index="2"
+                class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 2 }" @click="tab = 2">Analytics</button>
+            </div>
+        </div>
+
+        <main class="grid gap-y-12 -z-10">
+
+            <section class="stats grid gap-y-12" x-cloak x-show="tab === 0">
+                {% for stat in stats.numbers_stats %}
+                <section>
+                    <h2 class="mb-6 text-xl font-bold text-white">{{ stat.name }}</h2>
+                    <div class="grid @xs:grid-cols-2 @xs:gap-4  @5xl:grid-cols-4">
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Total</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stat.total }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-arrow-up-9-1 text-primary"></i>
+                                <span class="text-xl">Total</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Average</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stat.daily_average }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-divide text-warning"></i>
+                                <span class="text-xl">Average</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <div class="font-semibold text-lg">{{ stat.highest_stat.date }}</div>
+                            <div class="font-bold text-5xl tracking-tight large_number">{{ stat.highest }}</div>
+                            <div class="font-normal flex gap-x-3 items-center">
+                                <i class="fa-solid fa-arrow-trend-up text-success"></i>
+                                <span>Highest</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <div class="font-semibold text-lg">{{ stat.lowest_stat.date }}</div>
+                            <div class="font-bold text-5xl tracking-tight large_number">{{ stat.lowest }}</div>
+                            <div class="font-normal flex gap-x-3 items-center">
+                                <i class="fa-solid fa-arrow-trend-down text-danger"></i>
+                                <span>Lowest</span>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Total</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_services }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-calendar-day text-primary"></i>
-                            <span class="text-xl">Services</span>
+                </section>
+                {% endfor %}
+    
+                <section>
+                    <h2 class="mb-6 text-xl font-bold text-white flex items-center">
+                        <i class="fa-solid fa-person-digging text-purple-600 mr-2 text-2xl"></i>
+                        Facilitation
+                    </h2>
+                    <div class="grid @xs:grid-cols-2 @xs:gap-4 @5xl:grid-cols-4">
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Total</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_sundays }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-calendar-day text-primary"></i>
+                                <span class="text-xl">Days</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Total</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_services }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-calendar-day text-primary"></i>
+                                <span class="text-xl">Services</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Average</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_facilitators }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-person-digging text-warning"></i>
+                                <span class="text-xl">Facilitators</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <!-- <div class="font-semibold text-lg">Average</div> -->
+                            <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.average_facilitation }}</div>
+                            <div class="font-normal">
+                                <i class="fa-solid fa-divide text-warning"></i>
+                                <span class="text-xl">Daily Average</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <div class="font-semibold text-lg">{{ stats.facilitators_data.highest_facilitation_day.date }}
+                            </div>
+                            <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.highest_facilitation }}</div>
+                            <div class="font-normal flex gap-x-3 items-center">
+                                <i class="fa-solid fa-arrow-trend-up text-success"></i>
+                                <span>Most</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                            <div class="font-semibold text-lg">{{ stats.facilitators_data.lowest_facilitation_day.date }}
+                            </div>
+                            <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.lowest_facilitation }}</div>
+                            <div class="font-normal flex gap-x-3 items-center">
+                                <i class="fa-solid fa-arrow-trend-down text-danger"></i>
+                                <span>Least</span>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Average</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.total_facilitators }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-person-digging text-warning"></i>
-                            <span class="text-xl">Facilitators</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <!-- <div class="font-semibold text-lg">Average</div> -->
-                        <div class="font-bold text-6xl tracking-tight large_number">{{ stats.facilitators_data.average_facilitation }}</div>
-                        <div class="font-normal">
-                            <i class="fa-solid fa-divide text-warning"></i>
-                            <span class="text-xl">Daily Average</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <div class="font-semibold text-lg">{{ stats.facilitators_data.highest_facilitation_day.date }}
-                        </div>
-                        <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.highest_facilitation }}</div>
-                        <div class="font-normal flex gap-x-3 items-center">
-                            <i class="fa-solid fa-arrow-trend-up text-success"></i>
-                            <span>Most</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col gap-2 h-40 text-white rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <div class="font-semibold text-lg">{{ stats.facilitators_data.lowest_facilitation_day.date }}
-                        </div>
-                        <div class="font-bold text-5xl tracking-tight large_number">{{ stats.facilitators_data.lowest_facilitation }}</div>
-                        <div class="font-normal flex gap-x-3 items-center">
-                            <i class="fa-solid fa-arrow-trend-down text-danger"></i>
-                            <span>Least</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid gap-4 mt-12">
-                    <div
-                        class="flex flex-col gap-y-6 rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <h3 class="text-2xl font-bold text-white">Facilitators List</h3>
-                        <ol class="grid gap-y-6 gap-x-6" x-data="">
-                            {% for facilitator, details in stats.facilitators_data.facilitators_dict.items %}
-                            <li class="{% if not facilitator.active %}opacity-80{% endif %} flex gap-x-2">
-                                <div>
-                                    <span>{{ forloop.counter }}.</span>
-                                </div>
-                                <div class="grid border-l-2 border-lighter/30 pl-2">
-                                    <h4
-                                        class="text-xl font-semibold mb-1 text-white {% if not facilitator.active %}[text-decoration:line-through;]{% endif %}">
-                                        {{ facilitator.name }}</h4>
-                                    <div class="flex gap-x-6">
-                                        <div class="flex gap-x-1 items-end text-center text-sm font-medium">
-                                            <span class="">{{ details.total_sundays_served }}</span>
-                                            <span class="">Day{% if details.total_sundays_served > 1 %}s{% endif %},</span>
-                                            <span x-text="`${ ({{ details.total_sundays_served }}/{{ stats.facilitators_data.total_sundays }}*100).toFixed(1) }%`">,</span>
-                                        </div>
-                                        <div class="flex gap-x-1 items-end text-center text-sm font-medium">
-                                            <span class="">{{ details.total_services_served }}</span>
-                                            <span class="">Service{% if details.total_services_served > 1 %}s{% endif %}</span>
-                                            <span x-text="`${ ({{ details.total_services_served }}/{{ stats.facilitators_data.total_services }}*100).toFixed(1) }%`">,</span>
-                                        </div>
+                </section>
+            </section>
+
+            {% comment %} facilitators {% endcomment %}
+            <section class="grid gap-4 mt-12" x-cloak x-show="tab === 1">
+                <div
+                    class="flex flex-col gap-y-6">
+                    {% comment %} <h3 class="text-2xl font-bold text-white">Facilitators List</h3> {% endcomment %}
+                    <ol class="grid gap-y-6 gap-x-6" x-data="">
+                        {% for facilitator, details in stats.facilitators_data.facilitators_dict.items %}
+                        <li class="{% if not facilitator.active %}opacity-80{% endif %} flex gap-x-2">
+                            <div>
+                                <span>{{ forloop.counter }}.</span>
+                            </div>
+                            <div class="grid border-l-2 border-lighter/30 pl-2">
+                                <h4
+                                    class="text-lg font-semibold mb-1 text-white {% if not facilitator.active %}[text-decoration:line-through;]{% endif %}">
+                                    {{ facilitator.name }}</h4>
+                                <div class="flex gap-x-6">
+                                    <div class="flex gap-x-1 items-end text-center text-sm font-medium">
+                                        <span class="">{{ details.total_sundays_served }}</span>
+                                        <span class="">Day{% if details.total_sundays_served > 1 %}s{% endif %},</span>
+                                        <span x-text="`${ ({{ details.total_sundays_served }}/{{ stats.facilitators_data.total_sundays }}*100).toFixed(1) }%`">,</span>
                                     </div>
                                 </div>
-                            </li>
-                            {% endfor %}
-                        </ol>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </section>
+
+            <section class="flex flex-col gap-y-6" x-cloak x-show="tab === 2">
+                {% comment %} <h3 class="text-2xl font-bold text-white">Area Charts (Chart.js)</h3> {% endcomment %}
+
+                <div class="grid @xs:grid-cols-1 @md:grid-cols-2 gap-6">
+                    <div class="rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <h4 class="text-lg text-white mb-2">Attendance</h4>
+                        <canvas id="attendanceAreaChart"></canvas>
                     </div>
-                    <div
-                        class="flex flex-col gap-y-6 rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
-                        <h3 class="text-2xl font-bold text-white">Chart</h3>
-                        <div class="w-full">
-                            <div id="curve_chart" class="w-full"></div>
-                        </div>
-                        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-                        <script type="text/javascript">
-                            google.charts.load('current', { 'packages': ['corechart'] });
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable({{ stats.facilitators_data.stats_list|safe }});
-
-                                var options = {
-                                    // title: 'Company Performance',
-                                    curveType: 'function',
-                                    legend: { 
-                                        textStyle: { color: 'white', fontSize: 8 },
-                                        position: 'bottom'
-                                    },
-                                    backgroundColor: 'transparent',
-                                    colors: ['#006FFF', '#ff003c', '#FFB300'],
-                                    chartArea: { 
-                                        left: 50, // Padding on the left 
-                                        top: 10, // Padding on the top 
-                                        right: 0, // Padding on the right 
-                                        bottom: 50 // Padding on the bottom
-                                    },
-                                    hAxis: { 
-                                        textStyle: { 
-                                            color: '#C0D6F2', // Horizontal axis labels color (Primary color) 
-                                            fontSize: 10, // Font size for horizontal axis labels
-                                            bold: true // Bold font for horizontal axis labels
-                                        }, 
-                                        titleTextStyle: { 
-                                            color: '#C0D6F2' // Title color for horizontal axis (Primary color) 
-                                        } 
-                                    }, 
-                                    vAxis: { 
-                                        textStyle: { 
-                                            color: '#C0D6F2', // Vertical axis labels color (Primary color) 
-                                            fontSize: 10, // Font size for vertical axis labels 
-                                            bold: true // Bold font for vertical axis labels 
-                                        }, 
-                                        titleTextStyle: { 
-                                            color: '#C0D6F2' // Title color for vertical axis (Primary color) 
-                                        } 
-                                    },
-                                };
-
-                                var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-                                chart.draw(data, options);
-                            }
-                        </script>
+                    <div class="rounded-xl shadow-md p-6 bg-light bg-opacity-30 backdrop-filter backdrop-blur-lg">
+                        <h4 class="text-lg text-white mb-2">Facilitators</h4>
+                        <canvas id="facilitatorsAreaChart"></canvas>
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
 </div>
@@ -235,5 +208,7 @@
 
 
 {% block scripts %}
-
+<script id="stats-data" type="application/json">
+    {{ stats.facilitators_data.stats_list|safe }}
+</script>
 {% endblock scripts %}
