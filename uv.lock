@@ -116,8 +116,12 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "crispy-tailwind", specifier = ">=1.0.3" },
+<<<<<<< HEAD
     { name = "django", specifier = ">=5.1.4" },
     { name = "django-cors-headers", specifier = ">=4.6.0" },
+=======
+    { name = "django", specifier = ">=5.2" },
+>>>>>>> dcf9470 (show save loader on button)
     { name = "django-crispy-forms", specifier = ">=2.3" },
     { name = "django-environ", specifier = ">=0.11.2" },
     { name = "django-unfold", specifier = ">=0.43.0" },

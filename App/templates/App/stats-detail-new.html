@@ -98,9 +98,14 @@
                 </button>
                 <template x-if="editMode">
                     <button @click="updateServices()"
-                        class="bg-primary flex gap-2 items-center px-6 py-2 text-white rounded-full">
+                        class="load-btn bg-primary flex gap-2 items-center px-6 py-2 text-white rounded-full overflow-hidden" :class="statsLoader ? 'loading' : ''">
                         Save
                         <i class="fas fa-save"></i>
+                        <div class="button--loader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
                     </button>
                 </template>
             </div>

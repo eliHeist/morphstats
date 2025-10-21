@@ -534,3 +534,87 @@ form{
     }
 }
 
+.load-btn {
+    position: relative;
+
+    &:after {
+        position: absolute;
+        border-radius: inherit;
+        overflow: hidden;
+        content: '';
+        top: 100%;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--color-primary);
+        transition-property: background-color, top;
+        transition-duration: 500ms;
+        transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .button--loader {
+        z-index: 3;
+
+        display: flex;
+        gap: .25rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        opacity: 0;
+        transition-property: opacity;
+        transition-duration: 200ms;
+        transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+        transition-delay: 450ms;
+
+        div {
+            --size: .8rem;
+            width: var(--size);
+            height: var(--size);
+            max-width: 30%;
+            max-height: 90%;
+            border-radius: 50%;
+            background-color: var(--color-white);
+            transform: scale(0);
+        }
+    }
+
+    &.loading {
+        pointer-events: none;
+        cursor: wait;
+
+        &:after {
+            top: 0;
+        }
+
+        .button--loader {
+            opacity: 1;
+
+            div {
+                animation: 1.2s infinite ease-in-out scaleUp;
+
+                &:nth-child(1) {
+                    animation-delay: -0.32s;
+                }
+
+                &:nth-child(2) {
+                    animation-delay: -0.16s;
+                }
+            }
+        }
+    }
+}
+
+@keyframes scaleUp {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+

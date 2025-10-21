@@ -26,9 +26,10 @@ type Facilitator = {
 export default (): any => ({
     facilitators: [],
     services: [],
-    editMode: false,
     updateTimer: null,
     servicesUrl: '',
+    editMode: false,
+    statsLoader: false,
 
     async initialize(pk: number, servicesUrl: string, facilitatorsUrl: string){
         this.servicesUrl = servicesUrl
@@ -67,6 +68,7 @@ export default (): any => ({
     },
 
     async updateServices() {
+        this.statsLoader = true
         try {
             // Get the CSRF token from the cookie
             const csrftoken = this.getCookie('csrftoken');
@@ -86,6 +88,7 @@ export default (): any => ({
         } catch (error) {
             console.error('Error updating services:', error);
         }
+        this.statsLoader = false
     },
 
     // Helper function to get CSRF token from cookie
