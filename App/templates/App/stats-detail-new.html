@@ -1,5 +1,5 @@
 {% extends 'app_base.html' %}
-{% load static %}
+{% load static customtags %}
 
 {% block slot %}
 
@@ -10,6 +10,7 @@
     )">
 
     <div class="date">{{ stat.formatedDate }}</div>
+    <div class="text-center my-4">{{ stat.date|human_date }}</div>
     <div class="grid gap-8 lg:grid-cols-12 ">
         <section class="py-8 lg:col-span-5 xl:col-span-4 overflow-x-auto">
             <table id="services-table" class="w-full border-collapse">
