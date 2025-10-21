@@ -8,6 +8,7 @@ staticfiles
 .idea/
 venv/ 
 .env
+.venv
 **/bootstrap**/*
 db.sqlite3
 node_modules/

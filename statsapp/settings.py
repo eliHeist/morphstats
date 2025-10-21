@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import environ
+from .appsConfig import getAppNames
 
 from .settings_files.unfold_theme import *
 
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'api',
     'dashboard',
 ]
+INSTALLED_APPS += getAppNames()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
