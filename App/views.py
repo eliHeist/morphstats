@@ -1,6 +1,9 @@
-from datetime import date
+import calendar
+from collections import OrderedDict, defaultdict
+from datetime import date, datetime
+import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls.base import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
@@ -191,28 +194,40 @@ class GeneralStatsView(View):
         context = {}
         return render(request, template_name, context)
 
+
 class FacilitatorDetailView(View):
-    class PairSet():
+    class PairSet:
         def __init__(self, stat=None, status=None) -> None:
             self.stat = stat
             self.status = status
 
     def get(self, request, pk, *args, **kwargs):
         template_name = 'App/facilitators/facilitator-calendar.html'
-        stats = Stat.objects.all().order_by('-date')
-        facilitator = Facilitator.objects.get(pk=pk)
+        stats = Stat.objects.filter(date__year=datetime.now().year).order_by('date')
+        facilitator = get_object_or_404(Facilitator, pk=pk)
+
+        # Daily stats (already ordered by date)
         main_list = []
         for stat in stats:
             mini_list = self.PairSet(stat)
-            if facilitator in stat.facilitators():
-                mini_list.status = True
-            else:
-                mini_list.status = False
+            mini_list.status = facilitator in stat.facilitators()
             main_list.append(mini_list)
-                    
+
+        # Build monthly stats
+        monthly_stats = OrderedDict()
+        for month_num in range(1, 13):
+            month_name = calendar.month_abbr[month_num]
+            monthly_stats[month_name] = {"month": month_name, "days_present": 0}
+
+            month_stats = stats.filter(date__month=month_num)
+            for stat in month_stats:
+                if facilitator in stat.facilitators():
+                    monthly_stats[month_name]["days_present"] += 1
 
         context = {
             'facilitator': facilitator,
             'list': main_list,
+            'monthly_stats': json.dumps(monthly_stats)
         }
         return render(request, template_name, context)
+    

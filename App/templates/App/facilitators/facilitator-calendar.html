@@ -2,8 +2,6 @@
 {% load static tailwind_filters %}
 
 {% block slot %}
-<img class="logo my-8 mx-auto" src="{% static 'assets/logo.png' %}" alt="App logo">
-
 <section class="mb-8">
     <div class="grid grid-flow-col justify-between px-2 mt-4">
         <a href="{% url 'App:facilitator-list' %}"
@@ -22,7 +20,7 @@
     <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
 </section>
 
-<table class="w-full">
+{% comment %} <table class="w-full">
     {% for pair in list %}
     <tr class="text-left">
         <th>{{ pair.stat.date }}</th>
@@ -35,7 +33,29 @@
         </td>
     </tr>
     {% endfor %}
-</table>
+</table> {% endcomment %}
+
+<h3 class="font-bold mb-2 hidden">Daily Availability Heatmap</h3>
+<div class="w-full overflow-x-auto my-4">
+    <div id="availabilityHeatmap" class="grid-cols-12 grid gap-1 w-fit max-w-3xl p-1 border border-light rounded mx-auto"></div>
+</div>
+
+<h3 class="font-bold mb-2 mt-6">Monthly chart</h3>
+<canvas id="monthlyAvailabilityChart" class="heatmap"></canvas>
+
+<div class="hidden aspect-square"></div>
+
+<!-- Embed JSON data -->
+<script id="facilitator-data" type="application/json">
+{
+    "daily": [
+        {% for pair in list %}
+        { "date": "{{ pair.stat.date|date:'d M' }}", "status": {{ pair.status|yesno:"true,false" }} }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ],
+    "monthly": {{ monthly_stats|safe }}
+}
+</script>
 
 {% endblock slot %}
 
