@@ -4,43 +4,52 @@
 {% block slot %}
 
 <section class="px-2" x-data="{
-    tab: 0
+    tab: 0,
+    filter_modal: false
 }">
     <div class="flex gap-4 p-4 justify-center flex-wrap">
         
         {% if request.user.is_authenticated %}
             <a href="{% url 'App:facilitator-create' %}" class="flex gap-2 items-center px-6 py-2 bg-primary text-white rounded-full">
                 <i class="fas fa-plus"></i>
-                <span class="font-bold">Add Facilitator</span>
+                <span class="font-bold">Add</span>
             </a>
 
             <a href="{% url 'facilitators:attendance' %}" class="flex gap-2 items-center px-6 py-2 text-white rounded-full border border-primary">
                 <div class="circle-outer">
                     <div class="circle-inner"><i class="img fas fa-calendar"></i></div>
                 </div>
-                <span>Attendance</span>
+                {% comment %} <span>Attendance</span> {% endcomment %}
             </a>
         {% endif %}
+        <button @click="filter_modal=true">Filters</button>
             
     </div>
 
-    <section class="mb-4">
-        <h2 class="font-bold text-center hidden">Filters</h2>
-        <form method="get" class="flex flex-wrap gap-4 justify-center">
-            <div class="flex items-center gap-2">
-                <label for="start_date" class="text-white">From Date:</label>
-                <input type="date" id="start_date" name="start_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.start_date }}">
-            </div>
-            <div class="flex items-center gap-2">
-                <label for="end_date" class="text-white">To Date:</label>
-                <input type="date" id="end_date" name="end_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.end_date }}">
-            </div>
-            <input type="reset" class="py-2 px-4 rounded-md hover:bg-light focus:outline-none focus:ring focus:border-blue-700" value="Reset"/>
-            <button type="submit" class="bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
-                Submit
+    <div style="background-color: rgba(0, 0, 0, 0.5);" class="fixed inset-0 grid items-center z-20" x-show="filter_modal">
+        <section class="relative min-w-sm mx-auto p-4 bg-light rounded-md">
+            <h2 class="font-bold text-center text-2xl">Filters</h2>
+            <form method="get" class="grid gap-4 p-4 w-96">
+                <div class="flex items-center justify-between gap-2">
+                    <label for="start_date" class="text-white">From:</label>
+                    <input type="date" id="start_date" name="start_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <label for="end_date" class="text-white">To:</label>
+                    <input type="date" id="end_date" name="end_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="reset" class="py-2 px-4 rounded-md hover:bg-light focus:outline-none focus:ring focus:border-blue-700 cursor-pointer" value="Reset"/>
+                    <button type="submit" class="bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                        Submit
+                    </button>
+                </div>
+            </form>
+            <button @click="filter_modal=false" type="button" class="absolute top-2 right-2 p-2 bg-transparent hover:bg-danger w-8 h-8 grid place-content-center">
+                <i class="fas fa-x"></i>
             </button>
-        </form>
-    </section>
+        </section>
+    </div>
 
     <section class="mb-8">
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
@@ -61,7 +70,7 @@
     </section>
     
 
-    <div class="w-fit mb-4 max-w-3xl mx-auto sticky top-2 z-40" id="tabs-component">
+    <div class="w-fit mb-4 max-w-3xl mx-auto sticky top-2 z-10" id="tabs-component">
         <div role="tablist" aria-label="Sample tabs" class="flex gap-2">
             <button id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" data-index="0"
             class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 0 }" @click="tab = 0">Active</button>
