@@ -83,7 +83,7 @@
                 <tbody>
                     {% for f in facilitators %}
                     {% if f.active %}
-                    <tr>
+                    <tr class="hover:bg-light focus:bg-light">
                         <td class="px-2 py-2 border-b whitespace-nowrap text-left">
                             <a href="{% url 'App:facilitator-detail' f.pk %}"
                             class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
@@ -127,7 +127,7 @@
                 <tbody>
                     {% for f in facilitators %}
                     {% if not f.active %}
-                    <tr>
+                    <tr class="hover:bg-light focus:bg-light">
                         <td class="px-2 py-2 border-b whitespace-nowrap text-left">
                             <a href="{% url 'App:facilitator-detail' f.pk %}"
                             class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
