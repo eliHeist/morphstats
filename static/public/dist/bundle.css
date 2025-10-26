@@ -614,10 +614,6 @@ video {
   isolation: isolate;
 }
 
-.-z-10 {
-  z-index: -10;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -957,6 +953,10 @@ video {
   display: none;
 }
 
+.aspect-square {
+  aspect-ratio: 1/1;
+}
+
 .h-0 {
   height: 0px;
 }
@@ -991,10 +991,6 @@ video {
 
 .h-6 {
   height: 1.5rem;
-}
-
-.h-60 {
-  height: 15rem;
 }
 
 .h-64 {
@@ -1269,6 +1265,10 @@ video {
 
 .grid-cols-12 {
   grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-cols-\[repeat\(auto-fit\,minmax\(13rem\,1fr\)\)\] {
@@ -3468,19 +3468,11 @@ form button:hover {
 }
 
 @container (min-width: 20rem) {
-  .\@xs\:grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
   .\@xs\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .\@xs\:gap-4 {
     gap: 1rem;
-  }
-}
-@container (min-width: 28rem) {
-  .\@md\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @container (min-width: 64rem) {
@@ -3740,6 +3732,9 @@ form button:hover {
   }
   .md\:mt-0 {
     margin-top: 0px;
+  }
+  .md\:hidden {
+    display: none;
   }
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));

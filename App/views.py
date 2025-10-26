@@ -110,12 +110,38 @@ class FacilitatorListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FacilitatorListView, self).get_context_data(**kwargs)
-        context['active_facilitator_count'] = context['facilitators'].filter(active=True).count()
+
+        # get the start and end dates from the request
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        
+        if start_date or end_date:
+            context['facilitators'] = self.filter_by_active_dates(context['facilitators'], start_date, end_date)
+
+        context['active_count'] = context['facilitators'].filter(active=True).count()
+        context['inactive_count'] = context['facilitators'].filter(active=False).count()
+        context['start_date'] = start_date
+        context['end_date'] = end_date
         return context
     
     def get_queryset(self):
         qs = super().get_queryset().order_by('name')
         return qs 
+    
+    def filter_by_active_dates(self, facilitators, start_date, end_date):
+
+        stats = Stat.objects.filter(date__gte=start_date, date__lte=end_date)
+
+        facilitators_set = set()
+        for stat in stats:
+            for service in stat.services.all():
+                facilitator_ids = service.facilitators_available.all().values_list('id', flat=True)
+                facilitators_set.update(facilitator_ids)
+        
+        filtered = facilitators.filter(pk__in=facilitators_set)
+
+        return filtered
+
 
 class MoreMenuView(View):
     def get(self, request, year=None):
