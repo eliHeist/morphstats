@@ -71,88 +71,92 @@
     </div>
     
     <section x-show="tab === 0">
-        <table class="w-full border-collapse table-auto">
-            <thead>
-                <tr>
-                    <th class="px-2 py-2 border-b text-left">Name</th>
-                    <th class="px-2 py-2 border-b text-left">Tags</th>
-                    <th class="px-2 py-2 border-b text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for f in facilitators %}
-                {% if f.active %}
-                <tr>
-                    <td class="px-2 py-2 border-b text-left">
-                        <a href="{% url 'App:facilitator-detail' f.pk %}"
-                        class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
-                    </td>
-                    <td class="px-2 py-2 border-b text-left">
-                        <div class="flex flex-wrap gap-1">
-                            {% for tag in f.tags.all %}
-                            <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td class="px-2 py-2 border-b text-right">
-                        <div class="flex gap-4 items-center justify-end">
-                            <a href="{% url 'App:facilitator-detail' f.pk %}">
-                                <i class="far fa-eye"></i>
-                            </a>
-                            {% if request.user.is_staff %}
-                            <a href="{% url 'App:facilitator-update' f.pk %}">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="overflow-x-auto w-full">
+            <table class="w-full border-collapse table-auto">
+                <thead>
+                    <tr>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in facilitators %}
+                    {% if f.active %}
+                    <tr>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            <a href="{% url 'App:facilitator-detail' f.pk %}"
+                            class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
+                        </td>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            <div class="flex flex-wrap gap-1">
+                                {% for tag in f.tags.all %}
+                                <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-right">
+                            <div class="flex gap-4 items-center justify-end">
+                                <a href="{% url 'App:facilitator-detail' f.pk %}">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                {% if request.user.is_staff %}
+                                <a href="{% url 'App:facilitator-update' f.pk %}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </section>
     <section x-show="tab === 1">
-        <table class="w-full border-collapse table-auto">
-            <thead>
-                <tr>
-                    <th class="px-2 py-2 border-b text-left">Name</th>
-                    <th class="px-2 py-2 border-b text-left">Tags</th>
-                    <th class="px-2 py-2 border-b text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for f in facilitators %}
-                {% if not f.active %}
-                <tr>
-                    <td class="px-2 py-2 border-b text-left">
-                        <a href="{% url 'App:facilitator-detail' f.pk %}"
-                        class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
-                    </td>
-                    <td class="px-2 py-2 border-b text-left">
-                        <div class="flex flex-wrap gap-1">
-                            {% for tag in f.tags.all %}
-                            <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td class="px-2 py-2 border-b text-right">
-                        <div class="flex gap-4 items-center justify-end">
-                            <a href="{% url 'App:facilitator-detail' f.pk %}">
-                                <i class="far fa-eye"></i>
-                            </a>
-                            {% if request.user.is_staff %}
-                            <a href="{% url 'App:facilitator-update' f.pk %}">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="overflow-x-auto w-full">
+            <table class="w-full border-collapse table-auto">
+                <thead>
+                    <tr>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in facilitators %}
+                    {% if not f.active %}
+                    <tr>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            <a href="{% url 'App:facilitator-detail' f.pk %}"
+                            class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
+                        </td>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            <div class="flex flex-wrap gap-1">
+                                {% for tag in f.tags.all %}
+                                <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-right">
+                            <div class="flex gap-4 items-center justify-end">
+                                <a href="{% url 'App:facilitator-detail' f.pk %}">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                {% if request.user.is_staff %}
+                                <a href="{% url 'App:facilitator-update' f.pk %}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </section>
 </section>
 <section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
