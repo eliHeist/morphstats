@@ -77,7 +77,9 @@
                     <tr>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                        {% if request.user.is_staff %}
                         <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -95,18 +97,15 @@
                                 {% endfor %}
                             </div>
                         </td>
+                        {% if request.user.is_staff %}
                         <td class="px-2 py-2 border-b whitespace-nowrap text-right">
                             <div class="flex gap-4 items-center justify-end">
-                                <a href="{% url 'App:facilitator-detail' f.pk %}">
-                                    <i class="far fa-eye"></i>
-                                </a>
-                                {% if request.user.is_staff %}
                                 <a href="{% url 'App:facilitator-update' f.pk %}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                {% endif %}
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -121,7 +120,9 @@
                     <tr>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                        {% if request.user.is_staff %}
                         <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -139,18 +140,15 @@
                                 {% endfor %}
                             </div>
                         </td>
+                        {% if request.user.is_staff %}
                         <td class="px-2 py-2 border-b whitespace-nowrap text-right">
                             <div class="flex gap-4 items-center justify-end">
-                                <a href="{% url 'App:facilitator-detail' f.pk %}">
-                                    <i class="far fa-eye"></i>
-                                </a>
-                                {% if request.user.is_staff %}
                                 <a href="{% url 'App:facilitator-update' f.pk %}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                {% endif %}
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% endif %}
                     {% endfor %}
