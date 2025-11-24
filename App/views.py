@@ -145,60 +145,8 @@ class FacilitatorListView(ListView):
 
 class MoreMenuView(View):
     def get(self, request, year=None):
-        # TODO add django filter to make a greater filtering system
-        today = date.today()
-        current_year = timezone.now().year
-        
-        days = Stat.objects.filter(date__year=current_year).order_by('-date')
-        # services = Service.objects.filter()
-        
-        highest_attendance = 0
-        lowest_attendance = 1000
-        highest_visitors = 0
-        total_visitors = 0
-        highest_salvations = 0
-        total_salvations = 0
-        
-        highest_attendance_day = None
-        lowest_attendance_day = None
-        highest_visitors_day = None
-        highest_salvations_day = None
-        
-        for day in days:
-            attendance = day.totalAttendance()
-            visitors = day.totalVisitors()
-            salvations = day.totalSalvations()
-            
-            if attendance > highest_attendance:
-                highest_attendance_day = day
-                highest_attendance = attendance
-            
-            if attendance < lowest_attendance:
-                lowest_attendance_day = day
-                lowest_attendance = attendance
-            
-            if visitors > highest_visitors:
-                highest_visitors_day = day
-                highest_visitors = visitors
-            
-            if salvations > highest_salvations:
-                highest_salvations_day = day
-                highest_salvations = salvations
-            
-            total_visitors += visitors
-            total_salvations += salvations
-        
         template_name = "App/moremenu.html"
-        context = {
-            'year': today.year,
-            'days': days,
-            'highest_attendance_day': highest_attendance_day,
-            'lowest_attendance_day': lowest_attendance_day,
-            'highest_visitors_day': highest_visitors_day,
-            'highest_salvations_day': highest_salvations_day,
-            'total_visitors': total_visitors,
-            'total_salvations': total_salvations,
-        }
+        context = {}
         return render(request, template_name, context)
 
 def page_not_found(request, exception):

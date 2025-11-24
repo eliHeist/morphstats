@@ -3,95 +3,30 @@
 
 {% block slot %}
 
-<section title="Statistics">
-    <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
-    <div class="stat-articles">
-        {% if highest_attendance_day %}
-        <article class="stat-article">
-            <h3>Highest Attendance</h3>
-            <span class="num">{{ highest_attendance_day.totalAttendance }}</span>
-            <p class="date">{{ highest_attendance_day.formatedDate }}</p>
-            <div class="services">
-                {% for service in highest_attendance_day.services.all %}
-                <div class="">
-                    <h4>{{ service.name }}</h4>
-                    <p>{{ service.totalMorphers }}</p>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'App:stat-detail' highest_attendance_day.pk %}">
-                View details
-                <i class="fas fa-arrow-right-long"></i>
-            </a>
-        </article>
-        {% endif %}
-        {% if lowest_attendance_day %}
-        <article class="stat-article">
-            <h3>Lowest Attendance</h3>
-            <span class="num">{{ lowest_attendance_day.totalAttendance }}</span>
-            <p class="date">{{ lowest_attendance_day.formatedDate }}</p>
-            <div class="services">
-                {% for service in lowest_attendance_day.services.all %}
-                <div class="">
-                    <h4>{{ service.name }}</h4>
-                    <p>{{ service.totalMorphers }}</p>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'App:stat-detail' lowest_attendance_day.pk %}">
-                View details
-                <i class="fas fa-arrow-right-long"></i>
-            </a>
-        </article>
-        {% endif %}
-        {% if highest_visitors_day %}
-        <article class="stat-article">
-            <h3>Highest Visitors</h3>
-            <span class="num">{{ highest_visitors_day.totalVisitors }}</span>
-            <p class="date">{{ highest_visitors_day.formatedDate }}</p>
-            <div class="services">
-                {% for service in highest_visitors_day.services.all %}
-                <div class="">
-                    <h4>{{ service.name }}</h4>
-                    <p>{{ service.first_time_visitors }}</p>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'App:stat-detail' highest_visitors_day.pk %}">
-                View details
-                <i class="fas fa-arrow-right-long"></i>
-            </a>
-        </article>
-        {% endif %}
-        {% if highest_salvations_day %}
-        <article class="stat-article">
-            <h3>Highest Salvations</h3>
-            <span class="num">{{ highest_salvations_day.totalSalvations }}</span>
-            <p class="date">{{ highest_salvations_day.formatedDate }}</p>
-            <div class="services">
-                {% for service in highest_salvations_day.services.all %}
-                <div class="">
-                    <h4>{{ service.name }}</h4>
-                    <p>{{ service.salvations }}</p>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{% url 'App:stat-detail' highest_salvations_day.pk %}">
-                View details
-                <i class="fas fa-arrow-right-long"></i>
-            </a>
-        </article>
-        {% endif %}
-    </div>
-    <div class="grid gap-4 mt-8 text-xl">
-        <p>
-            Total Visitors:
-            <span class="font-semibold">{{ total_visitors }}</span>
+<section title="Statistics" class="min-h-screen grid items-center">
+
+    <!-- Profile Section -->
+    <div class="grid max-w-xs mx-auto rounded-md border p-6">
+        <h2 class="text-2xl font-semibold text-white">Elijah Triumph Angengeun</h2>
+        <p class="mt-2">
+          Full-stack developer and system architect, building modular backends,and modern web applications.
+          Founder at <a href="https://dakdot.com" target="_blank" class="hover:underline">Dakdot</a>.
         </p>
-        <p>
-            Total Salvations:
-            <span class="font-semibold">{{ total_salvations }}</span>
-        </p>
+  
+        <div class="mt-4 space-y-2 opacity-80">
+          <p class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe-icon lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            <a href="https://eliheist.pythonanywhere.com" target="_blank" class="hover:underline">eliheist.pythonanywhere.com</a>
+          </p>
+          <p class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe-icon lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            <a href="https://dakdot.com" target="_blank" class="hover:underline">dakdot.com</a>
+          </p>
+          <p class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin-icon lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            <a href="https://www.linkedin.com/in/elijahtriumph/" target="_blank" class="hover:underline">@elijahtriumph</a>
+          </p>
+        </div>
     </div>
 </section>
 
