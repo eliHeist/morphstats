@@ -108,16 +108,16 @@ class Service(models.Model):
     non_system_facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
     facilitators_available = models.ManyToManyField(Facilitator, blank=True)
 
+    fixed_total = models.PositiveSmallIntegerField(blank=True, null=True)
+
     def __str__(self):
         return f'{self.stat}: {self.name}'
     
     def totalMorphers(self):
-        count = 0
-        if self.junior:
-            count += self.junior
-        if self.senior:
-            count += self.senior
-        return count
+        if self.fixed_total:
+            return self.fixed_total
+
+        return (self.junior or 0) + (self.senior or 0) 
     
     def syncFacilitators(self):
         self.facilitators = self.facilitators_available.count()
