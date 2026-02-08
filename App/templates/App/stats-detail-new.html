@@ -24,9 +24,15 @@
                     <th class="border p-2">Junior</th>
                     <template x-for="service in services" :key="service.id">
                         <td class="border p-2">
-                            <input x-show="editMode" type="number" x-model="service.junior"
-                                class="w-full bg-dark focus:outline-none focus:bg-light">
-                            <span x-show="!editMode" x-text="service.junior"></span>
+                            <template x-if="service.fixed_total">
+                                <span>-</span>
+                            </template>
+                            <template x-if="!service.fixed_total">
+                                <div>
+                                    <input x-show="editMode" type="number" x-model="service.junior" class="w-full bg-dark focus:outline-none focus:bg-light">
+                                    <span x-show="!editMode" x-text="service.junior"></span>
+                                </div>
+                            </template>
                         </td>
                     </template>
                 </tr>
@@ -34,16 +40,28 @@
                     <th class="border p-2">Senior</th>
                     <template x-for="service in services" :key="service.id">
                         <td class="border p-2">
-                            <input x-show="editMode" type="number" x-model="service.senior"
-                                class="w-full bg-dark focus:outline-none focus:bg-light">
-                            <span x-show="!editMode" x-text="service.senior"></span>
+                            <template x-if="service.fixed_total != null">
+                                <span>-</span>
+                            </template>
+                            <template x-if="service.fixed_total == null">
+                                <input x-show="editMode" type="number" x-model="service.senior" class="w-full bg-dark focus:outline-none focus:bg-light">
+                                <span x-show="!editMode" x-text="service.senior"></span>
+                            </template>
                         </td>
                     </template>
                 </tr>
                 <tr>
                     <th class="border p-2">Total</th>
                     <template x-for="service in services" :key="service.id">
-                        <td class="border p-2" x-text="(parseInt(service.junior) || 0) + (parseInt(service.senior) || 0)"></td>
+                        <td class="border p-2">
+                            <template x-if="service.fixed_total != null">
+                                <input x-show="editMode" type="number" x-model="service.fixed_total" class="w-full bg-dark focus:outline-none focus:bg-light">
+                                <span x-show="!editMode" x-text="service.fixed_total"></span>
+                            </template>
+                            <template x-if="service.fixed_total == null">
+                                <span x-text="(parseInt(service.junior) || 0) + (parseInt(service.senior) || 0)"></span>
+                            </template>
+                        </td>
                     </template>
                 </tr>
                 <tr>
@@ -81,6 +99,17 @@
                             <input x-show="editMode" type="number" x-model="service.non_system_facilitators"
                                 class="w-full bg-dark focus:outline-none focus:bg-light">
                             <span x-show="!editMode" x-text="service.non_system_facilitators"></span>
+                        </td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2"></th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2">
+                            <button @click="toggleFixed(service)" class="text-[.25rem] uppercase w-full bg-light">
+                                <span x-show="service.fixed_total == null">Fixed</span>
+                                <span x-show="service.fixed_total != null">Auto</span>
+                            </button>
                         </td>
                     </template>
                 </tr>

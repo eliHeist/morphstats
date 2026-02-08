@@ -22,4 +22,5 @@ class ServiceSerializer(serializers.ModelSerializer):
             "facilitators",
             "non_system_facilitators",
             "facilitators_available",
+            "fixed_total",
         ]
