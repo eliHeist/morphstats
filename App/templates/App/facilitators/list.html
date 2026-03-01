@@ -26,20 +26,35 @@
             
     </div>
 
+    
+
     <div style="background-color: rgba(0, 0, 0, 0.5);" class="fixed inset-0 grid items-center z-20" x-show="filter_modal">
         <section class="relative min-w-sm mx-auto p-4 bg-light rounded-md">
             <h2 class="font-bold text-center text-2xl">Filters</h2>
             <form method="get" class="grid gap-4 p-4 w-96">
+                <div class="grid gap-2">
+                    <label for="search" class="text-white">Search:</label>
+                    <input type="text" id="search" name="search" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" placeholder="Search by name" value="{{ search_query }}">
+                </div>
+                <div class="grid gap-2">
+                    <label for="tag" class="text-white">Tags:</label>
+                    <select id="tag" name="tag" multiple class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500 min-h-28">
+                        {% for tag in tags %}
+                        <option value="{{ tag.id }}" {% if tag.id|stringformat:"s" in selected_tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="text-xs text-lighter">Hold Ctrl/Cmd to select multiple tags.</p>
+                </div>
                 <div class="flex items-center justify-between gap-2">
                     <label for="start_date" class="text-white">From:</label>
-                    <input type="date" id="start_date" name="start_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.start_date }}">
+                    <input type="date" id="start_date" name="start_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ start_date }}">
                 </div>
                 <div class="flex items-center justify-between gap-2">
                     <label for="end_date" class="text-white">To:</label>
-                    <input type="date" id="end_date" name="end_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ request.GET.end_date }}">
+                    <input type="date" id="end_date" name="end_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" value="{{ end_date }}">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="reset" class="py-2 px-4 rounded-md hover:bg-light focus:outline-none focus:ring focus:border-blue-700 cursor-pointer" value="Reset"/>
+                    <a href="{% url 'App:facilitator-list' %}" class="py-2 px-4 rounded-md hover:bg-light focus:outline-none focus:ring focus:border-blue-700 cursor-pointer text-center">Clear</a>
                     <button type="submit" class="bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
                         Submit
                     </button>
@@ -52,12 +67,11 @@
     </div>
 
     <section class="mb-8">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto">
             <div class="bg-light p-4 rounded-md">
                 <p class="text-center text-5xl">{{ facilitators.count }}</p>
                 <h3 class="text-xs font-semibold text-center mt-2">Total</h3>
             </div>
-            <div class="bg-light p-4 rounded-md md:hidden"></div>
             <div class="bg-light p-4 rounded-md">
                 <p class="text-center text-5xl">{{ active_count }}</p>
                 <h3 class="text-xs font-semibold text-center mt-2">Active</h3>
@@ -66,19 +80,157 @@
                 <p class="text-center text-5xl">{{ inactive_count }}</p>
                 <h3 class="text-xs font-semibold text-center mt-2">Inactive</h3>
             </div>
+            <div class="bg-light p-4 rounded-md">
+                <p class="text-center text-5xl">{{ served_count }}</p>
+                <h3 class="text-xs font-semibold text-center mt-2">Served</h3>
+            </div>
+            <div class="bg-light p-4 rounded-md">
+                <p class="text-center text-5xl">{{ never_served_count }}</p>
+                <h3 class="text-xs font-semibold text-center mt-2">Never Served</h3>
+            </div>
         </div>
     </section>
-    
 
+    {% if request.user.is_staff %}
+    <form method="post" class="max-w-5xl mx-auto mb-4 px-2">
+        {% csrf_token %}
+        <input type="hidden" name="return_query" value="{{ request.GET.urlencode }}">
+        <div class="flex gap-2 flex-wrap items-center justify-end">
+            <select name="bulk_action" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" required>
+                <option value="" disabled selected>Select bulk action</option>
+                <option value="activate">Activate</option>
+                <option value="deactivate">Deactivate</option>
+                <option value="edit">Edit</option>
+            </select>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md">Apply</button>
+        </div>
+
+        <div class="w-fit mb-4 max-w-3xl mx-auto sticky top-2 z-10" id="tabs-component">
+            <div role="tablist" aria-label="Sample tabs" class="flex gap-2">
+                <button id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" data-index="0" type="button"
+                class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white bg-light" :class="{ 'bg-primary text-white': tab === 0 }" @click="tab = 0">Active</button>
+                <button id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" data-index="1" type="button"
+                class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white bg-light" :class="{ 'bg-primary text-white': tab === 1 }" @click="tab = 1">Inactive</button>
+            </div>
+        </div>
+
+        <section x-show="tab === 0">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full border-collapse table-auto">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <input type="checkbox" onclick="toggleBulkSelection(this.checked)">
+                            </th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Last Served</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in facilitators %}
+                        {% if f.active %}
+                        <tr class="hover:bg-light focus:bg-light">
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <input class="bulk-checkbox" type="checkbox" name="facilitator_ids" value="{{ f.pk }}">
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <a href="{% url 'App:facilitator-detail' f.pk %}"
+                                class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <div class="flex flex-wrap gap-1">
+                                    {% for tag in f.tags.all %}
+                                    <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                {% if f.last_service_date %}
+                                {{ f.last_service_date|date:"d M Y" }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-right">
+                                <div class="flex gap-4 items-center justify-end">
+                                    <a href="{% url 'App:facilitator-update' f.pk %}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section x-show="tab === 1">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full border-collapse table-auto">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <input type="checkbox" onclick="toggleBulkSelection(this.checked)">
+                            </th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-left">Last Served</th>
+                            <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in facilitators %}
+                        {% if not f.active %}
+                        <tr class="hover:bg-light focus:bg-light">
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <input class="bulk-checkbox" type="checkbox" name="facilitator_ids" value="{{ f.pk }}">
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <a href="{% url 'App:facilitator-detail' f.pk %}"
+                                class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                <div class="flex flex-wrap gap-1">
+                                    {% for tag in f.tags.all %}
+                                    <span class="bg-light rounded-md px-2 py-1 text-sm font-semibold">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                                {% if f.last_service_date %}
+                                {{ f.last_service_date|date:"d M Y" }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 border-b whitespace-nowrap text-right">
+                                <div class="flex gap-4 items-center justify-end">
+                                    <a href="{% url 'App:facilitator-update' f.pk %}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </form>
+    {% else %}
     <div class="w-fit mb-4 max-w-3xl mx-auto sticky top-2 z-10" id="tabs-component">
         <div role="tablist" aria-label="Sample tabs" class="flex gap-2">
-            <button id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" data-index="0"
-            class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 0 }" @click="tab = 0">Active</button>
-            <button id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" data-index="1"
-            class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white" :class="{ 'bg-light text-white': tab === 1 }" @click="tab = 1">Inactive</button>
+            <button id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" data-index="0" type="button"
+            class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white bg-light" :class="{ 'bg-primary text-white': tab === 0 }" @click="tab = 0">Active</button>
+            <button id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" data-index="1" type="button"
+            class="px-4 py-2 text-sm font-medium focus:outline-none focus:ring-0 rounded-md hover:text-white bg-light" :class="{ 'bg-primary text-white': tab === 1 }" @click="tab = 1">Inactive</button>
         </div>
     </div>
-    
+
     <section x-show="tab === 0">
         <div class="overflow-x-auto w-full">
             <table class="w-full border-collapse table-auto">
@@ -86,9 +238,7 @@
                     <tr>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
-                        {% if request.user.is_staff %}
-                        <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
-                        {% endif %}
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Last Served</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,15 +256,13 @@
                                 {% endfor %}
                             </div>
                         </td>
-                        {% if request.user.is_staff %}
-                        <td class="px-2 py-2 border-b whitespace-nowrap text-right">
-                            <div class="flex gap-4 items-center justify-end">
-                                <a href="{% url 'App:facilitator-update' f.pk %}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            {% if f.last_service_date %}
+                            {{ f.last_service_date|date:"d M Y" }}
+                            {% else %}
+                            -
+                            {% endif %}
                         </td>
-                        {% endif %}
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -129,9 +277,7 @@
                     <tr>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Name</th>
                         <th class="px-2 py-2 border-b whitespace-nowrap text-left">Tags</th>
-                        {% if request.user.is_staff %}
-                        <th class="px-2 py-2 border-b whitespace-nowrap text-right">Actions</th>
-                        {% endif %}
+                        <th class="px-2 py-2 border-b whitespace-nowrap text-left">Last Served</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,15 +295,13 @@
                                 {% endfor %}
                             </div>
                         </td>
-                        {% if request.user.is_staff %}
-                        <td class="px-2 py-2 border-b whitespace-nowrap text-right">
-                            <div class="flex gap-4 items-center justify-end">
-                                <a href="{% url 'App:facilitator-update' f.pk %}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
+                        <td class="px-2 py-2 border-b whitespace-nowrap text-left">
+                            {% if f.last_service_date %}
+                            {{ f.last_service_date|date:"d M Y" }}
+                            {% else %}
+                            -
+                            {% endif %}
                         </td>
-                        {% endif %}
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -165,6 +309,7 @@
             </table>
         </div>
     </section>
+    {% endif %}
 </section>
 <section style="height:20svh;" class="text-xs text-light font-medium grid justify-center items-start">
 </section>
@@ -177,7 +322,14 @@
     {% if link_name %}
     const active_link = "{{ link_name }}" 
     {% else %}
-    const active_link = "all-stats" 
+    const active_link = "all-stats"
     {% endif %}
+
+    function toggleBulkSelection(isChecked) {
+        const checkboxes = document.querySelectorAll('.bulk-checkbox')
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = isChecked
+        })
+    }
 </script>
 {% endblock scripts %}

@@ -3,7 +3,10 @@ from collections import OrderedDict, defaultdict
 from datetime import date, datetime
 import json
 
+from django.db.models import OuterRef, Subquery
+from django.http import QueryDict
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.urls.base import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
@@ -12,7 +15,7 @@ from django.utils import timezone
 
 from Stat.models import Service, Stat
 from facilitators.forms import FacilitatorForm
-from facilitators.models import Facilitator
+from facilitators.models import Facilitator, Tag
 
 # Create your views here.
 class StatListView(ListView):
@@ -110,37 +113,109 @@ class FacilitatorListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FacilitatorListView, self).get_context_data(**kwargs)
+        facilitators = context['facilitators']
 
-        # get the start and end dates from the request
-        start_date = self.request.GET.get('start_date')
-        end_date = self.request.GET.get('end_date')
-        
-        if start_date or end_date:
-            context['facilitators'] = self.filter_by_active_dates(context['facilitators'], start_date, end_date)
+        start_date = self.request.GET.get('start_date', '')
+        end_date = self.request.GET.get('end_date', '')
+        selected_tags = self.request.GET.getlist('tag')
 
-        context['active_count'] = context['facilitators'].filter(active=True).count()
-        context['inactive_count'] = context['facilitators'].filter(active=False).count()
+        context['active_count'] = facilitators.filter(active=True).count()
+        context['inactive_count'] = facilitators.filter(active=False).count()
+        context['served_count'] = facilitators.exclude(last_service_date__isnull=True).count()
+        context['never_served_count'] = facilitators.filter(last_service_date__isnull=True).count()
         context['start_date'] = start_date
         context['end_date'] = end_date
+        context['search_query'] = self.request.GET.get('search', '').strip()
+        context['tags'] = Tag.objects.all().order_by('name')
+        context['selected_tags'] = selected_tags
+        context['bulk_notice'] = self.request.GET.get('bulk_notice', '')
         return context
     
     def get_queryset(self):
-        qs = super().get_queryset().order_by('name')
-        return qs 
+        latest_service_date = Subquery(
+            Service.objects.filter(
+                facilitators_available=OuterRef('pk')
+            ).order_by('-stat__date').values('stat__date')[:1]
+        )
+
+        qs = super().get_queryset().annotate(
+            last_service_date=latest_service_date
+        ).prefetch_related('tags').order_by('name')
+
+        return self.apply_filters(qs)
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_staff:
+            return redirect('App:access-denied')
+
+        action = request.POST.get('bulk_action', '').strip()
+        selected_ids = request.POST.getlist('facilitator_ids')
+
+        if not selected_ids:
+            return self.bulk_redirect('select_at_least_one')
+
+        selected_facilitators = Facilitator.objects.filter(pk__in=selected_ids)
+
+        if action == 'activate':
+            selected_facilitators.update(active=True)
+            return self.bulk_redirect('activated')
+
+        if action == 'deactivate':
+            selected_facilitators.update(active=False)
+            return self.bulk_redirect('deactivated')
+
+        if action == 'edit':
+            if selected_facilitators.count() != 1:
+                return self.bulk_redirect('select_one_for_edit')
+            facilitator = selected_facilitators.first()
+            return redirect(reverse('App:facilitator-update', kwargs={'pk': facilitator.pk}))
+
+        return self.bulk_redirect('invalid_action')
+
+    def apply_filters(self, facilitators):
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        search = self.request.GET.get('search', '').strip()
+        selected_tags = self.request.GET.getlist('tag')
+
+        if search:
+            facilitators = facilitators.filter(name__icontains=search)
+
+        if selected_tags:
+            facilitators = facilitators.filter(tags__id__in=selected_tags).distinct()
+
+        if start_date or end_date:
+            facilitators = self.filter_by_active_dates(facilitators, start_date, end_date)
+
+        return facilitators
+
+    def bulk_redirect(self, notice):
+        base_url = reverse('App:facilitator-list')
+        return_query = self.request.POST.get('return_query', '').strip()
+        params = QueryDict(return_query, mutable=True)
+        params['bulk_notice'] = notice
+        query_string = params.urlencode()
+
+        if query_string:
+            return redirect(f"{base_url}?{query_string}")
+
+        return redirect(base_url)
     
     def filter_by_active_dates(self, facilitators, start_date, end_date):
+        stats = Stat.objects.all()
 
-        stats = Stat.objects.filter(date__gte=start_date, date__lte=end_date)
+        if start_date:
+            stats = stats.filter(date__gte=start_date)
 
-        facilitators_set = set()
-        for stat in stats:
-            for service in stat.services.all():
-                facilitator_ids = service.facilitators_available.all().values_list('id', flat=True)
-                facilitators_set.update(facilitator_ids)
-        
-        filtered = facilitators.filter(pk__in=facilitators_set)
+        if end_date:
+            stats = stats.filter(date__lte=end_date)
 
-        return filtered
+        facilitator_ids = Service.objects.filter(
+            stat__in=stats,
+            facilitators_available__isnull=False,
+        ).values_list('facilitators_available__id', flat=True)
+
+        return facilitators.filter(pk__in=facilitator_ids).distinct()
 
 
 class MoreMenuView(View):
