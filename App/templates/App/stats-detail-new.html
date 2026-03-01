@@ -40,12 +40,14 @@
                     <th class="border p-2">Senior</th>
                     <template x-for="service in services" :key="service.id">
                         <td class="border p-2">
-                            <template x-if="service.fixed_total != null">
+                            <template x-if="service.fixed_total">
                                 <span>-</span>
                             </template>
-                            <template x-if="service.fixed_total == null">
-                                <input x-show="editMode" type="number" x-model="service.senior" class="w-full bg-dark focus:outline-none focus:bg-light">
-                                <span x-show="!editMode" x-text="service.senior"></span>
+                            <template x-if="!service.fixed_total">
+                                <div>
+                                    <input x-show="editMode" type="number" x-model="service.senior" class="w-full bg-dark focus:outline-none focus:bg-light">
+                                    <span x-show="!editMode" x-text="service.senior"></span>
+                                </div>
                             </template>
                         </td>
                     </template>
