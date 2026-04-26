@@ -1,16 +1,23 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from datetime import date
 
 from Stat.models import Service, Stat
 from Stat.serializers import ServiceSerializer, StatSerializer
 
-from facilitators.models import Facilitator
-from facilitators.serializers import FacilitatorSerializer
+from facilitators.models import Facilitator, Tag
+from facilitators.serializers import FacilitatorSerializer, TagSerializer
+
+from events.models import Event
+from events.serializers import EventSerializer
+
+from api.permissions import IsStaffOrReadOnly
 
 
 @api_view(["GET"])
@@ -220,3 +227,97 @@ def facilitatorsApiView(request):
         fs = Facilitator.objects.filter(active=True).order_by('name')
         serializer = FacilitatorSerializer(fs, many=True)
     return Response(serializer.data)
+
+
+# ---------------------------------------------------------------------------
+# ViewSets — mobile API (JWT auth, IsStaffOrReadOnly permissions)
+# ---------------------------------------------------------------------------
+
+class StatViewSet(ModelViewSet):
+    serializer_class = StatSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def get_queryset(self):
+        qs = Stat.objects.all().order_by('-date')
+        year = self.request.query_params.get('year')
+        month = self.request.query_params.get('month')
+        if year:
+            qs = qs.filter(date__year=year)
+        if month:
+            qs = qs.filter(date__month=month)
+        return qs
+
+
+class ServiceViewSet(ModelViewSet):
+    serializer_class = ServiceSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def get_queryset(self):
+        qs = Service.objects.all()
+        stat_id = self.request.query_params.get('stat_id')
+        if stat_id:
+            qs = qs.filter(stat__id=stat_id)
+        return qs
+
+    @action(detail=True, methods=['post'], url_path='facilitators/add')
+    def add_facilitator(self, request, pk=None):
+        service = self.get_object()
+        facilitator_id = request.data.get('facilitator_id')
+        if not facilitator_id:
+            return Response({'error': 'facilitator_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        facilitator = get_object_or_404(Facilitator, pk=facilitator_id)
+        service.facilitators_available.add(facilitator)
+        return Response({'status': 'facilitator added'})
+
+    @action(detail=True, methods=['delete'], url_path='facilitators/remove')
+    def remove_facilitator(self, request, pk=None):
+        service = self.get_object()
+        facilitator_id = request.data.get('facilitator_id')
+        if not facilitator_id:
+            return Response({'error': 'facilitator_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        facilitator = get_object_or_404(Facilitator, pk=facilitator_id)
+        service.facilitators_available.remove(facilitator)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FacilitatorViewSet(ModelViewSet):
+    serializer_class = FacilitatorSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def get_queryset(self):
+        qs = Facilitator.objects.all().order_by('name')
+        active = self.request.query_params.get('active')
+        only_in_band = self.request.query_params.get('only_in_band')
+        tag = self.request.query_params.get('tag')
+        if active is not None:
+            qs = qs.filter(active=active.lower() == 'true')
+        if only_in_band is not None:
+            qs = qs.filter(only_in_band=only_in_band.lower() == 'true')
+        if tag:
+            qs = qs.filter(tags__id=tag)
+        return qs
+
+
+class TagViewSet(ModelViewSet):
+    serializer_class = TagSerializer
+    permission_classes = [IsStaffOrReadOnly]
+    queryset = Tag.objects.all()
+
+
+class EventViewSet(ModelViewSet):
+    serializer_class = EventSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def get_queryset(self):
+        qs = Event.objects.all().order_by('start_date')
+        event_status = self.request.query_params.get('status')
+        ongoing = self.request.query_params.get('ongoing')
+        if event_status is not None:
+            qs = qs.filter(status=event_status)
+        if ongoing is not None and ongoing.lower() == 'true':
+            today = date.today()
+            qs = qs.filter(
+                Q(end_date__gte=today) | Q(start_date__gte=today)
+            )
+        return qs
+

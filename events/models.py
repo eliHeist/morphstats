@@ -7,7 +7,6 @@ class Event(models.Model):
         PLANNED = (0, "Planned")
         CANCELLED = (1, "Cancelled")
         POSTPONED = (2, "Postponed")
-        NODATE = (3, "No date yet")
         
     name = models.CharField(max_length=50)
     start_date = models.DateField(blank=True, null=True)
