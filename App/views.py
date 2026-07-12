@@ -169,6 +169,14 @@ class FacilitatorListView(ListView):
                 return self.bulk_redirect('select_one_for_edit')
             facilitator = selected_facilitators.first()
             return redirect(reverse('App:facilitator-update', kwargs={'pk': facilitator.pk}))
+        
+        if action == 'set-male':
+            selected_facilitators.update(gender='M')
+            return self.bulk_redirect('set_male')
+        
+        if action == 'set-female':
+            selected_facilitators.update(gender='F')
+            return self.bulk_redirect('set_female')
 
         return self.bulk_redirect('invalid_action')
 

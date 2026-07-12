@@ -101,6 +101,8 @@
                 <option value="activate">Activate</option>
                 <option value="deactivate">Deactivate</option>
                 <option value="edit">Edit</option>
+                <option value="set-female">Set as Female</option>
+                <option value="set-male">Set as Male</option>
             </select>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md">Apply</button>
         </div>
@@ -138,6 +140,7 @@
                             <td class="px-2 py-2 border-b whitespace-nowrap text-left">
                                 <a href="{% url 'App:facilitator-detail' f.pk %}"
                                 class="hover:underline hover:decoration-dashed">{{ f.name }}</a>
+                                <span class="bg-light rounded-md px-2 py-2 text-sm font-semibold opacity-60">{{ f.gender }}</span>
                             </td>
                             <td class="px-2 py-2 border-b whitespace-nowrap text-left">
                                 <div class="flex flex-wrap gap-1">
