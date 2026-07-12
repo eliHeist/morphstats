@@ -1,8 +1,9 @@
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -122,6 +123,7 @@ def serviceApiView(request, pk=None, stat_pk=None):
 
 
 class ServiceAPIView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, pk=None):
         stat_id = request.query_params.get('stat_id')
         
@@ -222,6 +224,7 @@ def facilitatorChecklistView(request, stat_pk=None, service_pk=None):
     return Response(return_list)
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def facilitatorsApiView(request):
     if request.method == 'GET':
         fs = Facilitator.objects.filter(active=True).order_by('name')
