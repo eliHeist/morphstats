@@ -87,6 +87,23 @@ class Stat(models.Model):
         total += self.facilitatorsCount()
         
         return total
+    
+    def totals(self):
+        male = 0
+        female = 0
+        f_list = self.facilitators()
+
+        for f in f_list:
+            if f.gender == "M":
+                male+=1
+            elif f.gender == "F":
+                female+=1
+        
+        return {
+            "male": male,
+            "female": female,
+            "total": male + female,
+        }
 
     def __str__(self):
         return str(self.date.strftime("%A, %d %B %Y"))

@@ -118,7 +118,13 @@
                 {% endif %}
             </table>
             <p>
-                Total facilitators: <span>{{ stat.total_that_served }}</span>
+                Total facilitators: <span>{{ stat.totals.total }}</span>
+            </p>
+            <p>
+                Male Count: <span>{{ stat.totals.male }}</span>
+            </p>
+            <p>
+                Female Count: <span>{{ stat.totals.female }}</span>
             </p>
 
             {% if request.user.is_authenticated %}
