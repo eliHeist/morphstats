@@ -1,9 +1,15 @@
 from django.db import models
 
+
+class GenderChoices(models.TextChoices):
+    MALE = 'M', "Male"
+    FEMALE = 'F', "Female"
+
 # Create your models here.
 class Facilitator(models.Model):
     name = models.CharField(max_length=25)
     active = models.BooleanField(default=True)
+    gender = models.CharField(max_length=1, choices=GenderChoices.choices, null=True)
     only_in_band = models.BooleanField(default=False)
     tags = models.ManyToManyField('Tag', blank=True)
 
