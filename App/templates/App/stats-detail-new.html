@@ -93,6 +93,20 @@
                             x-text="service.facilitators_available.length + (parseInt(service.non_system_facilitators) || 0)"></td>
                     </template>
                 </tr>
+                <tr>
+                    <th class="border p-2">Male</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2"
+                            x-text="getMaleFacilitatorsCount(service)"></td>
+                    </template>
+                </tr>
+                <tr>
+                    <th class="border p-2">Female</th>
+                    <template x-for="service in services" :key="service.id">
+                        <td class="border p-2"
+                            x-text="getFemaleFacilitatorsCount(service)"></td>
+                    </template>
+                </tr>
                 {% if request.user.is_authenticated %}
                 <tr>
                     <th class="border p-2">Extras</th>

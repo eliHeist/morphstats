@@ -19,6 +19,7 @@ type Facilitator = {
     name: string;
     active: boolean;
     only_in_band: boolean;
+    gender: string;
 };
 
 
@@ -89,6 +90,20 @@ export default (): any => ({
             console.error('Error updating services:', error);
         }
         this.statsLoader = false
+    },
+
+    // Get total number of male facilitators for a specific service
+    getMaleFacilitatorsCount(service: Service) {
+        return this.facilitators.filter((f: Facilitator) => 
+            service.facilitators_available.includes(f.id) && f.gender.toLowerCase() === 'm'
+        ).length;
+    },
+
+    // Get total number of female facilitators for a specific service
+    getFemaleFacilitatorsCount(service: Service) {
+        return this.facilitators.filter((f: Facilitator) => 
+            service.facilitators_available.includes(f.id) && f.gender.toLowerCase() === 'f'
+        ).length;
     },
 
     // Helper function to get CSRF token from cookie
