@@ -1300,6 +1300,10 @@ video {
   opacity: 0;
 }
 
+.opacity-60 {
+  opacity: 0.6;
+}
+
 .opacity-80 {
   opacity: 0.8;
 }
