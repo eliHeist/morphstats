@@ -4,35 +4,24 @@
 {% block slot %}
 
 <section>
-   <form action="{% url 'App:register-day' %}" method="post" class="mx-4 mt-8 grid gap-8 max-w-lg">
-      {% csrf_token %}
-      <div class="grid">
-         <input type="date" name="date" id="date" class="p-2 bg-light text-lighter rounded-full">
-      </div>
-      <div class="grid">
-         <label for="title" class="font-bold">Title</label>
-         <input value="Sunday Celebration" type="text" name="title" id="title" class="p-2 bg-light text-lighter rounded-full">
-      </div>
-      <fieldset class="grid gap-4">
-         <h3 class="font-bold">Register services</h3>
-         <div>
-            <input type="checkbox" name="first_service" id="first_service" class="mr-2 accent-primary" checked>
-            <label for="first_service" class="">First Service</label>
-         </div>
-         <div>
-            <input type="checkbox" name="second_service" id="second_service" class="mr-2 accent-primary" checked>
-            <label for="second_service" class="">Second Service</label>
-         </div>
-         <div>
-            <input type="checkbox" name="third_service" id="third_service" class="mr-2 accent-primary" checked>
-            <label for="third_service" class="">Third Service</label>
-         </div>
-      </fieldset>
-      <div>
-         <button type="submit" class="bg-primary text-white p-4 rounded-full w-full">
-            Add
-         </button>
-      </div>
+   <form action="{% url 'App:register-day' %}" method="post" class="mx-4 mt-8 grid gap-4 max-w-lg">
+        {% csrf_token %}
+        <c-ui.field>
+            <c-ui.label for="id_date">Date</c-ui.label>
+            <c-ui.input type="date" name="date" id="id_date" required />
+            <c-ui.error name="date" />
+        </c-ui.field>
+        <c-ui.field>
+            <c-ui.label for="id_title">Title</c-ui.label>
+            <c-ui.input value="Sunday Services" type="text" name="title" id="id_title" required />
+            <c-ui.error name="title" />
+        </c-ui.field>
+        <c-ui.checkbox.group name="services" label="Select Services">
+            <c-ui.checkbox value="first_service" name="first_service" label="First Service" />
+            <c-ui.checkbox value="second_service" name="second_service" label="Second Service" />
+            <c-ui.checkbox value="third_service" name="third_service" label="Third Service" />
+        </c-ui.checkbox.group>
+        <c-ui.button variant="primary" type="submit">Submit</c-ui.button>
    </form>
 </section>
 
