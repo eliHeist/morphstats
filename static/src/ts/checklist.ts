@@ -106,6 +106,32 @@ export default (): any => ({
         ).length;
     },
 
+    getAllFacilitatorIds():Set<number> {
+        const userIds = new Set<number>();
+        this.services.forEach((service: Service) => {
+            service.facilitators_available.forEach((id: number) => {
+                userIds.add(id)
+            })
+        });
+        return userIds
+    },
+
+    getPresentFacilitators() {
+        const ids:Set<number> = this.getAllFacilitatorIds()
+        const facilitators:Set<Facilitator> = new Set()
+
+        for (const id of ids) {
+            const facilitatorLs = this.facilitators.filter((f: Facilitator) => f.id == id)
+            facilitators.add(facilitatorLs[0])
+        }
+
+        return facilitators
+    },
+
+    getPresentFacilitatorsTotal() {
+        return this.getAllFacilitatorIds().size
+    },
+
     // Helper function to get CSRF token from cookie
     getCookie(name: string) {
         let cookieValue = null;

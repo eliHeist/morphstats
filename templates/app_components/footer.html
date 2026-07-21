@@ -23,7 +23,7 @@
       {% if request.user.is_staff %}{
         icon: 'icon-chart-pie',
         label: 'Dashboard',
-        url: `{% url 'App:facilitator-list' %}`,
+        url: `{% url 'dashboard:index' %}`,
         match: 'includes'
       },{% endif %}
       {
@@ -38,6 +38,9 @@
       return match === 'equal'
         ? path === url
         : path.includes(url);
+    },
+    init(){
+        console.log(this.items)
     }
   }" class="fixed bottom-0 left-0 right-0 bg-ink-700">
     <div class="hidden sm:grid p-4 pb-16">

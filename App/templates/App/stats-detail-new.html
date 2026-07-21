@@ -9,156 +9,120 @@
         '{% url 'api:facilitators' %}' //facilitators url
     )">
 
-    <div class="date">{{ stat.formatedDate }}</div>
-    <div class="text-center my-4">{{ stat.date|human_date }}</div>
+    <div class="flex items-center justify-center gap-2 mb-4">
+        <div class="flex items-center gap-2 bg-ink-700 rounded-box py-2 px-4">
+            <c-icon icon="calendar" />
+            <span>{{ stat.formatedDate }}</span>
+        </div>
+        <div class="text-center">{{ stat.date|days_since }}</div>
+    </div>
+    <div class="grid gap-8">
+        <!-- morphers -->
+        <c-ui.card>
+            <h3 class="font-semibold text-white mb-2">Morphers</h3>
+            <div class="flex justify-between gap-2">
+                <div class="grid grid-rows-6 gap-1 items-center pr-4 text-sm opacity-70">
+                    <div>Service</div>
+                    <div>Junior</div>
+                    <div>Senior</div>
+                    <div>Total</div>
+                    <div>F T Visitors</div>
+                    <div>Salvations</div>
+                </div>
+                <template x-for="service in services" :key="service.id">
+                    <div class="grid grid-rows-6 gap-1 items-center">
+                        <!-- header -->
+                        <div class="text-center">
+                            <span x-text="service.name"></span>
+                        </div>
+
+                        <!-- junior -->
+                        <template x-if="service.fixed_total != null">
+                            <c-table.cell xtext="`-`" no_edit />
+                        </template>
+                        <template x-if="service.fixed_total == null">
+                            <c-table.cell xtext="service.junior" x-mask="9999" x-model="service.junior" />
+                        </template>
+
+                        <!-- senior -->
+                        <template x-if="service.fixed_total != null">
+                            <c-table.cell xtext="`-`" no_edit />
+                        </template>
+                        <template x-if="service.fixed_total == null">
+                            <c-table.cell xtext="service.senior" x-mask="9999" x-model="service.senior" />
+                        </template>
+
+                        <!-- total -->
+                        <template x-if="service.fixed_total != null">
+                            <c-table.cell xtext="service.fixed_total" x-mask="9999" x-model="service.fixed_total" />
+                        </template>
+                        <template x-if="service.fixed_total == null">
+                            <c-table.cell xtext="(parseInt(service.junior) || 0) + (parseInt(service.senior) || 0)" no_edit />
+                        </template>
+
+                        <!-- first time visitors -->
+                        <c-table.cell xtext="service.first_time_visitors" x-mask="9999" x-model="service.first_time_visitors" />
+
+                        <!-- salvations -->
+                        <c-table.cell xtext="service.salvations" x-mask="9999" x-model="service.salvations" />
+                    </div>
+                </template>
+            </div>
+        </c-ui.card>
+
+        <!-- facilitators -->
+        <c-ui.card>
+            <h3 class="font-semibold text-white mb-2">Facilitators</h3>
+            <div class="flex justify-between gap-2">
+                <div class="grid grid-rows-4 gap-1 items-center pr-4 text-sm opacity-70">
+                    <div>Service</div>
+                    <div>Female</div>
+                    <div>Male</div>
+                    <div>Total</div>
+                </div>
+                <template x-for="service in services" :key="service.id">
+                    <div class="grid grid-rows-4 gap-1 items-center">
+                        <!-- header -->
+                        <div class="text-center">
+                            <span x-text="service.name"></span>
+                        </div>
+
+                        <!-- Female -->
+                        <c-table.cell xtext="service.facilitators_available.length + (parseInt(service.non_system_facilitators) || 0)" no_edit />
+
+                        <!-- Male -->
+                        <c-table.cell xtext="getMaleFacilitatorsCount(service)" no_edit />
+
+                        <!-- Total -->
+                        <c-table.cell xtext="getFemaleFacilitatorsCount(service)" no_edit />
+                    </div>
+                </template>
+            </div>
+            <div class="flex gap-2 mt-2">
+                <div>Overall:</div>
+                <div x-text="getPresentFacilitatorsTotal()"></div>
+            </div>
+        </c-ui.card>
+    </div>
     <div class="grid gap-8 lg:grid-cols-12 ">
         <section class="py-8 lg:col-span-5 xl:col-span-4 overflow-x-auto">
-            <table id="services-table" class="w-full border-collapse">
-                <tr>
-                    <th class="border p-2">Service</th>
-                    <template x-for="service in services" :key="service.id">
-                        <th class="border p-2" x-text="service.name"></th>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Junior</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <template x-if="service.fixed_total">
-                                <span>-</span>
-                            </template>
-                            <template x-if="!service.fixed_total">
-                                <div>
-                                    <input x-show="editMode" type="number" x-model="service.junior" class="w-full bg-dark focus:outline-none focus:bg-light">
-                                    <span x-show="!editMode" x-text="service.junior"></span>
-                                </div>
-                            </template>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Senior</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <template x-if="service.fixed_total">
-                                <span>-</span>
-                            </template>
-                            <template x-if="!service.fixed_total">
-                                <div>
-                                    <input x-show="editMode" type="number" x-model="service.senior" class="w-full bg-dark focus:outline-none focus:bg-light">
-                                    <span x-show="!editMode" x-text="service.senior"></span>
-                                </div>
-                            </template>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Total</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <template x-if="service.fixed_total != null">
-                                <input x-show="editMode" type="number" x-model="service.fixed_total" class="w-full bg-dark focus:outline-none focus:bg-light">
-                                <span x-show="!editMode" x-text="service.fixed_total"></span>
-                            </template>
-                            <template x-if="service.fixed_total == null">
-                                <span x-text="(parseInt(service.junior) || 0) + (parseInt(service.senior) || 0)"></span>
-                            </template>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">F T Visitors</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <input x-show="editMode" type="number" x-model="service.first_time_visitors"
-                                class="w-full bg-dark focus:outline-none focus:bg-light">
-                            <span x-show="!editMode" x-text="service.first_time_visitors"></span>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Salvations</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <input x-show="editMode" type="number" x-model="service.salvations"
-                                class="w-full bg-dark focus:outline-none focus:bg-light">
-                            <span x-show="!editMode" x-text="service.salvations"></span>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Facilitators</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2"
-                            x-text="service.facilitators_available.length + (parseInt(service.non_system_facilitators) || 0)"></td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Male</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2"
-                            x-text="getMaleFacilitatorsCount(service)"></td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2">Female</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2"
-                            x-text="getFemaleFacilitatorsCount(service)"></td>
-                    </template>
-                </tr>
-                {% if request.user.is_authenticated %}
-                <tr>
-                    <th class="border p-2">Extras</th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <input x-show="editMode" type="number" x-model="service.non_system_facilitators"
-                                class="w-full bg-dark focus:outline-none focus:bg-light">
-                            <span x-show="!editMode" x-text="service.non_system_facilitators"></span>
-                        </td>
-                    </template>
-                </tr>
-                <tr>
-                    <th class="border p-2"></th>
-                    <template x-for="service in services" :key="service.id">
-                        <td class="border p-2">
-                            <button @click="toggleFixed(service)" class="text-[.25rem] uppercase w-full bg-light">
-                                <span x-show="service.fixed_total == null">Fixed</span>
-                                <span x-show="service.fixed_total != null">Auto</span>
-                            </button>
-                        </td>
-                    </template>
-                </tr>
-                {% endif %}
-            </table>
-            <p>
-                Total facilitators: <span>{{ stat.totals.total }}</span>
-            </p>
-            <p>
-                Male Count: <span>{{ stat.totals.male }}</span>
-            </p>
-            <p>
-                Female Count: <span>{{ stat.totals.female }}</span>
-            </p>
 
             {% if request.user.is_authenticated %}
             <div class="flex gap-4 justify-center flex-wrap">
-                <button @click="editMode = !editMode"
-                    class="flex gap-2 items-center px-6 py-2 text-white rounded-full border border-light">
-                    <i class="fas fa-edit"></i>
-                    <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
-                </button>
+                <c-ui.button @click="editMode = !editMode">
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="pen" />
+                        <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
+                    </div>
+                </c-ui.button>
                 <template x-if="editMode">
-                    <button @click="updateServices()"
-                        class="load-btn bg-primary flex gap-2 items-center px-6 py-2 text-white rounded-full overflow-hidden" :class="statsLoader ? 'loading' : ''">
-                        Save
-                        <i class="fas fa-save"></i>
-                        <div class="button--loader">
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                    <c-ui.button variant="primary" @click="updateServices()">
+                        <div class="flex items-center gap-2">
+                            <c-icon icon="save" x-cloak x-show="!statsLoader" />
+                            <c-icon icon="loader-circle animate-spin" x-cloak x-show="statsLoader" />
+                            <span x-text="statsLoader ? 'Saving' : 'Save'">Save</span>
                         </div>
-                    </button>
+                    </c-ui.button>
                 </template>
             </div>
             {% endif %}
