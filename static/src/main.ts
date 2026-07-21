@@ -1,64 +1,131 @@
-// declare let checklistPage: boolean
+import Alpine from "alpinejs";
+import mask from '@alpinejs/mask'
+import ajax from '@imacrayon/alpine-ajax'
+import intersect from '@alpinejs/intersect'
+import anchor from '@alpinejs/anchor'
+import collapse from '@alpinejs/collapse'
+import morph from '@alpinejs/morph'
+import persist from '@alpinejs/persist'
 
-//#region facilitator checklist
+import './main.css';
+import checklist from './ts/checklist';
+import { renderStatsCharts } from "./ts/chart";
+import { renderMonthlyAvailabilityChart } from "./ts/facilitator-charts";
 
-async function getFacilitators(url: string) {
-    url = `${url}?format=json`
-
-    const response = await fetch(url)
-    return await response.json();
+declare global {
+  interface Window {
+    Alpine: typeof Alpine;
+  }
 }
 
-async function getServices(url: string) {
-    url = `${url}?format=json`
+window.Alpine = Alpine
+Alpine.plugin(ajax)
+Alpine.plugin(mask)
+Alpine.plugin(intersect)
+Alpine.plugin(anchor)
+Alpine.plugin(collapse)
+Alpine.plugin(morph)
+Alpine.plugin(persist)
 
-    const response = await fetch(url)
-    return await response.json();
-}
+Alpine.data('checklist', checklist)
 
-async function udpadeFacilitators(url:string, service:object, csrf: string) {
-    const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrf,
-        },
-        body: JSON.stringify(service),
-    })
-    const data = await response.json();
-    console.log(data);
-}
+Alpine.start()
 
-function handleWildChecks(available: string, absent: string) { 
-    const avcont = document.querySelector(`.${available}`)
-    const abcont = document.querySelector(`.${absent}`)
+// buttons ===================
+const loaderButtons = document.querySelectorAll('.load-btn') as NodeListOf<HTMLButtonElement>
 
-    avcont?.querySelectorAll('input').forEach((input) => {
-        if (!input.classList.contains('checked')) {
-            input.classList.add('checked')
-        }
-    })
-    abcont?.querySelectorAll('input').forEach((input) => {
-        if (input.classList.contains('checked')) {
-            input.classList.remove('checked')
-        }
-    })
-    return true
-}
+loaderButtons.forEach((button: HTMLElement) => {
+    const loader = document.createElement('div') as HTMLDivElement
+    loader.classList.add('button--loader')
+    loader.innerHTML = `<div></div><div></div><div></div>`
+    button.appendChild(loader)
+});
 
-function CheckActions(facilitator: object, isAvailable: boolean, active_facilitators: Array<object>, inactive_facilitators: Array<object>) {
-    if (isAvailable) {
-        let index = active_facilitators.indexOf(facilitator)
-        active_facilitators.splice(index, 1)
-        inactive_facilitators.push(facilitator)
+document.addEventListener('DOMContentLoaded', () => {
+    // stats dashboard
+    const dataElement = document.getElementById('stats-data') as HTMLScriptElement;
+    if (!dataElement) return;
+    
+    let rawText = dataElement.textContent || '[]';
+    
+    // Replace single quotes with double quotes for valid JSON
+    const fixedText = rawText.replace(/'/g, '"');
+    
+    const statsList = JSON.parse(fixedText);
+    renderStatsCharts(statsList);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // facilitator detail
+    const dataEl = document.getElementById('facilitator-data');
+    if (dataEl) {
+        
+        let fac_data_text = dataEl.textContent || '[]'
+        const parsed_data = fac_data_text.replace(/'/g, '"')
+        
+        const jsonData = JSON.parse(parsed_data || '{}');
+        
+        const dailyData = jsonData.daily ?? [];
+        const monthlyData = jsonData.monthly ?? [];
+        
+        console.log(dailyData, monthlyData);
+
+        renderMonthlyAvailabilityChart('monthlyAvailabilityChart', monthlyData);
+        renderHeatMap(dailyData)
     }
-    else {
-        let index = inactive_facilitators.indexOf(facilitator)
-        inactive_facilitators.splice(index, 1)
-        active_facilitators.push(facilitator)
-    }
-    return handleWildChecks('available', 'absent')
+});
+
+
+function renderHeatMap(dailyData: [{ date: string; status: boolean }]) {
+    // Group dates by month
+    type MonthMap = Record<string, { date: string; status: boolean }[]>;
+    const months: MonthMap = {};
+
+    dailyData.forEach(d => {
+        const dateObj = new Date(d.date);
+        const monthKey = dateObj.toLocaleString('default', { month: 'short', year: 'numeric' });
+        if (!months[monthKey]) months[monthKey] = [];
+        months[monthKey].push(d);
+    });
+
+    // Sort months chronologically
+    const sortedMonthKeys = Object.keys(months).sort((a, b) => {
+        const [aMonth, aYear] = a.split(' ');
+        const [bMonth, bYear] = b.split(' ');
+        const aDate = new Date(`${aMonth} 1, ${aYear}`);
+        const bDate = new Date(`${bMonth} 1, ${bYear}`);
+        return aDate.getTime() - bDate.getTime();
+    });
+
+    const container = document.getElementById('availabilityHeatmap');
+    if (!container) throw new Error('Heatmap container not found');
+
+    // Render each month as a column
+    sortedMonthKeys.forEach(monthKey => {
+        // const monthDiv = document.createElement('div');
+        // monthDiv.classList.add('grid', 'gap-1');
+
+        // Month label
+        // const monthLabel = document.createElement('div');
+        // monthLabel.textContent = monthKey;
+        // monthLabel.classList.add('text-center', 'text-xs', 'font-semibold', 'mb-1');
+        // monthDiv.appendChild(monthLabel);
+
+        // const cellsDiv = document.createElement('div');
+        // cellsDiv.classList.add('grid', 'gap-1');
+
+        // Day cells
+        months[monthKey].forEach(d => {
+            const cell = document.createElement('div');
+            cell.classList.add('aspect-square', 'p-4', 'rounded', 'border', 'border-light');
+            cell.title = `${d.date}: ${d.status ? 'Present' : 'Absent'}`;
+            cell.style.backgroundColor = d.status ? '#006fff' : '#1a2b3d';
+            container.appendChild(cell);
+        });
+
+        // monthDiv.appendChild(cellsDiv);
+
+        // container.appendChild(monthDiv);
+    });
 }
 
-//#endregion facilitator checklist

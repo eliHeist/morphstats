@@ -67,6 +67,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-cotton-ui"
+version = "0.3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "django-cotton" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/94/d8/0ca995941a12df896c83a58aefc6614a040e4a8fe87d533227236a5c6558/django_cotton_ui-0.3.2.tar.gz", hash = "sha256:71a82c7940b9581299fbe741420c24f2a7ac91f84f2c28ad42de361cd89c6516", size = 173126, upload-time = "2026-07-07T12:57:22.715Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d2/61/1de040c48796f16afdaae9ab4fd5c6683b819c02a06f77563dcfb0e9fdb6/django_cotton_ui-0.3.2-py3-none-any.whl", hash = "sha256:0a05d6f733553929389071786a9524335782c7f9d3e1ca8fe4234cdf80488bf2", size = 214320, upload-time = "2026-07-07T12:57:23.837Z" },
+]
+
+[[package]]
 name = "django-crispy-forms"
 version = "2.3"
 source = { registry = "https://pypi.org/simple" }
@@ -159,6 +172,7 @@ dependencies = [
     { name = "django" },
     { name = "django-cors-headers" },
     { name = "django-cotton" },
+    { name = "django-cotton-ui" },
     { name = "django-crispy-forms" },
     { name = "django-environ" },
     { name = "django-htmx" },
@@ -175,6 +189,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.1.4" },
     { name = "django-cors-headers", specifier = ">=4.6.0" },
     { name = "django-cotton", specifier = ">=2.7.2" },
+    { name = "django-cotton-ui", specifier = ">=0.3.2" },
     { name = "django-crispy-forms", specifier = ">=2.3" },
     { name = "django-environ", specifier = ">=0.11.2" },
     { name = "django-htmx", specifier = ">=1.27.0" },
