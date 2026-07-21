@@ -7,15 +7,24 @@
 
   <main class="card-body">
 
-    <div class="pt-12 pb-8">
-      <h5 class="card-title text-center pb-0 text-3xl">Login</h5>
-      <p class="text-center text-sm">Enter username & password to login</p>
+    <div class="text-center pt-12 pb-8">
+      <h1 class="text-3xl">Login</h1>
+      <p class="text-sm">Enter username & password to login</p>
     </div>
 
-    <form class="max-w-lg w-11/12 mx-auto grid" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button class="p-3 bg-blue-600 mt-4 rounded-lg" type="submit">Login</button>
+    <form class="max-w-lg w-11/12 mx-auto grid gap-y-4" method="post">
+        {% csrf_token %}
+        <c-ui.field>
+            <c-ui.label for="id_username">Username</c-ui.label>
+            <c-ui.input type="text" name="username" placeholder="" id="id_username" maxlength="25" autofocus required />
+            <c-ui.error name="email" />
+        </c-ui.field>
+        <c-ui.field>
+            <c-ui.label for="id_password">Password</c-ui.label>
+            <c-ui.input type="password" name="password" id="id_password" required />
+            <c-ui.error name="email" />
+        </c-ui.field>
+        <c-ui.button variant="primary" type="submit">Login</c-ui.button>
     </form>
 
   </main>

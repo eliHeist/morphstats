@@ -11,6 +11,8 @@
     --color-accent-content: var(--color-blue-300);
     --color-accent-foreground: var(--color-white);
 
+    --color-foreground: #dbe5f1;
+
     --color-primary: #006fff;
     --color-dark: #030e19;
     --color-light: #1a2b3d;
