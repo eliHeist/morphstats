@@ -6,6 +6,7 @@ import anchor from '@alpinejs/anchor'
 import collapse from '@alpinejs/collapse'
 import morph from '@alpinejs/morph'
 import persist from '@alpinejs/persist'
+import focus from '@alpinejs/focus'
 
 import './main.css';
 import checklist from './ts/checklist';
@@ -26,6 +27,7 @@ Alpine.plugin(anchor)
 Alpine.plugin(collapse)
 Alpine.plugin(morph)
 Alpine.plugin(persist)
+Alpine.plugin(focus)
 
 Alpine.data('checklist', checklist)
 
