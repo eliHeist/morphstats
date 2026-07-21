@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @import "./theme.css";
 
+@import "lucide-static/font/lucide.css";
+
 @source "../../../";
 
 /* Theme configuration (replaces tailwind.config.js) */
