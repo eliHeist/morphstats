@@ -41,6 +41,9 @@
     --radius-box: 1.5rem;         /* structural: cards, dialogs, menus → rounded-box */
     --radius-button: var(--radius-control);  /* buttons → rounded-button; defaults to the control radius, set to a large value for pill buttons */
 
+    --color-card-border: var(--color-slate-600);
+    --color-box-border: var(--color-slate-600);
+
     --color-ink-50: var(--color-slate-50);
     --color-ink-100: var(--color-slate-100);
     --color-ink-200: var(--color-slate-200);
