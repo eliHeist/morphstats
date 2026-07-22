@@ -123,18 +123,40 @@ class FacilitatorListView(ListView):
         start_date = self.request.GET.get('start_date', '')
         end_date = self.request.GET.get('end_date', '')
         selected_tags = self.request.GET.getlist('tag')
+        tags = list(Tag.objects.all().order_by('name').values_list('name', flat=True))
 
-        context['active_count'] = facilitators.filter(active=True).count()
-        context['inactive_count'] = facilitators.filter(active=False).count()
-        context['served_count'] = facilitators.exclude(last_service_date__isnull=True).count()
-        context['never_served_count'] = facilitators.filter(last_service_date__isnull=True).count()
+        context['stats_list'] = self.get_stats_list(facilitators)
+
+        context['active_f'] = facilitators.filter(active=True)
+        context['inactive_f'] = facilitators.filter(active=False)
+
         context['start_date'] = start_date
         context['end_date'] = end_date
         context['search_query'] = self.request.GET.get('search', '').strip()
-        context['tags'] = Tag.objects.all().order_by('name')
+        context['tags'] = tags
         context['selected_tags'] = selected_tags
         context['bulk_notice'] = self.request.GET.get('bulk_notice', '')
         return context
+    
+    def get_stats_list(self, facilitators):
+        stats_list = []
+        stats_list.append({
+            "title": "Female",
+            "value": facilitators.filter(gender="F").count()
+        })
+        stats_list.append({
+            "title": "Male",
+            "value": facilitators.filter(gender="M").count()
+        })
+        stats_list.append({
+            "title": "Total",
+            "value": facilitators.count()
+        })
+        stats_list.append({
+            "title": "Active",
+            "value": facilitators.filter(active=True).count()
+        })
+        return stats_list
     
     def get_queryset(self):
         latest_service_date = Subquery(

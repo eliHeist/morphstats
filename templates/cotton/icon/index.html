@@ -1,5 +1,5 @@
-<c-vars icon="x" />
+<c-vars icon="x" :sm="False" />
 
-<div class="text-base {{ class }}" {{ attrs }}>
+<div class="{% if not sm %}text-base{% endif %} {{ class }}" {{ attrs }}>
     <span class="icon-{{ icon }}"></span>
 </div>
