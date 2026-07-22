@@ -12,7 +12,7 @@ type Service = {
     first_time_visitors: number;
     salvations: number;
     non_system_facilitators: number;
-    facilitators_available: number[];
+    facilitators_available: string[];
 };
 type Facilitator = {
     id: number;
@@ -40,23 +40,9 @@ export default (): any => ({
         this.facilitators = await this.getFacilitators(facilitatorsUrl)
     },
 
-    handleCheck(facilitator: Facilitator, serviceId: number){
-        const service = this.services.find((s:Service) => s.id === serviceId);
-        if (service) {
-            const index = service.facilitators_available.indexOf(facilitator.id);
-            if (index > -1) {
-                // Remove facilitator if already present
-                service.facilitators_available.splice(index, 1);
-            } else {
-                // Add facilitator if not present
-                service.facilitators_available.push(facilitator.id);
-            }
-            // Trigger a re-render
-            this.services = [...this.services];
-            
-            // Call the debounced update function
-            this.debouncedUpdateServices();
-        }
+    handleCheck(){
+        // Call the debounced update function
+        this.debouncedUpdateServices();
     },
 
     debouncedUpdateServices() {
@@ -73,6 +59,8 @@ export default (): any => ({
         try {
             // Get the CSRF token from the cookie
             const csrftoken = this.getCookie('csrftoken');
+            const json = JSON.stringify(this.services)
+            console.log(json)
 
             const response = await fetch(this.servicesUrl, {
                 method: 'PUT',
@@ -80,13 +68,15 @@ export default (): any => ({
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken,
                 },
-                body: JSON.stringify(this.services),
+                body: json,
             });
             if (!response.ok) {
                 throw new Error('Failed to update services');
             }
+            window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Saved successfully', variant: 'success' } }))
             console.log('Services updated successfully');
         } catch (error) {
+            window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Internal server error: Contact Developer.', variant: 'error' } }))
             console.error('Error updating services:', error);
         }
         this.statsLoader = false
@@ -94,23 +84,25 @@ export default (): any => ({
 
     // Get total number of male facilitators for a specific service
     getMaleFacilitatorsCount(service: Service) {
-        return this.facilitators.filter((f: Facilitator) => 
-            service.facilitators_available.includes(f.id) && f.gender.toLowerCase() === 'm'
-        ).length;
+        const ls:Facilitator[] = this.facilitators.filter((f: Facilitator) => 
+            service.facilitators_available.includes(String(f.id)) && f.gender.toLowerCase() === 'm'
+        );
+        return ls.length
     },
 
     // Get total number of female facilitators for a specific service
     getFemaleFacilitatorsCount(service: Service) {
-        return this.facilitators.filter((f: Facilitator) => 
-            service.facilitators_available.includes(f.id) && f.gender.toLowerCase() === 'f'
-        ).length;
+        const ls:Facilitator[] = this.facilitators.filter((f: Facilitator) => 
+            service.facilitators_available.includes(String(f.id)) && f.gender.toLowerCase() === 'f'
+        );
+        return ls.length
     },
 
     getAllFacilitatorIds():Set<number> {
         const userIds = new Set<number>();
         this.services.forEach((service: Service) => {
-            service.facilitators_available.forEach((id: number) => {
-                userIds.add(id)
+            service.facilitators_available.forEach((id: string) => {
+                userIds.add(Number(id))
             })
         });
         return userIds
@@ -130,6 +122,11 @@ export default (): any => ({
 
     getPresentFacilitatorsTotal() {
         return this.getAllFacilitatorIds().size
+    },
+
+    getService(id:number) {
+        const serviceLs = this.services.filter((s: Service) => s.id == id)
+        return serviceLs[0]
     },
 
     // Helper function to get CSRF token from cookie

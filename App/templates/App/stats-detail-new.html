@@ -69,7 +69,25 @@
                 </template>
             </div>
         </c-ui.card>
-
+        {% if request.user.is_authenticated %}
+        <div class="flex gap-4 justify-center flex-wrap">
+            <c-ui.button @click="editMode = !editMode">
+                <div class="flex items-center gap-2">
+                    <c-icon icon="pen" />
+                    <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
+                </div>
+            </c-ui.button>
+            <template x-if="editMode">
+                <c-ui.button variant="primary" @click="updateServices()">
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="save" x-cloak x-show="!statsLoader" />
+                        <c-icon icon="loader-circle animate-spin" x-cloak x-show="statsLoader" />
+                        <span x-text="statsLoader ? 'Saving' : 'Save'">Save</span>
+                    </div>
+                </c-ui.button>
+            </template>
+        </div>
+        {% endif %}
         <!-- facilitators -->
         <c-ui.card>
             <h3 class="font-semibold text-white mb-2">Facilitators</h3>
@@ -88,13 +106,13 @@
                         </div>
 
                         <!-- Female -->
-                        <c-table.cell xtext="service.facilitators_available.length + (parseInt(service.non_system_facilitators) || 0)" no_edit />
+                        <c-table.cell xtext="getFemaleFacilitatorsCount(service)" no_edit />
 
                         <!-- Male -->
                         <c-table.cell xtext="getMaleFacilitatorsCount(service)" no_edit />
 
                         <!-- Total -->
-                        <c-table.cell xtext="getFemaleFacilitatorsCount(service)" no_edit />
+                        <c-table.cell xtext="service.facilitators_available.length" no_edit />
                     </div>
                 </template>
             </div>
@@ -102,76 +120,27 @@
                 <div>Overall:</div>
                 <div x-text="getPresentFacilitatorsTotal()"></div>
             </div>
-        </c-ui.card>
-    </div>
-    <div class="grid gap-8 lg:grid-cols-12 ">
-        <section class="py-8 lg:col-span-5 xl:col-span-4 overflow-x-auto">
-
             {% if request.user.is_authenticated %}
-            <div class="flex gap-4 justify-center flex-wrap">
-                <c-ui.button @click="editMode = !editMode">
-                    <div class="flex items-center gap-2">
-                        <c-icon icon="pen" />
-                        <span x-text="editMode ? 'Close Edit' : 'Edit'">Edit</span>
-                    </div>
-                </c-ui.button>
-                <template x-if="editMode">
-                    <c-ui.button variant="primary" @click="updateServices()">
+            <div class="flex justify-end gap-3 mt-4">
+                <c-ui.drawer title="Facilitator's Checklist" description="Check who served in which service.">
+                    <c-ui.button @click="drawerOpen = true">
                         <div class="flex items-center gap-2">
-                            <c-icon icon="save" x-cloak x-show="!statsLoader" />
-                            <c-icon icon="loader-circle animate-spin" x-cloak x-show="statsLoader" />
-                            <span x-text="statsLoader ? 'Saving' : 'Save'">Save</span>
+                            <c-icon icon="list-todo"></c-icon>
+                            <span>Checklist</span>
                         </div>
                     </c-ui.button>
-                </template>
+                    <c-slot name="content">
+                        {% partial checklist %}
+                    </c-slot>
+                    <c-slot name="footer">
+                        <div class="flex justify-end gap-2">
+                            <c-ui.button @click="drawerOpen = false">Cancel</c-ui.button>
+                        </div>
+                    </c-slot>
+                </c-ui.drawer>
             </div>
             {% endif %}
-        </section>
-        {% if request.user.is_authenticated %}
-        <section class="py-8 lg:col-span-7 xl:col-span-8">
-            <h2 class="text-2xl font-bold">Checklist</h2>
-            <div x-data="{ activeTab: services[0]?.name || '' }" class="mt-4">
-                <!-- Tab navigation -->
-                <div class="flex mb-4 border-b border-light">
-                    <template x-for="service in services" :key="service.id">
-                        <button 
-                            class="px-4 py-2 font-semibold"
-                            :class="{ 'text-primary border-b-2 border-primary': activeTab === service.name }"
-                            @click="activeTab = service.name"
-                            x-text="service.name">
-                        </button>
-                    </template>
-                </div>
-
-                <!-- Tab content -->
-                <template x-for="service in services" :key="service.id">
-                    <div x-show="activeTab === service.name" class="mt-4">
-                        <ul class="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-y-2 gap-x-6">
-                            <template x-for="facilitator in facilitators" :key="facilitator.id">
-                                <li class="item">
-                                    <input x-bind:id="'check' + facilitator.id" type="checkbox"
-                                        class="hidden pointer-events-none" 
-                                        :class="service.facilitators_available.includes(facilitator.id) ? 'checked' : ''"
-                                        :checked="service.facilitators_available.includes(facilitator.id)">
-                                    <label x-bind:for="'check' + facilitator.id" @click="handleCheck(facilitator, service.id)">
-                                        <svg viewbox="0 0 100 100">
-                                            <path class="box"
-                                                d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
-                                            <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
-                                        </svg>
-                                        <span x-text="facilitator.name"></span>
-                                    </label>
-                                    <!-- <a :href="`/facilitator/${facilitator.id}/update/`" class="opacity-0">
-                                        <i class="fas fa-edit"></i>
-                                    </a> -->
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-                </template>
-            </div>
-        </section>
-        {% endif %}
+        </c-ui.card>
     </div>
 
 
@@ -179,6 +148,77 @@
 
 {% endblock slot %}
 
+{% partialdef checklist %}
+<c-ui.tabs variant="segmented">
+    {% for service in stat.services.all %}
+    <c-ui.tabs.tab name="{{ service.name }}">
+        <c-ui.checkbox.group name="facilitators_available" label="Select facilitators">
+            <template x-for="facilitator in facilitators" :key="facilitator.id">
+                <div class="item">
+                    <label class="facilitator-check" @click="handleCheck()">
+                        <input
+                            type="checkbox"
+                            :id="'check' + facilitator.id"
+                            :name="'check' + facilitator.id"
+                            class="hidden"
+                            x-model="getService({{ service.pk }}).facilitators_available"
+                            :value="facilitator.id"
+                        />
+                        <svg viewBox="0 0 100 100">
+                            <path class="box"
+                                d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                            <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
+                        </svg>
+                        <span x-text="facilitator.name"></span>
+                    </label>
+                </div>
+            </template>
+        </c-ui.checkbox.group>
+    </c-ui.tabs.tab>
+    {% endfor %}
+</c-ui.tabs>
+{% endpartialdef checklist %}
+<div x-data="{ activeTab: services[0]?.name || '' }" class="mt-4">
+    <!-- Tab navigation -->
+    <div class="flex mb-4 border-b border-light">
+        <template x-for="service in services" :key="service.id">
+            <button 
+                class="px-4 py-2 font-semibold"
+                :class="{ 'text-primary border-b-2 border-primary': activeTab === service.name }"
+                @click="activeTab = service.name"
+                x-text="service.name">
+            </button>
+        </template>
+    </div>
+
+    <!-- Tab content -->
+    <template x-for="service in services" :key="service.id">
+        <div x-show="activeTab === service.name" class="mt-4">
+            <ul class="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-y-2 gap-x-6">
+                <template x-for="facilitator in facilitators" :key="facilitator.id">
+                    <li class="item">
+                        <label class="facilitator-check">
+                            <input
+                                type="checkbox"
+                                :id="'check' + facilitator.id"
+                                :name="'check' + facilitator.id"
+                                class="hidden"
+                                :class="service.facilitators_available.includes(facilitator.id) ? 'checked' : ''"
+                                :checked="service.facilitators_available.includes(facilitator.id)"
+                            />
+                            <svg viewBox="0 0 100 100">
+                                <path class="box"
+                                    d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                                <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
+                            </svg>
+                            <span x-text="facilitator.name"></span>
+                        </label>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+</div>
 
 {% block scripts %}
 {% endblock scripts %}

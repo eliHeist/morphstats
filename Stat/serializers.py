@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from Stat.models import Service, Stat
+from facilitators.models import Facilitator
 
 
 class StatSerializer(serializers.ModelSerializer):
@@ -38,7 +39,23 @@ class StatSerializer(serializers.ModelSerializer):
         return obj.total_that_served()
 
 
+class FacilitatorsAvailableField(serializers.PrimaryKeyRelatedField):
+    """
+    Accepts facilitator primary keys (strings or ints) and 
+    returns a list of string IDs during serialization.
+    """
+    def __init__(self, **kwargs):
+        kwargs["queryset"] = Facilitator.objects.all()
+        super().__init__(**kwargs)
+
+    def to_representation(self, value):
+        # DRF passes a SINGLE Facilitator instance here when many=True is set on the serializer field
+        return str(value.pk)
+    
+
 class ServiceSerializer(serializers.ModelSerializer):
+    facilitators_available = FacilitatorsAvailableField(many=True)
+
     class Meta:
         model = Service
         fields = [
