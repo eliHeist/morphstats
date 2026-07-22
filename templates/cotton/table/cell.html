@@ -5,6 +5,7 @@
     <input type="{{ type }}" x-show="editMode" 
     class="block rounded-control text-ink-900 dark:text-ink-100 text-sm py-2 px-3 bg-input-bg text-center w-16" {{ attrs }}>
     {% endif %}
-    <div x-text="{{ xtext }}" {% if html %}x-html="{{ html }}"{% endif %} x-show="!editMode" 
+    <div x-text="{{ xtext }}" {% if html %}x-html="{{ html }}"{% endif %} 
+    {% if not no_edit %}x-show="!editMode"{% endif %} 
     class="block w-16 rounded-control text-ink-900 dark:text-ink-100 text-sm py-2 px-4 -bg-input-bg text-center"></div>
 </div>
