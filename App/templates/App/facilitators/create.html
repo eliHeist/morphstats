@@ -2,14 +2,57 @@
 
 {% block slot %}
 
-<section class=" pt-12">
-    <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm">
+<section class=" pt-12" x-data="facilitatorForm()">
+    <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="p-3 bg-blue-600 mt-4 rounded-lg">Save Facilitator</button>
+        <div class="grid gap-4 grid-cols-2">
+            <c-ui.field>
+                <c-ui.label for="id_first_name">First Name *</c-ui.label>
+                <c-ui.input type="text" name="first_name" placeholder="" id="id_first_name" maxlength="25" autofocus required x-ref="first" @keydown.space.prevent="nextOnSpace($refs.first, $refs.last)" />
+            </c-ui.field>
+            <c-ui.field>
+                <c-ui.label for="id_last_name">Last Name *</c-ui.label>
+                <c-ui.input type="text" name="last_name" placeholder="" id="id_last_name" maxlength="25" required x-ref="last" @keydown.space.prevent="nextOnSpace($refs.last, $refs.other)" />
+            </c-ui.field>
+            <c-ui.field>
+                <c-ui.label for="id_other_name">Other Name</c-ui.label>
+                <c-ui.input type="text" name="other_name" placeholder="" id="id_other_name" maxlength="25" x-ref="other" @keydown.space.prevent="nextOnSpace($refs.other, $refs.status)" />
+            </c-ui.field>
+        </div>
+        <c-ui.switch
+            name="active"
+            label="Active status"
+            description="Designates whether they are actively serving or not right now."
+            x-ref="status"
+            checked />
+        <c-ui.select name="gender" label="Gender *" placeholder="Choose a gender" required>
+            <c-ui.select.option value="F">Female</c-ui.select.option>
+            <c-ui.select.option value="M">Male</c-ui.select.option>
+        </c-ui.select>
+        <c-ui.combobox
+            name="tags"
+            label="Tags"
+            description="Pick all that relate."
+            placeholder="Select tags"
+            :options="{{ tags_list|safe }}"
+        />
+        <c-ui.button variant="primary" type="submit">Save Facilitator</c-ui.button>
     </form>
 </section>
 
+<script>
+  function facilitatorForm() {
+    return {
+      nextOnSpace(current, next) {
+        const value = current.value;
+        // Move only if there's text before the space
+        if (value.trim().length > 0 && next) {
+          next.focus();
+        }
+      }
+    }
+  }
+</script>
 {% endblock slot %}
 
 

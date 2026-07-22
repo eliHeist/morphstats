@@ -93,7 +93,12 @@ class FacilitatorCreateView(RedirectNonStaffMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(FacilitatorCreateView, self).get_context_data(**kwargs)
         context['link_name'] = 'facilitators-link'
+        context['tags_list'] = list(Tag.objects.all().values_list('name', flat=True))
         return context
+
+    # class FacilitatorCreateView(RedirectNonStaffMixin, View):
+    #     template_name = "App/facilitators/create.html"
+    #     success_url = reverse_lazy('App:facilitator-list')
     
 class FacilitatorUpdateView(RedirectNonStaffMixin, UpdateView):
     model = Facilitator

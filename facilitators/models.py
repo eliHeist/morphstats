@@ -21,7 +21,7 @@ class Facilitator(models.Model):
         return self.name
     
 class Tag(models.Model):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=25, unique=True)
     description = models.TextField(blank=True, null=True)
     class Meta:
         verbose_name = 'Tag'
