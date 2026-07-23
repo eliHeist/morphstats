@@ -24,14 +24,15 @@
                 </div>
 
                 <!-- Action / Login Container -->
-                <div class="flex flex-wrap sm:flex-row md:flex-col gap-3 min-w-45 justify-center">
+                <form action="{% url 'logout' %}" method="post" class="flex flex-wrap sm:flex-row md:flex-col gap-3 min-w-45 justify-center">
                     {% if user.is_authenticated %}
-                        <c-ui.button href="{% url 'logout' %}" variant="danger">
+                        <c-ui.button type="submit" variant="danger">
                             <div class="flex items-center gap-2">
                                 <c-icon icon="log-out" sm />
                                 Logout
                             </div>
                         </c-ui.button>
+                        {% csrf_token %}
                         {% else %}
                         <c-ui.button href="{% url 'login' %}" variant="primary">
                             <div class="flex items-center gap-2">
@@ -47,7 +48,7 @@
                             GitHub
                         </div>
                     </c-ui.button>
-                </div>
+                </form>
             </div>
         </c-ui.card>
 

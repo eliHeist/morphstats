@@ -3,33 +3,14 @@
 
 {% block slot %}
 
-<section class="max-w-4xl mx-auto">
-    <div class="flex p-4 justify-center">
-        
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'App:register-day' %}">
-            <c-ui.button class="flex items-center gap-2">
-                <c-icon icon="plus" />
-                <span class="uppercase">Add new stat</span>
-            </c-ui.button>
-        </a>
-        {% else %}
-        <a href="{% url 'login' %}">
-            <c-ui.button variant="primary" class="flex items-center gap-2">
-                <c-icon icon="user" />
-                <span class="uppercase">Login</span>
-            </c-ui.button>
-        </a>
-        {% endif %}
-            
-    </div>
+<section class="max-w-4xl mx-auto @container">
     <!-- list of the stats -->
-    <div class="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="mx-auto grid @sm:grid-cols-2 @xl:grid-cols-3 @3xl:grid-cols-4 gap-4">
         {% for stat in stats %}
         <a href="{% url 'App:stat-detail' stat.id %}">
             <c-ui.card>
-                <h3 class="text-lg font-semibold mb-2">{{ stat.formatedDate }}</h3>
-                <p class="text-ink-600">{{ stat.date|timesince }}</p>
+                <h3 class="font-semibold mb-2">{{ stat.formatedDate }}</h3>
+                <p class="text-ink-400">{{ stat.date|timesince }}</p>
             </c-ui.card>
         </a>
         {% endfor %}
