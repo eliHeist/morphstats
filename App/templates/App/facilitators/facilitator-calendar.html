@@ -4,21 +4,37 @@
 {% block slot %}
 <section class="mb-8">
     <div class="grid grid-flow-col justify-between px-2 mt-4">
-        <a href="{% url 'App:facilitator-list' %}"
-            class="w-fit flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i>
-            <span>List</span>
+        <a href="{% url 'App:facilitator-list' %}">
+            <c-ui.button type="submit">
+                <div class="flex items-center gap-2">
+                    <c-icon icon="chevron-left" />
+                    <span class="hidden">List</span>
+                </div>
+            </c-ui.button>
         </a>
         {% if request.user.is_superuser %}
-        <a href="{% url 'App:facilitator-update' facilitator.pk %}"
-            class="w-fit flex items-center gap-2">
-            <i class="fas fa-edit"></i>
-            <span>Update</span>
+        <a href="{% url 'App:facilitator-update' facilitator.pk %}">
+            <c-ui.button type="submit">
+                <div class="flex items-center gap-2">
+                    <c-icon icon="pencil" />
+                    <span class="hidden">Edit</span>
+                </div>
+            </c-ui.button>
         </a>
         {% endif %}
     </div>
-    <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
 </section>
+
+<header>
+    <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
+    <div class="grid justify-center uppercase">
+        {% if facilitator.gender == 'F' %}
+        <c-ui.badge color="fuchsia">{{ facilitator.get_gender_display }}</c-ui.badge>
+        {% else %}
+        <c-ui.badge color="orange">{{ facilitator.get_gender_display }}</c-ui.badge>
+        {% endif %}
+    </div>
+</header>
 
 {% comment %} <table class="w-full">
     {% for pair in list %}
@@ -36,14 +52,12 @@
 </table> {% endcomment %}
 
 <h3 class="font-bold mb-2 hidden">Daily Availability Heatmap</h3>
-<div class="w-full overflow-x-auto my-4">
-    <div id="availabilityHeatmap" class="grid-cols-12 grid gap-1 w-fit max-w-3xl p-1 border border-light rounded mx-auto"></div>
+<div class="w-full my-4">
+    <div id="availabilityHeatmap" class="grid-cols-5 grid gap-1 w-full max-w-3xl p-1 border border-box-border rounded-box mx-auto"></div>
 </div>
 
 <h3 class="font-bold mb-2 mt-6">Monthly chart</h3>
 <canvas id="monthlyAvailabilityChart" class="heatmap"></canvas>
-
-<div class="hidden aspect-square"></div>
 
 <!-- Embed JSON data -->
 <script id="facilitator-data" type="application/json">
@@ -59,6 +73,3 @@
 
 {% endblock slot %}
 
-
-{% block scripts %}
-{% endblock scripts %}

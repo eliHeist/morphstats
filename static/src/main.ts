@@ -119,9 +119,10 @@ function renderHeatMap(dailyData: [{ date: string; status: boolean }]) {
         // Day cells
         months[monthKey].forEach(d => {
             const cell = document.createElement('div');
-            cell.classList.add('aspect-square', 'p-4', 'rounded', 'border', 'border-light');
+            cell.classList.add('h-8', 'rounded-box', 'text-xs', 'grid', 'place-content-center');
             cell.title = `${d.date}: ${d.status ? 'Present' : 'Absent'}`;
-            cell.style.backgroundColor = d.status ? '#006fff' : '#1a2b3d';
+            cell.classList.add(d.status ? 'bg-accent' : 'bg-surface')
+            cell.innerText = d.date
             container.appendChild(cell);
         });
 
