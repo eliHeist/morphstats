@@ -13,6 +13,7 @@ django==5.2.16
     #   crispy-tailwind
     #   django-cors-headers
     #   django-cotton
+    #   django-cotton-ui
     #   django-crispy-forms
     #   django-htmx
     #   django-template-partials
@@ -22,6 +23,10 @@ django==5.2.16
 django-cors-headers==4.9.0
     # via morphstats (pyproject.toml)
 django-cotton==2.7.2
+    # via
+    #   morphstats (pyproject.toml)
+    #   django-cotton-ui
+django-cotton-ui==0.3.2
     # via morphstats (pyproject.toml)
 django-crispy-forms==2.6
     # via
