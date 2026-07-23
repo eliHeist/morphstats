@@ -4,54 +4,78 @@
 {% block slot %}
 
 <section title="Attendance records">
-    <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2>
-    <header class="bg-light p-4 rounded-md mb-8" x-data='{ show:false }'>
-        <button type="submit" class="bg-sky-500 text-white py-2 px-4 rounded-md hover:bg-sky-600 focus:outline-none focus:ring focus:border-sky-300" @click="show=!show">
-            <i class="fas fa-filter"></i>
-            Filters
-        </button>
-        <form method="get" class="flex items-end gap-4 mt-4" x-cloak x-show="show">
-            <!-- From Date Field -->
-            <div class="grid gap-1">
-                <label for="from_date" class="text-white">From Date:</label>
-                <input type="date" id="from_date" name="from_date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500">
-            </div>
-    
-            <!-- To Date Field -->
-            <div class="grid gap-1">
-                <label for="to_date" class="text-white">Date: *</label>
-                <input type="date" id="to_date" name="date" class="rounded-md border-gray-300 bg-dark p-2 focus:outline-none focus:border-blue-500" required>
-            </div>
-    
-            <!-- Submit Button -->
-            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
-                Submit
-            </button>
-        </form>
+    <!-- <h2 class="text-3xl font-semibold text-center mb-8 text-white">{{ year }}</h2> -->
+    <header>
+        <c-ui.dialog>
+            <c-slot name="trigger">
+                <c-ui.button>
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="funnel" />
+                        <span>Filters</span>
+                    </div>
+                </c-ui.button>
+            </c-slot>
+
+            <c-slot name="header">
+                <c-ui.dialog.title>Filters</c-ui.dialog.title>
+                <!-- <c-ui.dialog.description>Make changes to your profile here. Click save when you're done.</c-ui.dialog.description> -->
+            </c-slot>
+
+            <form method="get" class="space-y-4">
+                <div class="grid gap-y-4">
+                    <div class="grid grid-cols-2 gap-2">
+                        <c-ui.field>
+                            <c-ui.label>From:</c-ui.label>
+                            <c-ui.input type="date" name="from_date" value="{{ from_date }}" required />
+                        </c-ui.field>
+                        <c-ui.field>
+                            <c-ui.label>To:</c-ui.label>
+                            <c-ui.input type="date" name="to_date" value="{{ to_date }}" />
+                        </c-ui.field>
+                    </div>
+                </div>
+
+                <div class="grid gap-2">
+                    <c-ui.button variant="ghost" @click="close()">Cancel</c-ui.button>
+                    <a href="{% url 'facilitators:attendance' %}" class="w-full grid">
+                        <c-ui.button>Reset</c-ui.button>
+                    </a>
+                    <c-ui.button variant="primary" type="submit">Submit</c-ui.button>
+                </div>
+            </form>
+        </c-ui.dialog>
     </header>
-    <div class="overflow-auto">
-        <table class="w-max">
+    <div class="overflow-auto mt-4">
+        <table class="w-max border-collapse text-xs rounded-box overflow-hidden">
             <thead>
-                <th class="sticky bg-dark left-0"></th>
-                {% for facilitator in facilitators %}
-                <th><span class="w-max">{{ facilitator.name }}</span></th>
-                {% endfor %}
+                <tr>
+                    <!-- Sticky top-left corner cell for layout alignment -->
+                    <th class="sticky left-0 bg-surface z-10 p-2 text-left">
+                        Facilitator
+                    </th>
+
+                    <!-- Date Columns Header formatted as '18 AUG' -->
+                    {% for stat in days %}
+                    <th class="p-2 text-center font-semibold uppercase text-xs bg-surface w-min">
+                        <span class="whitespace-wrap">{{ stat.date|date:"d M"|upper }}</span>
+                    </th>
+                    {% endfor %}
+                </tr>
             </thead>
             <tbody>
-                {% for pair in calendar %}
-                <tr>
-                    <td class="sticky bg-dark left-0">{{ pair.stat.date }}</td>
-                    <div class="overflow-x-auto w-full">
-                        {% for item in pair.data %}
-                        <td class="text-center">
-                            {% if item %}
-                            <i class="fas fa-circle-check text-green-500"></i>
-                            {% else %}
-                            <i class="fas fa-circle-xmark text-red"></i>
-                            {% endif %}
-                        </td>
-                        {% endfor %}
-                    </div>
+                {% for row in facilitator_rows %}
+                <tr class="border-t border-gray-700">
+                    <!-- Sticky Facilitator Name Row Header -->
+                    <td class="sticky left-0 bg-surface z-10 p-2 font-medium whitespace-nowrap">
+                        {{ row.facilitator.name }}
+                    </td>
+
+                    <!-- Attendance Status Cells -->
+                    {% for is_present in row.statuses %}
+                    <td class="py-1 px-2 text-center align-middle w-min">
+                        <div class="rounded-box w-full h-full p-2 aspect-square {% if is_present %}bg-accent{% else %}bg-surface{% endif %}"></div>
+                    </td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -60,10 +84,3 @@
 </section>
 
 {% endblock slot %}
-
-
-{% block scripts %}
-<script>
-    const active_link = "facilitators-link"
-</script>
-{% endblock scripts %}

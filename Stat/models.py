@@ -1,5 +1,5 @@
 from django.db import models 
-import datetime
+from django.db.models import Sum
 
 from facilitators.models import Facilitator
 
@@ -19,40 +19,22 @@ class Stat(models.Model):
         return count
     
     def totalJunior(self):
-        count:int = 0
-        for service in self.services.all():
-            if service.junior:
-                count += service.junior or 0
-        return count
-    
+        return self.services.aggregate(total=Sum('junior'))['total'] or 0
+
     def totalSenior(self):
-        count:int = 0
-        for service in self.services.all():
-            if service.senior:
-                count += service.senior
-        return count
-    
+        return self.services.aggregate(total=Sum('senior'))['total'] or 0
+
     def totalSalvations(self):
-        count:int = 0
-        for service in self.services.all():
-            if service.salvations:
-                count += service.salvations
-        return count
-    
+        return self.services.aggregate(total=Sum('salvations'))['total'] or 0
+
     def totalVisitors(self):
-        count:int = 0
-        for service in self.services.all():
-            if service.first_time_visitors:
-                count += service.first_time_visitors
-        return count
+        return self.services.aggregate(total=Sum('first_time_visitors'))['total'] or 0
     
     def facilitators(self):
-        facilitators_list = []
-        for service in self.services.all():
-            for facilitator in service.facilitators_available.all():
-                if facilitator not in facilitators_list:
-                    facilitators_list.append(facilitator)
-        return facilitators_list
+        # Returns distinct Facilitator queryset instead of a raw Python list
+        return Facilitator.objects.filter(
+            services_served__stat=self
+        ).distinct()
     
     def facilitatorsData(self):
         facilitators_dict = {}
@@ -123,7 +105,7 @@ class Service(models.Model):
     salvations = models.PositiveSmallIntegerField(blank=True, null=True)
     facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
     non_system_facilitators = models.PositiveSmallIntegerField(blank=True, null=True)
-    facilitators_available = models.ManyToManyField(Facilitator, blank=True)
+    facilitators_available = models.ManyToManyField(Facilitator, blank=True, related_name='services_served')
 
     fixed_total = models.PositiveSmallIntegerField(blank=True, null=True)
 
