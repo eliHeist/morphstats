@@ -3,7 +3,7 @@
 
 {% block slot %}
 
-<div class="min-h-screen p-2" x-data="{
+<div class="min-h-screen px-2 max-w-4xl mx-auto" x-data="{
     tab: 0,
     convertNumber(){
         document.querySelectorAll('.large_number').forEach(element => {
@@ -36,7 +36,7 @@
                     {% for stat in stats.numbers_stats %}
                     <section>
                         <h2 class="mb-2 font-semibold text-white">{{ stat.name }}</h2>
-                        <div class="grid @xs:grid-cols-2 @xs:gap-2 @5xl:grid-cols-4">
+                        <div class="grid @xs:grid-cols-2 gap-2 @2xl:grid-cols-4">
                             <c-ui.card padding="sm" class="text-center">
                                 <h4 class="font-semibold text-4xl">{{ stat.total }}</h4>
                                 <p class="text-sm text-ink-400 mt-2">Total</p>
@@ -59,7 +59,7 @@
         
                     <section>
                         <h2 class="mb-2 font-semibold text-white">Facilitation Overview</h2>
-                        <div class="grid @xs:grid-cols-2 @xs:gap-2 @5xl:grid-cols-4">
+                        <div class="grid @xs:grid-cols-2 gap-2 @2xl:grid-cols-4">
                             <c-ui.card padding="sm" class="text-center">
                                 <h4 class="font-semibold text-4xl">{{ stats.facilitators_data.total_sundays }}</h4>
                                 <p class="text-sm text-ink-400 mt-2">Days</p>
@@ -82,7 +82,7 @@
                     <!-- Demographics & Tags Section -->
                     <section>
                         <h2 class="mb-2 font-semibold text-white">Demographics & Tags</h2>
-                        <div class="grid @xs:grid-cols-2 @xs:gap-2 @5xl:grid-cols-3">
+                        <div class="grid @xs:grid-cols-2 gap-2 @2xl:grid-cols-3">
                             <c-ui.card padding="sm" class="text-center">
                                 <h4 class="font-semibold text-4xl text-blue-400">{{ stats.facilitators_data.demographics.male_count }}</h4>
                                 <p class="text-sm text-ink-400 mt-2">Male Facilitators</p>

@@ -3,7 +3,7 @@
 {% block slot %}
 
 <section class=" pt-12" x-data="facilitatorForm()">
-    <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm space-y-4">
+    <form method="post" class="accent-primary grid space-y-4 px-2 max-w-4xl mx-auto">
         {% csrf_token %}
         <div class="grid gap-4 grid-cols-2">
             <c-ui.field>

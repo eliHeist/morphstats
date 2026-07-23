@@ -2,78 +2,66 @@
 {% load static tailwind_filters %}
 
 {% block slot %}
-<section class="mb-8">
-    <div class="grid grid-flow-col justify-between px-2 mt-4">
-        <a href="{% url 'App:facilitator-list' %}">
-            <c-ui.button type="submit">
-                <div class="flex items-center gap-2">
-                    <c-icon icon="chevron-left" />
-                    <span class="hidden">List</span>
-                </div>
-            </c-ui.button>
-        </a>
-        {% if request.user.is_superuser %}
-        <a href="{% url 'App:facilitator-update' facilitator.pk %}">
-            <c-ui.button type="submit">
-                <div class="flex items-center gap-2">
-                    <c-icon icon="pencil" />
-                    <span class="hidden">Edit</span>
-                </div>
-            </c-ui.button>
-        </a>
-        {% endif %}
-    </div>
-</section>
-
-<header>
-    <div class="flex justify-center items-center gap-2">
-        <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
-        {% if facilitator.active %}
-        <c-ui.badge color="lime" inset="top bottom">
-            <c-icon icon="check" sm />
-        </c-ui.badge>
-        {% else %}
-        <c-ui.badge color="zinc" inset="top bottom">
-            <c-icon icon="square-dashed" sm />
-        </c-ui.badge>
-        {% endif %}
-    </div>
-    <div class="grid justify-center uppercase">
-        {% if facilitator.gender == 'F' %}
-        <c-ui.badge color="fuchsia">{{ facilitator.get_gender_display }}</c-ui.badge>
-        {% else %}
-        <c-ui.badge color="orange">{{ facilitator.get_gender_display }}</c-ui.badge>
-        {% endif %}
-    </div>
-    <div class="flex flex-wrap gap-2 justify-center uppercase my-4">
-        {% for tag in facilitator.tags.all %}
-        <c-ui.badge color="teal">{{ tag.name }}</c-ui.badge>
-        {% endfor %}
-    </div>
-</header>
-
-{% comment %} <table class="w-full">
-    {% for pair in list %}
-    <tr class="text-left">
-        <th>{{ pair.stat.date }}</th>
-        <td>
-            {% if pair.status %}
-            <i class="fas fa-circle-check text-green-500"></i>
-            {% else %}
-            <i class="fas fa-circle-xmark text-red"></i>
+<div class="max-w-4xl mx-auto">
+    <section class="mb-8">
+        <div class="grid grid-flow-col justify-between px-2 mt-4">
+            <a href="{% url 'App:facilitator-list' %}">
+                <c-ui.button type="submit">
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="chevron-left" />
+                        <span class="hidden">List</span>
+                    </div>
+                </c-ui.button>
+            </a>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'App:facilitator-update' facilitator.pk %}">
+                <c-ui.button type="submit">
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="pencil" />
+                        <span class="hidden">Edit</span>
+                    </div>
+                </c-ui.button>
+            </a>
             {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
-</table> {% endcomment %}
-
-<h3 class="font-bold mb-2 hidden">Daily Availability Heatmap</h3>
-<div class="w-full my-4">
-    <div id="availabilityHeatmap" class="grid-cols-5 grid gap-1 w-full max-w-3xl p-1 border border-box-border rounded-box mx-auto"></div>
+        </div>
+    </section>
+    
+    <header>
+        <div class="flex justify-center items-center gap-2">
+            <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
+            {% if facilitator.active %}
+            <c-ui.badge color="lime" inset="top bottom">
+                <c-icon icon="check" sm />
+            </c-ui.badge>
+            {% else %}
+            <c-ui.badge color="zinc" inset="top bottom">
+                <c-icon icon="square-dashed" sm />
+            </c-ui.badge>
+            {% endif %}
+        </div>
+        <div class="grid justify-center uppercase">
+            {% if facilitator.gender == 'F' %}
+            <c-ui.badge color="fuchsia">{{ facilitator.get_gender_display }}</c-ui.badge>
+            {% else %}
+            <c-ui.badge color="orange">{{ facilitator.get_gender_display }}</c-ui.badge>
+            {% endif %}
+        </div>
+        <div class="flex flex-wrap gap-2 justify-center uppercase my-4">
+            {% for tag in facilitator.tags.all %}
+            <c-ui.badge color="teal">{{ tag.name }}</c-ui.badge>
+            {% endfor %}
+        </div>
+    </header>
+    
+    
+    <h3 class="font-bold mb-2 hidden">Daily Availability Heatmap</h3>
+    <div class="w-full my-4">
+        <div id="availabilityHeatmap" class="grid-cols-5 grid gap-1 w-full max-w-3xl p-1 border border-box-border rounded-box mx-auto"></div>
+    </div>
+    
+    <h3 class="font-bold mb-2 mt-6">Monthly chart</h3>
+    <canvas id="monthlyAvailabilityChart" class="heatmap"></canvas>
 </div>
-
-<h3 class="font-bold mb-2 mt-6">Monthly chart</h3>
-<canvas id="monthlyAvailabilityChart" class="heatmap"></canvas>
 
 <!-- Embed JSON data -->
 <script id="facilitator-data" type="application/json">
