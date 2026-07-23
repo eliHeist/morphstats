@@ -4,11 +4,47 @@
 {% block slot %}
 
 <section class=" pt-12">
-    <img class="logo mx-auto pb-8" src="{% static 'assets/logo.png' %}" alt="App logo">
-    <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm">
+    <form method="post" class=" accent-primary grid mx-auto w-11/12 max-w-sm space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="p-3 bg-amber-600 mt-4 rounded-lg">Save Facilitator</button>
+        <div class="grid gap-4 grid-cols-2">
+            <c-ui.field>
+                <c-ui.label for="id_first_name">First Name *</c-ui.label>
+                <c-ui.input type="text" name="first_name" placeholder="" id="id_first_name" maxlength="25" autofocus required x-ref="first" @keydown.space.prevent="nextOnSpace($refs.first, $refs.last)" value="{{ form.first_name.value }}" />
+            </c-ui.field>
+            <c-ui.field>
+                <c-ui.label for="id_last_name">Last Name *</c-ui.label>
+                <c-ui.input type="text" name="last_name" placeholder="" id="id_last_name" maxlength="25" required x-ref="last" @keydown.space.prevent="nextOnSpace($refs.last, $refs.other)" value="{{ form.last_name.value }}" />
+            </c-ui.field>
+            <c-ui.field>
+                <c-ui.label for="id_other_name">Other Name</c-ui.label>
+                <c-ui.input type="text" name="other_name" placeholder="" id="id_other_name" maxlength="25" x-ref="other" @keydown.space.prevent="nextOnSpace($refs.other, $refs.status)" value="{{ form.other_name.value }}" />
+            </c-ui.field>
+        </div>
+        <c-ui.switch
+            name="active"
+            label="Active status"
+            description="Designates whether they are actively serving or not right now."
+            x-ref="status"
+            checked="{{ form.active.value }}" />
+        <c-ui.select name="gender" label="Gender *" placeholder="Choose a gender" required>
+            {% for choice_val, choice_label in form.gender.field.choices %}
+                <c-ui.select.option 
+                    value="{{ choice_val }}" 
+                    :selected="{% if form.gender.value|stringformat:'s' == choice_val|stringformat:'s' %}True{% else %}False{% endif %}"
+                >
+                    {{ choice_label }}
+                </c-ui.select.option>
+            {% endfor %}
+        </c-ui.select>
+        <c-ui.combobox
+            name="tags"
+            label="Tags"
+            description="Pick all that relate."
+            placeholder="Select tags"
+            :options="{{ tags_list|safe }}"
+            :selected="{{ form.tags.value|safe }}"
+        />
+        <c-ui.button variant="primary" type="submit">Update</c-ui.button>
     </form>
 </section>
 

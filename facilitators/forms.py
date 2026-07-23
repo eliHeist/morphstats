@@ -11,18 +11,19 @@ class FacilitatorFormOld(ModelForm):
 
 class TagNameMultipleChoiceField(ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
+        kwargs.setdefault('to_field_name', 'name')
         super().__init__(*args, **kwargs)
-        self.label_from_instance = lambda obj: obj.name
+        # self.label_from_instance = lambda obj: obj.name
 
-    def _get_choices(self):
-        return [(obj.name, obj.name) for obj in self.queryset]
+    # def _get_choices(self):
+    #     return [(obj.name, obj.name) for obj in self.queryset]
 
-    choices = property(_get_choices)
+    # choices = property(_get_choices)
 
-    def clean(self, value):
-        if not value:
-            return self.queryset.none()
-        return self.queryset.filter(name__in=value)
+    # def clean(self, value):
+    #     if not value:
+    #         return self.queryset.none()
+    #     return self.queryset.filter(name__in=value)
 
 
 class FacilitatorForm(ModelForm):
@@ -42,7 +43,8 @@ class FacilitatorForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.instance.pk and self.instance.name:
+        # 1. Parse name field logic
+        if self.instance.pk and getattr(self.instance, 'name', None):
             parts = self.instance.name.split()
             if len(parts) == 0:
                 first = last = other = ''
@@ -56,6 +58,12 @@ class FacilitatorForm(ModelForm):
             self.fields['first_name'].initial = first
             self.fields['last_name'].initial = last
             self.fields['other_name'].initial = other
+
+        # 2. Fix tags initial values (Force Tag Names instead of Tag IDs)
+        if self.instance.pk:
+            self.fields['tags'].initial = list(
+                self.instance.tags.values_list('name', flat=True)
+            )
 
     def clean(self):
         cleaned = super().clean()

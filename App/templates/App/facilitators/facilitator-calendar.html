@@ -26,13 +26,29 @@
 </section>
 
 <header>
-    <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
+    <div class="flex justify-center items-center gap-2">
+        <h2 class="text-lg text-center">{{ facilitator.name }}</h2>
+        {% if facilitator.active %}
+        <c-ui.badge color="lime" inset="top bottom">
+            <c-icon icon="check" sm />
+        </c-ui.badge>
+        {% else %}
+        <c-ui.badge color="zinc" inset="top bottom">
+            <c-icon icon="square-dashed" sm />
+        </c-ui.badge>
+        {% endif %}
+    </div>
     <div class="grid justify-center uppercase">
         {% if facilitator.gender == 'F' %}
         <c-ui.badge color="fuchsia">{{ facilitator.get_gender_display }}</c-ui.badge>
         {% else %}
         <c-ui.badge color="orange">{{ facilitator.get_gender_display }}</c-ui.badge>
         {% endif %}
+    </div>
+    <div class="flex flex-wrap gap-2 justify-center uppercase my-4">
+        {% for tag in facilitator.tags.all %}
+        <c-ui.badge color="teal">{{ tag.name }}</c-ui.badge>
+        {% endfor %}
     </div>
 </header>
 
