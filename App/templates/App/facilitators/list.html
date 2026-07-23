@@ -4,8 +4,7 @@
 {% block slot %}
 
 <section class="px-2" x-data="{
-    tab: 0,
-    filter_modal: false
+    show_bulk_actions: false
 }">
     <section class="mb-8">
         <c-ui.accordion>
@@ -103,37 +102,56 @@
         {% if request.user.is_staff %}
         {% csrf_token %}
         <input type="hidden" name="return_query" value="{{ request.GET.urlencode }}">
-        <div class="flex gap-2 items-center justify-end">
-            <c-ui.select name="bulk_action" placeholder="Select an action" required>
-                <c-ui.select.option value="activate">Activate</c-ui.select.option>
-                <c-ui.select.option value="deactivate">Deactivate</c-ui.select.option>
-                <c-ui.select.option value="edit">Edit</c-ui.select.option>
-                <c-ui.select.option value="set-female">Set as Female</c-ui.select.option>
-                <c-ui.select.option value="set-male">Set as Male</c-ui.select.option>
-            </c-ui.select>
-            <c-ui.button type="submit">
+
+        <div class="flex gap-2 items-center">
+            <c-ui.button variant="ghost" @click="show_bulk_actions=!show_bulk_actions">
                 <div class="flex items-center gap-2">
-                    <c-icon icon="cloud-upload" sm />
-                    <span>Apply</span>
+                    <c-icon icon="file-pen" sm x-cloak x-show="!show_bulk_actions" />
+                    <c-icon icon="x" sm x-cloak x-show="show_bulk_actions" />
                 </div>
             </c-ui.button>
+            <div class="flex gap-2 items-center justify-end" x-cloak x-show="show_bulk_actions">
+                <c-ui.select name="bulk_action" placeholder="Select an action" required>
+                    <c-ui.select.option value="activate">Activate</c-ui.select.option>
+                    <c-ui.select.option value="deactivate">Deactivate</c-ui.select.option>
+                    <c-ui.select.option value="edit">Edit</c-ui.select.option>
+                    <c-ui.select.option value="set-female">Set as Female</c-ui.select.option>
+                    <c-ui.select.option value="set-male">Set as Male</c-ui.select.option>
+                </c-ui.select>
+                <c-ui.button type="submit">
+                    <div class="flex items-center gap-2">
+                        <c-icon icon="cloud-upload" sm />
+                        <span class="hidden">Apply</span>
+                    </div>
+                </c-ui.button>
+            </div>
         </div>
         {% endif %}
 
         <c-ui.tabs variant="segmented">
             <c-ui.tabs.tab name="Active">
                 <c-ui.card class="space-y-4">
-                    <!-- <div>
-                        <h3 class="text-xl font-bold">Active Facilitators</h3>
-                        <p class="text-sm text-ink-600 mt-1"></p>
-                    </div> -->
-
                     <div class="space-y-3">
                         {% for f in active_f %}
-                        <div class="flex items-center gap-4 py-2">
-                            <div>
-                                <input class="bulk-checkbox" type="checkbox" name="facilitator_ids" value="{{ f.pk }}">
+                        <div class="flex items-center gap-4">
+                            {% if request.user.is_staff %}
+                            <div x-cloak x-show="show_bulk_actions">
+                                <label class="facilitator-check">
+                                    <input
+                                        type="checkbox"
+                                        id="fck{{ f.pk }}"
+                                        name="facilitator_ids"
+                                        class="hidden bulk-checkbox"
+                                        value="{{ f.pk }}"
+                                    />
+                                    <svg viewBox="0 0 100 100">
+                                        <path class="box"
+                                            d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                                        <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
+                                    </svg>
+                                </label>
                             </div>
+                            {% endif %}
                             <div>
                                 <div class="font-medium">
                                     <a href="{% url 'App:facilitator-detail' f.pk %}">
@@ -148,6 +166,40 @@
                 </c-ui.card>
             </c-ui.tabs.tab>
             <c-ui.tabs.tab name="Inactive">
+                <c-ui.card class="space-y-4">
+                    <div class="space-y-3">
+                        {% for f in inactive_f %}
+                        <div class="flex items-center gap-4">
+                            {% if request.user.is_staff %}
+                            <div x-cloak x-show="show_bulk_actions">
+                                <label class="facilitator-check">
+                                    <input
+                                        type="checkbox"
+                                        id="fck{{ f.pk }}"
+                                        name="facilitator_ids"
+                                        class="hidden bulk-checkbox"
+                                        value="{{ f.pk }}"
+                                    />
+                                    <svg viewBox="0 0 100 100">
+                                        <path class="box"
+                                            d="M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z" />
+                                        <polyline class="check" points="25.5,53.5 39.5,67.5 72.5,34.5" />
+                                    </svg>
+                                </label>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <div class="font-medium">
+                                    <a href="{% url 'App:facilitator-detail' f.pk %}">
+                                        {{ f.name }}
+                                    </a>
+                                </div>
+                                <!-- <div class="text-sm text-ink-600">michael@example.com</div> -->
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </c-ui.card>
                 <!-- Content -->
             </c-ui.tabs.tab>
         </c-ui.tabs>

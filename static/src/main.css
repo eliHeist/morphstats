@@ -89,7 +89,7 @@
 		cursor: pointer;
 
 		.box {
-			fill: var(--color-dark);
+			fill: transparent;
 			stroke-dasharray: 320;
 			stroke-dashoffset: 0;
 			transition: stroke-dashoffset 0.2s linear;
