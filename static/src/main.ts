@@ -10,7 +10,8 @@ import focus from '@alpinejs/focus'
 
 import './main.css';
 import checklist from './ts/checklist';
-import { renderStatsCharts } from "./ts/chart";
+import "./ts/chart";
+// import { renderStatsCharts } from "./ts/chart";
 import { renderMonthlyAvailabilityChart } from "./ts/facilitator-charts";
 
 declare global {
@@ -43,19 +44,19 @@ loaderButtons.forEach((button: HTMLElement) => {
     button.appendChild(loader)
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // stats dashboard
-    const dataElement = document.getElementById('stats-data') as HTMLScriptElement;
-    if (!dataElement) return;
+// document.addEventListener('DOMContentLoaded', () => {
+//     // stats dashboard
+//     const dataElement = document.getElementById('stats-data') as HTMLScriptElement;
+//     if (!dataElement) return;
     
-    let rawText = dataElement.textContent || '[]';
+//     let rawText = dataElement.textContent || '[]';
     
-    // Replace single quotes with double quotes for valid JSON
-    const fixedText = rawText.replace(/'/g, '"');
+//     // Replace single quotes with double quotes for valid JSON
+//     const fixedText = rawText.replace(/'/g, '"');
     
-    const statsList = JSON.parse(fixedText);
-    renderStatsCharts(statsList);
-});
+//     const statsList = JSON.parse(fixedText);
+//     renderStatsCharts(statsList);
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
     // facilitator detail
